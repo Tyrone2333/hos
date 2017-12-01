@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="release/wangEditor.js"></script>
+</head>
+<body>
+
+<div id="div1"></div>
+
+<button id="show">show</button>
+
+<div id="panel">
+
+</div>
+
+<script>
+    var E = window.wangEditor
+    var editor = new E('#div1')
+    // 下面两个配置，使用其中一个即可显示“上传图片”的tab。但是两者不要同时使用！！！
+//     editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+     editor.customConfig.uploadImgServer = './upload'  // 上传图片到服务器
+    editor.create()
+    
+    var show = document.getElementById("show")
+    var panel = document.getElementById("panel")
+    show.onclick = function () {
+        editorVal = editor.txt.html()
+        console.log(editorVal)
+        panel.innerHTML = editorVal
+    }
+</script>
+</body>
+</html>
