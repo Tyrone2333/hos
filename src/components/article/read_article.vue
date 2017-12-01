@@ -13,7 +13,6 @@
 </template>
 <script type="text/ecmascript-6">
     import "./article_markdown.css"
-
     export default {
         data() {
             return {
@@ -35,7 +34,6 @@
                 let url = window.location.href
                 _this.articleId = _this.$route.params.articleId || _this.getIdByURL(url)
 //                log("articleId: " + _this.articleId)
-
                 ajax({
                     type: "get",
                     url: "//yangzq.top/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),

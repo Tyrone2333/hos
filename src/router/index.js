@@ -7,7 +7,7 @@ import header from '../components/header/header.vue'
 import me from '../components/me/me.vue'
 import login from '../components/me/login.vue'
 import article_edit from '../components/console/article_edit.vue'
-import article from '../components/article/article.vue'
+import article from '../components/article/article_list.vue'
 import read_article from '../components/article/read_article.vue'
 // 引入后手机只有chrome能访问，其他都是空白
 import mavon_editor_test from '../components/console/mavon_editor_test.vue'

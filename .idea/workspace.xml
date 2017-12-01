@@ -15,63 +15,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="home.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/home/home.vue">
+      <file leaf-file-name="article_list.vue" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/article/article_list.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1280">
-              <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="read_article.vue" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/article/read_article.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="488">
-              <caret line="65" column="18" lean-forward="true" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="article.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/article/article.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2240">
-              <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="article_markdown.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/article/article_markdown.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="1" column="51" lean-forward="false" selection-start-line="1" selection-start-column="51" selection-end-line="1" selection-end-column="51" />
+            <state relative-caret-position="586">
+              <caret line="124" column="78" lean-forward="true" selection-start-line="124" selection-start-column="78" selection-end-line="124" selection-end-column="78" />
               <folding>
-                <element signature="e#41#2282#1" expanded="true" />
+                <element signature="e#716#755#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="read_article.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/common/read_article.css">
+      <file leaf-file-name="read_article.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/article/read_article.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="7" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="App.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/App.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3648">
-              <caret line="118" column="0" lean-forward="false" selection-start-line="118" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+            <state relative-caret-position="480">
+              <caret line="60" column="14" lean-forward="true" selection-start-line="58" selection-start-column="12" selection-end-line="60" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -80,20 +40,10 @@
       <file leaf-file-name="news.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/news/news.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="704">
-              <caret line="22" column="20" lean-forward="false" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mavon_editor_test.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/console/mavon_editor_test.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4544">
-              <caret line="147" column="28" lean-forward="false" selection-start-line="147" selection-start-column="28" selection-end-line="147" selection-end-column="28" />
+            <state relative-caret-position="247">
+              <caret line="63" column="0" lean-forward="false" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
               <folding>
-                <element signature="n#style#0;n#mavon-editor#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="e#1235#1410#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -102,18 +52,8 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/router/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1728">
-              <caret line="62" column="33" lean-forward="false" selection-start-line="62" selection-start-column="33" selection-end-line="62" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="17" column="32" lean-forward="false" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
+            <state relative-caret-position="-640">
+              <caret line="9" column="14" lean-forward="false" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -133,12 +73,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>assetsPublicPath</find>
-      <find>output</find>
-      <find>enterText</find>
-      <find>be2333</find>
-      <find>change</find>
-      <find>iconType</find>
       <find>username</find>
       <find>gold</find>
       <find>@on</find>
@@ -163,11 +97,20 @@
       <find>.markdown-body</find>
       <find>readArticle</find>
       <find>item</find>
+      <find>_this.resData</find>
+      <find>length</find>
+      <find>url</find>
+      <find>obj</find>
+      <find>articleList</find>
+      <find>this.transformList()</find>
     </findStrings>
     <replaceStrings>
       <replace>./1.png</replace>
       <replace>var</replace>
       <replace>.content</replace>
+      <replace>resData</replace>
+      <replace>this.articleList</replace>
+      <replace>articleList</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -200,15 +143,16 @@
         <option value="$PROJECT_DIR$/src/components/header/header.vue" />
         <option value="$PROJECT_DIR$/src/App.vue" />
         <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/src/components/news/news.vue" />
         <option value="$PROJECT_DIR$/src/common/markdown_css.css" />
         <option value="$PROJECT_DIR$/src/common/read_article.css" />
         <option value="$PROJECT_DIR$/src/components/article/article_markdown.css" />
-        <option value="$PROJECT_DIR$/src/components/console/mavon_editor_test.vue" />
         <option value="$PROJECT_DIR$/src/components/home/home.vue" />
         <option value="$PROJECT_DIR$/src/router/index.js" />
         <option value="$PROJECT_DIR$/src/components/article/article.vue" />
         <option value="$PROJECT_DIR$/src/components/article/read_article.vue" />
+        <option value="$PROJECT_DIR$/src/components/console/mavon_editor_test.vue" />
+        <option value="$PROJECT_DIR$/src/components/news/news.vue" />
+        <option value="$PROJECT_DIR$/src/components/article/article_list.vue" />
       </list>
     </option>
   </component>
@@ -224,7 +168,7 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-9" />
     <option name="width" value="1932" />
     <option name="height" value="1048" />
@@ -515,7 +459,7 @@
       <workItem from="1512044488960" duration="6785000" />
       <workItem from="1512055985628" duration="16000" />
       <workItem from="1512131777456" duration="15000" />
-      <workItem from="1512132285484" duration="909000" />
+      <workItem from="1512132285484" duration="7778000" />
     </task>
     <task id="LOCAL-00001" summary="文章列表">
       <changelist id="f27d0488-3e09-42e8-9966-54409ebce278" name="文章列表" comment="" />
@@ -530,7 +474,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="111356000" />
+    <option name="totallyTimeSpent" value="118225000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -542,7 +486,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1050" extended-state="7" />
+    <frame x="-9" y="-9" width="1938" height="1050" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24409871" sideWeight="0.54974705" order="0" side_tool="false" content_ui="combo" />
@@ -630,7 +574,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/header.vue" />
-    <entry file="file://$PROJECT_DIR$/src/components/article/article.vue">
+    <entry file="file://$PROJECT_DIR$/src/components/article/article_list.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -835,14 +779,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/news/news.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
-          <caret line="22" column="20" lean-forward="false" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/header/header.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
@@ -879,17 +815,7 @@
         <state relative-caret-position="32">
           <caret line="1" column="51" lean-forward="false" selection-start-line="1" selection-start-column="51" selection-end-line="1" selection-end-column="51" />
           <folding>
-            <element signature="e#41#2282#1" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/console/mavon_editor_test.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4544">
-          <caret line="147" column="28" lean-forward="false" selection-start-line="147" selection-start-column="28" selection-end-line="147" selection-end-column="28" />
-          <folding>
-            <element signature="n#style#0;n#mavon-editor#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#41#2282#1" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -902,27 +828,49 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/console/mavon_editor_test.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="634">
+          <caret line="101" column="25" lean-forward="true" selection-start-line="94" selection-start-column="23" selection-end-line="101" selection-end-column="25" />
+          <folding>
+            <element signature="n#style#0;n#mavon-editor#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/router/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1728">
-          <caret line="62" column="33" lean-forward="false" selection-start-line="62" selection-start-column="33" selection-end-line="62" selection-end-column="33" />
+        <state relative-caret-position="-640">
+          <caret line="9" column="14" lean-forward="false" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/article/article.vue">
+    <entry file="file://$PROJECT_DIR$/src/components/news/news.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2240">
-          <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="247">
+          <caret line="63" column="0" lean-forward="false" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
+          <folding>
+            <element signature="e#1235#1410#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/article/read_article.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="488">
-          <caret line="65" column="18" lean-forward="true" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="18" />
+        <state relative-caret-position="480">
+          <caret line="60" column="14" lean-forward="true" selection-start-line="58" selection-start-column="12" selection-end-line="60" selection-end-column="14" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/article/article_list.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="586">
+          <caret line="124" column="78" lean-forward="true" selection-start-line="124" selection-start-column="78" selection-end-line="124" selection-end-column="78" />
+          <folding>
+            <element signature="e#716#755#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
