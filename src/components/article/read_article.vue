@@ -78,18 +78,4 @@
         color: #999;
     }
 
-    /*.read_article{*/
-    /*h1 {*/
-    /*border-bottom: 1px solid #eaecef;*/
-
-    /*}*/
-    /*img {*/
-    /*min-width: 100%;*/
-    /*max-width: 100%;*/
-    /*}*/
-    /*li{*/
-    /*list-style: circle;*/
-    /*}*/
-    /*}*/
-
 </style>
