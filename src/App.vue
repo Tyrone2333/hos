@@ -12,6 +12,11 @@
             <!--切换标签-->
             <router-view></router-view>
 
+            <div class="dd" @click="scrollToBefore(states.scrollTop)">
+                get getScrollTop
+            </div>
+
+
             <tabbar class="tabbar-footer" slot="bottom">
                 <tabbar-item link="/home">
                     <x-icon slot="icon" type="ios-barcode-outline" size="30"></x-icon>
@@ -23,21 +28,24 @@
                 <!--<x-icon  slot="icon" type="xbox" size="30"></x-icon>-->
                 <!--<span slot="label">xBox</span>-->
                 <!--</tabbar-item>-->
-
                 <tabbar-item @on-item-click="toNews">
                     <img slot="icon-active" src="./assets/1.png">
                     <x-icon slot="icon" type="ios-ionic-outline" size="30"></x-icon>
                     <span slot="label">信息登记</span>
                 </tabbar-item>
+
                 <tabbar-item link="/article">
                     <x-icon slot="icon" type="ios-monitor" size="30"></x-icon>
                     <span slot="label">患者交流</span>
                 </tabbar-item>
+
                 <tabbar-item link="/me">
                     <x-icon slot="icon" type="android-person" size="30"></x-icon>
                     <span slot="label">我的</span>
                 </tabbar-item>
             </tabbar>
+
+
         </view-box>
         <!--<router-view></router-view>-->
         <!--<app-footer></app-footer>-->
@@ -93,6 +101,11 @@
             },
             toNews() {
                 this.$router.push({name: 'news'})
+            },
+            scrollToBefore(s) {
+
+                this.$refs.viewBox.scrollTo(s)
+
             }
         },
         data() {
@@ -108,8 +121,32 @@
                 showModeValue: 'push',
                 showPlacement: 'left',
                 showPlacementValue: 'left',
-                title: "XHeader"
+                title: "XHeader",
+                states: {
+                    scrollTop: 0,
+                },
             }
+        },
+        watch: {
+            $route(to, from) {
+                let _this = this
+                let scrBody = this.$refs.viewBox.getScrollBody()
+                let scrTop = this.$refs.viewBox.getScrollTop()
+//                从列表到具体文章时保存之前的滚动距离
+                if (to.name == "read_article" && from.name == "article") {
+                    console.warn("从列表到具体文章" + scrTop)
+                    this.states.scrollTop = scrTop
+                }
+//                从文章退回列表跳转到之前的位置
+                if (to.name == "article" && from.name == "read_article") {
+                    console.warn("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
+                    setTimeout(function () {
+                        _this.scrollToBefore(_this.states.scrollTop)
+                    },0)
+
+//                    this.$refs.viewBox.scrollTo(this.states.scrollTop)
+                }
+            },
         },
     }
 </script>
@@ -120,7 +157,6 @@
     body {
         background-color: #fbf9fe;
     }
-
     html, body {
         height: 100%;
         width: 100%;

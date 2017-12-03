@@ -37,6 +37,13 @@ export default new Router({
             path: '/article',
             name: 'article',
             component: article,
+            children: [
+                {
+                    path: 'read_article/:articleId',
+                    name: 'read_article',
+                    component: read_article
+                },
+            ]
 
         }, {
             path: '/news',
@@ -58,11 +65,12 @@ export default new Router({
             path: '/article_edit',
             name: 'article_edit',
             component: article_edit
-        },{
-            path: '/read_article/:articleId',
-            name: 'read_article',
-            component: read_article
         },
+        // {
+        //     path: '/read_article/:articleId',
+        //     name: 'read_article',
+        //     component: read_article
+        // },
         {
             path: '/mavon_editor_test',
             name: 'mavon_editor_test',

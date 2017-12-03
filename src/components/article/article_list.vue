@@ -2,20 +2,26 @@
     <div class="about">
         <!--v-if="resData" v-for="item in resData"-->
 
-        <div v-if="articleList">
-            <panel :header="'最新文章'" :list="articleList" :type="type"
-                   @on-click-item="readArticle"></panel>
+        <!--用子路由，盖住父路由页面，返回时刷新滚动条啥的都不用判断了 ：)-->
+        <router-view></router-view>
 
-            <!--<panel :header="item.title" :footer="item.description" :list="list" :type="type" @on-img-error="onImgError"></panel>-->
+        <div class="father-router" v-show="showFather">
+
+            <div >
+                <panel :header="'最新文章'" :list="articleList" :type="type"
+                       @on-click-item="readArticle"></panel>
+
+                <!--<panel :header="item.title" :footer="item.description" :list="list" :type="type" @on-img-error="onImgError"></panel>-->
+            </div>
+            <div id="get-more-article" class="get-more-article" @click="getMoreArticle">
+                查看更多
+            </div>
+
+            <load-more v-if="showLoading" :show-loading="showLoadingSymbol" :tip="loadMoreText"
+                       background-color="#fbf9fe"></load-more>
+
         </div>
 
-        <div class="get-more-article" @click="getMoreArticle">
-            read more
-        </div>
-
-        <div class="load-more" v-if="isLoading">
-            <load-more :show-loading="showLoading" :tip="loadMoreText" background-color="#fbf9fe"></load-more>
-        </div>
 
     </div>
 </template>
@@ -32,6 +38,7 @@
         },
         data() {
             return {
+                showFather : true,
                 resData: "",
                 articleList: [],
                 type: '1',
@@ -41,8 +48,8 @@
                 },
                 page: 1, // 文章的页数
                 articleId: 0,
-                isLoading: true,
-                showLoading: true,
+                showLoading: false,
+                showLoadingSymbol: true,
                 loadMoreText: "正在加载",
                 item: {
                     articleId: "67",
@@ -56,28 +63,35 @@
             }
         },
         beforeMount() {
+            log("beforeMount!!!!")
             this.getAritcleList()
+//            log(this.$refs)
+
         },
         mounted() {
-//            log(this.resData)
+//            log(this.$emit)
         },
         watch: {
             resData(curVal, oldVal) {
-
                 let articleList = this.articleList
                 let newList = this.transformList(this.resData)
 
 //                articleList尚未赋值时
-                if (this.articleList === undefined || articleList.length == 0) {
+                if (isEmptyArr(this.articleList)) {
                     this.articleList = newList
                 } else {
-                    log(newList)
-                    log(articleList)
-                    for (let i in newList){
+//                    log(newList)
+//                    log(articleList)
+                    for (let i in newList) {
                         articleList.push(newList[i])
                     }
                 }
 
+            },
+            $route(to,from) {
+                if( to.name == "article" && from.name == "read_article"){
+                    this.showFather = true
+                }
             },
         },
         methods: {
@@ -85,6 +99,7 @@
                 this.articleId = item.articleId
 //                在 this.$router.push() 方法中path不能和params一起使用，否则params将无效。需要用name来指定页面
                 this.$router.push({name: 'read_article', params: {articleId: this.articleId}})
+                this.showFather = false
 
             },
             getAritcleList() {
@@ -94,12 +109,16 @@
                     url: "//yangzq.top/console/show_list_test.php?page=" + _this.page + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
-                        var res = JSON.parse(data)
+                        let res = JSON.parse(data);
                         if (res.errno == 0) {
                             _this.resData = res
                             _this.page++
                         } else if (res.errno == 2) {
-                            _this.showLoading = false
+                            let moreBtn = document.getElementById("get-more-article")
+
+                            moreBtn.style.display = "none"
+                            _this.showLoading = true
+                            _this.showLoadingSymbol = false
                             _this.loadMoreText = res.data.errMsg
                         }
                     },
@@ -109,8 +128,8 @@
                 })
             },
             getMoreArticle() {
+//                this.showLoading = true
                 this.getAritcleList()
-
             },
             transformList(resData) {
 //                let _this = this
@@ -128,35 +147,38 @@
                         arr.push(articleList)
                     }
                 }
-//                log(arr)
                 return arr
             },
 
         },
         computed: {
-            list() {
-                let _this = this
-                let arr = []
-                if (this.resData !== null) {
-                    for (let i = 0; i < _this.resData.data.length; i++) {
-                        let articleList = {
-                            src: "http://placeholder.qiniudn.com/60x60/3cc51f/ffffff",
-                            title: _this.resData.data[i].title,
-                            desc: _this.resData.data[i].description,
-                            articleId: _this.resData.data[i].id,
-//                            url : "http://yangzq.top/console/get_article.php?pageid=" + _this.resData.data[i].id + "&n=" + Math.random(),
-//                            url: "/home",
-                        }
-                        arr.push(articleList)
-                    }
-                }
-                log(arr)
-                return arr
-            }
+//            list() {
+//                let _this = this
+//                let arr = []
+//                if (this.resData !== null) {
+//                    for (let i = 0; i < _this.resData.data.length; i++) {
+//                        let articleList = {
+//                            src: "http://placeholder.qiniudn.com/60x60/3cc51f/ffffff",
+//                            title: _this.resData.data[i].title,
+//                            desc: _this.resData.data[i].description,
+//                            articleId: _this.resData.data[i].id,
+////                            url : "http://yangzq.top/console/get_article.php?pageid=" + _this.resData.data[i].id + "&n=" + Math.random(),
+////                            url: "/home",
+//                        }
+//                        arr.push(articleList)
+//                    }
+//                }
+//                log(arr)
+//                return arr
+//            }
         },
     }
 </script>
 
 <style>
-
+    .get-more-article {
+        color: #586C94;
+        margin-left: 15px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
 </style>

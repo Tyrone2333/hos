@@ -20,10 +20,10 @@
             </scroller>
 
             <router-link to="/mavon_editor_test">
-                <h2>to mavon_editor_test</h2>
+                <h2>使用mavon_editor编辑器(推荐)</h2>
             </router-link>
             <router-link to="/article_edit">
-                <h2>to article_edit</h2>
+                <h2>使用wang_editor</h2>
             </router-link>
 
         </group>
