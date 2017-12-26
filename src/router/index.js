@@ -7,7 +7,9 @@ import header from '../components/header/header.vue'
 import me from '../components/me/me.vue'
 import login from '../components/me/login.vue'
 import article_edit from '../components/console/article_edit.vue'
+import article_modify from '../components/console/article_modify.vue'
 import article from '../components/article/article_list.vue'
+import assert from '../components/article/assert.vue'
 import read_article from '../components/article/read_article.vue'
 // 引入后手机只有chrome能访问，其他都是空白
 import mavon_editor_test from '../components/console/mavon_editor_test.vue'
@@ -45,7 +47,21 @@ export default new Router({
                 },
             ]
 
-        }, {
+        },
+        {
+            path: '/assert',
+            name: 'assert',
+            component: assert,
+            children: [
+                {
+                    path: 'read_article/:articleId',
+                    name: 'read_article',
+                    component: read_article
+                },
+            ]
+
+        },
+        {
             path: '/news',
             name: 'news',
             component: news
@@ -75,6 +91,10 @@ export default new Router({
             path: '/mavon_editor_test',
             name: 'mavon_editor_test',
             component: mavon_editor_test
+        },{
+            path: '/article_modify',
+            name: 'article_modify',
+            component: article_modify
         },
 
     ]

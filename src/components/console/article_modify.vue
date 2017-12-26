@@ -1,40 +1,34 @@
 <template>
-    <div class="mavon_editor_test">
-        <!--<div class="show-panel">{{resData}}</div>-->
+    <div class="article_modify">
+        <h1>修改文章</h1>
 
-        源码显示：
-        <textarea cols="50" rows="8" v-model="editorHtmlValue"></textarea>
-        <button @click="uploadimg">只是一个功能按钮</button>
+        请输入文章id: <input type="text" v-model="articleId">
+        <button @click="getArticle">getArticle</button>
+        <div v-if="resData">
+            源码显示：
+            <textarea cols="50" rows="8" v-model="editorHtmlValue"></textarea>
+            <button @click="uploadimg">只是一个功能按钮</button>
 
-        <h1>编辑文章</h1>
-        文章标题: <input type="text" v-model="title" name="title" id="title"> <br>
-        文章描述:
-        <textarea v-model="description" name="description" id="" cols="50" rows="7"></textarea>
-        <!--<input type="text" v-model="description" id="description"> -->
-        <br>
-
+            <h1>编辑文章</h1>
+            文章标题: <input type="text" v-model="title" name="title" id="title"> <br>
+            文章描述:
+            <textarea v-model="description" name="description" id="" cols="50" rows="7"></textarea>
+            <!--<input type="text" v-model="description" id="description"> -->
+            <br>
+        </div>
 
         <div id="editor">
-            <mavon-editor ref="mavon-editor" style="height: 80%" v-model="editorValue"
+            <mavon-editor ref="mavon-editor" style="height: 80%"
+                          v-model="editorValue"
                           default_open="edit"
                           @change="onEditorChange"
                           @htmlcode="onShowHtml"
-                          placeholder="提交“待验证”的预言、个人判断、思路"
-                          @imgAdd="$imgAdd" @imgDel="$imgDel"></mavon-editor>
+                          @imgAdd="$imgAdd"
+                          @imgDel="$imgDel"></mavon-editor>
         </div>
 
-        <button @click="uploadArticle">提交文章</button>
-        <!--<button v-if="isChild" @click="modifyArticle">提交修改</button>-->
+        <button @click="modifyArticle">提交修改</button>
 
-
-        <div>
-            <popup v-model="showPop" position="bottom" :show-mask="false">
-                <div class="popup-text">
-                    {{popupText}}
-                </div>
-            </popup>
-        </div>
-        <loading :show="isLoading" text="数据加载中..."></loading>
         <toast v-model="showToast" :type="toastType" :time="2000" is-show-mask :text="toastText"
                position="default"></toast>
 
@@ -42,22 +36,25 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {Loading} from 'vux'
-    import {Popup, Group, Cell, XButton, XSwitch, Toast, XAddress, ChinaAddressData} from 'vux'
+    import {Toast,} from 'vux'
 
     import {mavonEditor} from 'mavon-editor'
     import 'mavon-editor/dist/css/index.css'
     import axios from 'axios'
 
     export default {
+        components: {
+            mavonEditor, Toast,
+        },
         data() {
             return {
+                resData: null,
+                articleId: 76,
                 isLoading: false,
-                editorValue: this.initVal,
+                editorValue: "",
                 editorHtmlValue: "",
                 editorMDValue: "",
                 img_file: {},
-                resData: null,
                 title: "",
                 author: "enzo",
                 description: "",
@@ -68,45 +65,28 @@
                 toastText: "hello world",
             }
         },
-        components: {
-            Loading,
-            mavonEditor,
-            Popup,
-            Group,
-            Cell,
-            XSwitch,
-            Toast,
-            XAddress,
-            XButton
+        beforeMount() {
+            this.fetchData()
         },
+
         methods: {
             uploadimg() {
                 let _this = this
-                localStorage.setItem("name", "myName")
-                this.$vux.toast.show({
-                    showPositionValue: false,
-                    text: "localStorage.name: " + localStorage.name,
-                    type: "warn",
-                    // width: width,
-                    position: 'middle',
-                    onShow() {
-                        // console.log('Plugin: I\'m showing')
-                    },
-                    onHide() {
-                        // console.log('Plugin: I\'m hiding')
-                    }
-                })
+                _this.contentCheck()
+
             },
-            uploadArticle() {
+            modifyArticle() {
                 let _this = this
                 if (_this.contentCheck()) {
                     return
                 }
+
                 ajax({
                     type: "post",
-                    url: "//yangzq.top/console/public_article.php?n=" + Math.random(),
+                    url: "//yangzq.top/console/modify_article.php?id=" + _this.articleId + "&n=" + Math.random(),
                     timeOut: 5000,
                     data: {
+                        id: _this.articleId,
                         article: _this.editorHtmlValue,
                         description: _this.description,
                         title: _this.title,
@@ -129,7 +109,6 @@
                         console.log(err);
                     }
                 })
-
             },
             onShowHtml(status, value) {
                 // value 是 markdown 代码
@@ -175,6 +154,30 @@
                 this.toastText = text
                 this.showToast = true
             },
+            fetchData() {
+                let _this = this
+                ajax({
+                    type: "get",
+                    url: "//yangzq.top/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
+                    data: {},
+                    success: function (data) {
+                        var res = JSON.parse(data)
+                        _this.resData = res
+                        log(_this.resData)
+
+                        // 用来给编辑器赋数据库的文章内容
+                        _this.editorValue = _this.resData.data.md
+                        _this.title = _this.resData.data.title
+                        _this.description = _this.resData.data.description
+                    },
+                    error() {
+                        alert("无法获取服务器数据")
+                    }
+                })
+            },
+            getArticle() {
+                this.fetchData()
+            },
             contentCheck() {
                 let _this = this
                 if (isEmptyStr(_this.title)) {
@@ -193,29 +196,12 @@
 
         },
         watch: {
-            showPop(val) {
-                log(val)
-                if (val) {
-                    setTimeout(() => {
-                        this.showPop = false
-                    }, 1000)
-                }
-            }
+            resData(curVal, oldVal) {
+            },
         },
     }
 </script>
 
 <style>
-    .icon-chrome {
-        color: #5d0500;
-        width: 30px;
-        height: 30px;
-    }
 
-    .popup-text {
-        background-color: #30415e;
-        color: #fafbfc;
-        text-align: center;
-        padding: 20px;
-    }
 </style>

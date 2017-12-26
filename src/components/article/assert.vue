@@ -1,5 +1,5 @@
 <template>
-    <div class="about">
+    <div class="assert">
         <!--v-if="resData" v-for="item in resData"-->
 
         <!--用子路由，盖住父路由页面，返回时刷新滚动条啥的都不用判断了 ：)-->
@@ -7,12 +7,18 @@
 
         <div class="father-router" v-show="showFather">
 
-            <div >
-                <panel :header="'最新文章'" :list="articleList" :type="type"
-                       @on-click-item="readArticle">
-                </panel>
+            <div  v-for="item in articleList">
+                <div class="panel">
+                    <div class="left-wrapper">
+                        <div class="title">{{item.title}}</div>
+                        <div class="dateline">{{item.dateline}}</div>
+                    </div>
+                    <div class="right-wrapper">
+                        <img :src="item.src" alt="" width="60" height="60">
+                    </div>
+                </div>
 
-                <!--<panel :header="item.title" :footer="item.description" :list="list" :type="type" @on-img-error="onImgError"></panel>-->
+                <br>
             </div>
             <div id="get-more-article" class="get-more-article" @click="getMoreArticle">
                 查看更多
@@ -32,6 +38,7 @@
     import {LoadMore} from "vux"
 
     export default {
+        name:"assert",
         components: {
             Panel,
             Group,
@@ -140,6 +147,7 @@
                             title: resData.data[i].title,
                             desc: resData.data[i].description,
                             articleId: resData.data[i].id,
+                            dateline: resData.data[i].dateline,
 //                            url : "http://yangzq.top/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
 //                            url: "/home",
                         }
@@ -179,10 +187,45 @@
     }
 </script>
 
-<style>
+<style lang="less">
     .get-more-article {
         color: #586C94;
         margin-left: 15px;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+    .panel{
+        padding: 15px;
+        position: relative;
+        display: flex;
+        /*border: solid 1px #cccccc;*/
+        /*border-radius: 2px;*/
+        :before{
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px solid #E5E5E5;
+            color: #E5E5E5;
+
+            transform-origin: 0 0;
+
+            /*transform: scaleY(0.5);*/
+            left: 15px;
+        }
+        .right-wrapper{
+            margin-right: .8em;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+        }
+        .left-wrapper{
+            flex: 1;
+            min-width: 0;
+
+        }
+
     }
 </style>

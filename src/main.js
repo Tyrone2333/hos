@@ -5,20 +5,29 @@ import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import VueRouterIndex from './router/index.js'
-// import axios from 'axios'
-// import VueAxios from 'vue-axios'
-// Vue.use(VueAxios, axios)
+import  { ToastPlugin } from 'vux'
+// import Vuex from 'vuex'
+import { store } from './store/store'
 
+// Vue.use(Vuex)
+Vue.use(ToastPlugin)
+Vue.use(VueRouter)
 
 import "./common/style.css"
-Vue.use(VueRouter)
+
 
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
+
+
+
 /* eslint-disable no-new */
 new Vue({
     router: VueRouterIndex,
-    render: h => h(App)
+    store,
+    render: h => h(App),
+
 }).$mount('#app')
+

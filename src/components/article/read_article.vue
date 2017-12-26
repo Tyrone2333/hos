@@ -2,6 +2,7 @@
     <div class="read_article" v-if="resData">
         <!--<div v-for="item in resData.data">-->
         <h1>{{resData.data.title}}</h1>
+        <div class="collection " @click="toggleCollect">{{collection}}</div>
         <div class="article-info">
             <span>{{resData.data.author}} 写于 {{resData.data.dateline}}</span>
         </div>
@@ -12,15 +13,17 @@
     </div>
 </template>
 <script type="text/ecmascript-6">
-    import "./article_markdown.css"
     export default {
         data() {
             return {
                 resData: null,
                 articleId: 8,
+                collected: false,
+                collection: "  ☆ 收藏​"
             }
         },
         beforeMount() {
+
             this.fetchData()
         },
         methods: {
@@ -29,6 +32,7 @@
 //                var str = "http://192.168.1.186:10086/#read_article/66";
                 return url.match(regExp)[3]
             },
+
             fetchData() {
                 let _this = this
                 let url = window.location.href
@@ -47,7 +51,11 @@
                         alert("无法获取服务器数据")
                     }
                 })
-            }
+            },
+            toggleCollect() {
+                this.collected = !this.collected
+                this.collection = this.collected ? "  ★ 已收藏​" : "  ☆ 收藏​"
+            },
         },
         watch: {
             /**
@@ -56,7 +64,7 @@
              * @param curVal
              * @param oldVal
              */
-            $route(curVal,oldVal) {
+            $route(curVal, oldVal) {
                 this.fetchData()
             },
         },
@@ -71,9 +79,17 @@
     }
 </script>
 
-<style lang="less">
+<style lang="less" type="less">
+    @import "article_markdown.css";
+
     .article-info {
         color: #999;
+    }
+
+    .collection {
+        color: #8590a6;
+        float: right;
+        margin-right: 10px;
     }
 
 </style>

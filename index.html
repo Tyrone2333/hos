@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="icon" href="//static2.ele.me/eleme/desktop/media/img/favicon-16x16.png" type="image/png" sizes="16x16">
-    <title>hos</title>
+    <link rel="icon" href="./static/fuck_face.jpg" type="image/png" sizes="16x16">
+    <title>打脸网</title>
     <script src="static/ajax.js"></script>
     <script>
         function log(meg) {
@@ -14,12 +14,33 @@
                 console.log(meg)
             }
         }
+        window.log = log;
         function isEmptyArr(value) {
             return (Array.isArray(value) && value.length === 0)
                 || (Object.prototype.isPrototypeOf(value) && Object.keys(value).length === 0);
         }
-        window.log = log;
+        function isEmptyStr(str) {
+            var regu = "^[ ]+$";
+            var re = new RegExp(regu);
+            if (str.length === 0 || str.replace(/(^s*)|(s*$)/g, "").length === 0 || str == null || re.test(str))
+            {
+                return true
+            }else {
+                return false
+            }
+        }
+
     </script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?1f7806f663206e12585db8c4ba006227";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
   </head>
   <body>
     <div id="app"></div>
