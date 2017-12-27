@@ -27,7 +27,8 @@
             </div>
         </group>
         <group title="开发者">
-            {{count}}
+            欢迎,{{username}} <br>
+            id: {{user_id}}
             <cell title="版本" @click.native="clickVision" inline-desc="v1.0">
                 <x-icon class="cellIcon" slot="icon" type="ios-information" size="30"></x-icon>
             </cell>
@@ -44,6 +45,7 @@
     import {Group, Cell, CellBox} from 'vux'
     import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
+    import {mapMutations} from 'vuex'
 
     export default {
         components: {
@@ -66,16 +68,9 @@
             toLogin() {
                 alert(11111111)
             },
+
             clickVision() {
-                // log(this)
-                localStorage.setItem("name", "33333")
-
-                this.$store.commit('increment')
-                this.$store.commit('inc')
-
-                console.log(this.$store.state.count)
-                console.log(this.doneTodos)
-
+                console.log(this.$store.state)
             },
         },
         computed: {
@@ -92,8 +87,18 @@
                 // 为了能够使用 `this` 获取局部状态，必须使用常规函数
                 countPlusLocalState(state) {
                     return state.count + this.localCount
-                }
+                },
+                user_id (state) {
+                    if(state.user_id === ""){
+                        this.$store.commit('_flashUser')
+                    }
+                    return state.user_id
+                },
+
             }),
+            ...mapState([
+                "username",
+            ]),
             ...mapGetters([
                 //映射 this.doneTodosCount 为 store.getters.doneTodosCount
                 'doneTodosCount',

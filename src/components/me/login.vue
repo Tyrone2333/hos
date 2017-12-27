@@ -53,6 +53,8 @@
 </template>
 
 <script>
+    import { mapMutations } from 'vuex'
+
     import {XInput, Group, XButton, Cell} from 'vux'
     import {AjaxPlugin} from 'vux'
     import {Loading} from 'vux'
@@ -92,6 +94,17 @@
 
         },
         methods: {
+
+            ...mapMutations([
+                'increment', // 将 `this.increment()` 映射为 `this.$store.commit('increment')`
+
+                // `mapMutations` 也支持载荷：
+                'incrementBy', // 将 `this.incrementBy(amount)` 映射为 `this.$store.commit('incrementBy', amount)`
+                "setUsername",
+            ]),
+            ...mapMutations({
+                add: 'increment' // 将 `this.add()` 映射为 `this.$store.commit('increment')`
+            }),
             changeType() {
                 this.pwdType = this.pwdType === 'password' ? 'text' : 'password'
             },
@@ -159,7 +172,7 @@
 //                    });
             },
 
-//            提交按钮事件
+//            登录按钮事件
             loginBtnClick() {
                 var username = this.username
                 var tel = this.tel
@@ -193,11 +206,28 @@
                             return
                         }
                         // 登录成功 显示 Toast
-                        _this.$vux.toast.show({
-                            text: res.resMsg,
-                            type: "success",
-                        })
+
                         _this.setToken(res)
+                        _this.$store.commit('_flashUser')
+
+                        let redirect = _this.$router.currentRoute.query.redirect
+                        if(redirect){
+                            _this.$vux.toast.show({
+                                text: "登录成功,2秒后转入之前页面",
+                                type: "success",
+                            })
+                            setTimeout(() => {
+                                _this.$router.push({path: redirect})
+                            },2000)
+                        }else {
+                            _this.$vux.toast.show({
+                                text: res.resMsg,
+                                type: "success",
+                            })
+                            setTimeout(() => {
+                                _this.$router.push({path: "/me"})
+                            },2000)
+                        }
                     },
                     error: function () {
                         console.log("error");
@@ -234,7 +264,7 @@
                         var res = JSON.parse(str)
                         _this.resData = res
                         console.warn(_this.resData);
-                        // 登录失败
+                        // 注册失败
                         if (res.errno === 1) {
                             _this.$vux.toast.show({
                                 text: res.msg.errMsg,
@@ -243,7 +273,7 @@
                             // alert(res.resMsg)
                             return
                         }
-                        // 登录成功
+                        // 注册成功
                         // 显示 Toast
                         _this.$vux.toast.show({
                             text: res.msg.noticeMsg,
@@ -255,6 +285,7 @@
                             _this.username = username
                             _this.password = ""
                         },1500)
+
 
                     },
                     error: function () {
@@ -270,10 +301,10 @@
                 localStorage.setItem('user_id', res.userInfo.user_id);
                 localStorage.setItem('nickname', res.userInfo.nickname);
                 localStorage.setItem('avatar', res.userInfo.avatar);
+                localStorage.setItem('token', res.userInfo.token);
                 log("注册信息已保存 localStorage")
             }
         },
-
     }
 </script>
 <style scoped>
