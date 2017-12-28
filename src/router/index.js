@@ -94,6 +94,9 @@ const router = new Router({
         {
             path: '/mavon_editor_test',
             name: 'mavon_editor_test',
+            meta: {
+                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+            },
             component: mavon_editor_test
         }, {
             path: '/article_modify',

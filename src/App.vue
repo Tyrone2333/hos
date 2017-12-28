@@ -22,7 +22,7 @@
             <router-view></router-view>
 
             <tabbar class="tabbar-footer" slot="bottom">
-                <tabbar-item link="/home">
+                <tabbar-item link="/mavon_editor_test">
                     <x-icon slot="icon" type="ios-barcode-outline" size="30"></x-icon>
                     <!--<span  slot="icon" class="icon-user" icon-class="icon-user"></span>-->
                     <span slot="label">首页</span>
