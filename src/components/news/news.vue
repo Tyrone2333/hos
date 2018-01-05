@@ -6,8 +6,7 @@
             </tab>
             <swiper v-model="index" height="100px" :show-dots="false">
                 <swiper-item v-for="(item, index) in list" :key="index">
-                    {{item }} and {{index}} in list
-                    <div class="tab-swiper vux-center">{{item}} Container</div>
+                    {{item }} 板块建设中
                 </swiper-item>
             </swiper>
         </div>
@@ -18,11 +17,10 @@
                     <div class="box1-item" v-for="i in 7"><span>{{' ' + i + ' '}}</span></div>
                 </div>
             </scroller>
-
         </group>
 
 
-        <divider>我是有底线的</divider>
+        <!--<divider>我是有底线的</divider>-->
     </div>
 </template>
 
@@ -51,7 +49,7 @@
         },
         data (){
             return {
-                list : ['精选', '热点', '课堂', '药品', '活动',"饮食"],
+                list : [ "科学", "体育", "时尚", "经济", "政治"],
                 demo2: '美食',
                 index: 0,
             }

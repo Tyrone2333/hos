@@ -14,10 +14,11 @@ export const store = new Vuex.Store({
         // 用户登录信息
         user_id: "",
         username: "",
-        nickname:"",
+        nickname: "",
         token: "",
         avatar: "",
-
+        collectList: [],
+        clock: 0,  //打脸倒计时的Interval ID
     },
     getters: {
         changeState: state => {
@@ -36,32 +37,46 @@ export const store = new Vuex.Store({
         //组件想要对于vuex 中的数据进行的处理
         //组件中采用this.$store.commit('方法名') 的方式调用，实现充分解耦
         //内部操作必须在此刻完成(同步)
+        setcollectList(state, payload) {
+            state.collectList = payload
+        },
         increment(state) {
             state.count++
         },
         inc: state => state.count++,
-        setuser_id : (state,payload) => {
+        setuser_id: (state, payload) => {
             state.user_id = payload
         },
-        setUsername : (state,payload) => {
+        setUsername: (state, payload) => {
             state.username = payload
         },
-        setnickname : (state,payload) => {
+        setnickname: (state, payload) => {
             state.nickname = payload
         },
-        setexpire_time : (state,payload) => {
+        setexpire_time: (state, payload) => {
             state.expire_time = payload
         },
-        settoken : (state,payload) => {
+        settoken: (state, payload) => {
             state.token = payload
         },
+        setclock: (state, payload) => {
+            state.clock = payload
+        },
         // 从localStorage取出数据赋给用户信息
-        _flashUser(state){
+        _flashUser(state) {
             state.user_id = localStorage.user_id
             state.username = localStorage.username
             state.nickname = localStorage.nickname
             state.token = localStorage.token
             state.avatar = localStorage.avatar
+        },
+        _clearToken(state) {
+            state.user_id = ""
+            state.username = ""
+            state.nickname = ""
+            state.token = ""
+            state.avatar = ""
+            state.collectList = []
         }
 
 

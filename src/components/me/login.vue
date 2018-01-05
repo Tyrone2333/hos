@@ -5,16 +5,15 @@
                 <x-input name="username" v-model="username" @on-change="checkName"
                          placeholder="用户名/邮箱"></x-input>
                 <x-input v-model="password" :type="pwdType" placeholder="打脸网登录密码">
-                    <!--<input slot="right" type="checkbox" @click="changeType"/>-->
-                    <span class="cellIcon icon-chrome" @click="changeType" slot="right"></span>
+                    <span :class="pwdClass" @click="pwdTypeChange" slot="right"></span>
                 </x-input>
                 <button class="handleSubmitBtn" type="submit">登录</button>
             </form>
 
-            <!--用来显示登录数据-->
-            <div v-if="resData" v-for="(val,key) in resData">
-                <span>{{key}}</span> ==> <span>{{val}}</span>
-            </div>
+            <!--用来显示登录数据,正式版会关闭-->
+            <!--<div v-if="resData" v-for="(val,key) in resData">-->
+                <!--<span>{{key}}</span> ==> <span>{{val}}</span>-->
+            <!--</div>-->
 
         </div>
         <!--<divider>我是有底线的</divider>-->
@@ -24,9 +23,14 @@
                 <form @submit.prevent="registerBtnClick">
 
                     <x-input title="昵 称" name="nickname" v-model="nickname" placeholder="昵称"></x-input>
-                    <x-input title="用户名" name="username" v-model="username" placeholder="请输入用户名(用于登录)"></x-input>
+                    <!--禁用内置验证才能显示成功或者错误样式-->
+                    <x-input title="用户名" @on-change="checkName" novalidate
+                             :icon-type="iconType"
+                             :show-clear="false"
+                             name="username" v-model="username" placeholder="请输入用户名(用于登录)"></x-input>
 
-                    <x-input title="密码" required type="text" placeholder="" v-model="password" :min="6"></x-input>
+                    <x-input title="密码" type="text" :is-type="bePwd" placeholder="" v-model="password"
+                             :min="2"></x-input>
                     <x-input title="确认密码" type="text" v-model="password2" placeholder=""
                              :equal-with="password"></x-input>
 
@@ -53,7 +57,7 @@
 </template>
 
 <script>
-    import { mapMutations } from 'vuex'
+    import {mapMutations} from 'vuex'
 
     import {XInput, Group, XButton, Cell} from 'vux'
     import {AjaxPlugin} from 'vux'
@@ -79,6 +83,8 @@
                 username: "",
                 nickname: "",
                 pwdType: "password",    //用于显示隐藏密码
+                pwdClass: "cell-icon icon-eye-hidden",
+
                 isLoading: false,
                 inLogin: true, // 用于切换显示注册页,登录页
                 submitBtnType: "primary",   // AjaxPlugin、axios 测试用变量
@@ -91,6 +97,7 @@
             togleInfo() {
                 return this.inLogin ? "或者,创建账户" : "已有账户,登录"
             },
+
 
         },
         methods: {
@@ -105,15 +112,33 @@
             ...mapMutations({
                 add: 'increment' // 将 `this.add()` 映射为 `this.$store.commit('increment')`
             }),
-            changeType() {
-                this.pwdType = this.pwdType === 'password' ? 'text' : 'password'
+            bePwd: function (value) {
+                let reg = /^[A-Za-z0-9]{6,12}$/
+                if (reg.test(value)) {
+                    return {
+                        valid: true,
+                    }
+                } else {
+                    return {
+                        valid: false,
+                        msg: '6-12位大小写字母加数字'
+                    }
+                }
+
             },
-            onFocus(val, $event) {
-                console.log('on focus', val, $event)
+            pwdTypeChange() {
+                this.pwdType = this.pwdType === 'password' ? 'text' : 'password'
+                this.pwdClass = this.pwdType === 'password' ? 'cell-icon icon-eye-hidden' : 'cell-icon icon-eye'
+
             },
 
             checkName(val) {
-                console.log('name change !', val)
+                let reg = /^[A-Za-z][A-Za-z0-9]{5,12}$/
+                if (reg.test(val)) {
+                    this.iconType = "success"
+                } else {
+                    this.iconType = "error"
+                }
             },
             togleLogin() {
                 this.inLogin = !this.inLogin
@@ -188,9 +213,6 @@
                         "username": username,
                         "password": password,
                     },
-                    before: function () {
-
-                    },
                     success: function (str) {
                         var res = JSON.parse(str)
                         _this.resData = res
@@ -202,35 +224,39 @@
                                 text: res.resMsg,
                                 type: "warn",
                             })
-                            // alert(res.resMsg)
                             return
                         }
                         // 登录成功 显示 Toast
-
-                        _this.setToken(res)
+                        _this.setLocalUserInfo(res)
                         _this.$store.commit('_flashUser')
+                        _this.getCollectList(res.userInfo.user_id)
 
                         let redirect = _this.$router.currentRoute.query.redirect
-                        if(redirect){
+                        if (redirect) {
                             _this.$vux.toast.show({
                                 text: "登录成功,2秒后转入之前页面",
                                 type: "success",
                             })
                             setTimeout(() => {
                                 _this.$router.push({path: redirect})
-                            },2000)
-                        }else {
+                            }, 2000)
+                        } else {
                             _this.$vux.toast.show({
                                 text: res.resMsg,
                                 type: "success",
                             })
                             setTimeout(() => {
                                 _this.$router.push({path: "/me"})
-                            },2000)
+                            }, 2000)
                         }
                     },
                     error: function () {
-                        console.log("error");
+                        if (res.errno === 1) {
+                            _this.$vux.toast.show({
+                                text: "出错了",
+                                type: "warn",
+                            })
+                        }
                     }
                 });
             },
@@ -280,13 +306,11 @@
                             type: "success",
                         })
                         // 跳转到登录页,并放置注册的用户名
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             _this.inLogin = true
                             _this.username = username
                             _this.password = ""
-                        },1500)
-
-
+                        }, 1500)
                     },
                     error: function () {
                         _this.$vux.toast.show({
@@ -296,24 +320,62 @@
                     }
                 });
             },
-            setToken(res) {
+            setLocalUserInfo(res) {
                 localStorage.setItem('username', res.userInfo.username);
                 localStorage.setItem('user_id', res.userInfo.user_id);
                 localStorage.setItem('nickname', res.userInfo.nickname);
                 localStorage.setItem('avatar', res.userInfo.avatar);
                 localStorage.setItem('token', res.userInfo.token);
                 log("注册信息已保存 localStorage")
+            },
+            getCollectList(user_id,) {
+                let _this = this
+                ajax({
+                    type: "get",
+                    url: "//yangzq.top/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
+                    data: {},
+                    success: function (data) {
+                        let res = JSON.parse(data);
+                        log(res)
+                        if (res.errno == 0) {
+                            // 在vuex保存收藏列表
+                            _this.$store.commit("setcollectList", res.data)
+
+                            // 存：localStorage.setItem('weekDay',JSON.stringify(weekArray));
+                            // 取： weekArray = JSON.parse(localStorage.getItem('weekDay'));
+                            localStorage.setItem("setcollectList", JSON.stringify(res.data))
+                        } else if (res.errno == 1) {
+                            log(res.msg.receiveMsg)
+                        }
+                        else {
+
+                        }
+                    },
+                    error() {
+                        log("getCollectList error")
+                    }
+                })
+            },
+        },
+        beforeMount() {
+            let redirect = this.$router.currentRoute.query.redirect
+
+            if (redirect) {
+                this.$vux.toast.show({
+                    text: "本页面需要登录",
+                    type: "text",
+                })
             }
+
+
         },
     }
 </script>
-<style scoped>
-    .red {
-        color: red;
-    }
-
-    .green {
-        color: green;
+<style lang="less" scoped>
+    .login-in {
+        .cell-icon {
+            color: #8590a6;
+        }
     }
 
     .handleSubmitBtn {

@@ -8,9 +8,14 @@
     <script src="static/ajax.js"></script>
     <script>
         function log(meg) {
-            if (typeof meg === "string" || typeof meg === "number") {
-                console.warn(meg)
-            } else {
+            if (typeof meg === "string"  ) {
+                console.log("%c " + meg + " %c",
+                     "background:#fff; padding: 1px; color: #1b54f2", "background:transparent")
+            } else if (typeof meg === "number"){
+                console.log("%c " + meg + " %c",
+                    "background:#41b883 ; padding: 1px; border-radius: 3px ;  color: #fff", "background:transparent")
+            }
+            else {
                 console.log(meg)
             }
         }

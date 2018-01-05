@@ -22,26 +22,32 @@
             <router-view></router-view>
 
             <tabbar class="tabbar-footer" slot="bottom">
-                <tabbar-item link="/mavon_editor_test">
-                    <x-icon slot="icon" type="ios-barcode-outline" size="30"></x-icon>
+                <tabbar-item link="/article">
+                    <!--<x-icon slot="icon" type="ios-barcode-outline" size="30"></x-icon>-->
                     <!--<span  slot="icon" class="icon-user" icon-class="icon-user"></span>-->
+                    <img src="./common/PNG/file-text.png" slot="icon" alt="icon">
                     <span slot="label">首页</span>
                 </tabbar-item>
 
-                <tabbar-item @on-item-click="toNews">
-                    <img slot="icon-active" src="./assets/1.png">
-                    <x-icon slot="icon" type="ios-ionic-outline" size="30"></x-icon>
-                    <span slot="label">谈笑风生</span>
+                <!--图标点击切换-->
+                <!--<tabbar-item @on-item-click="toNews">-->
+                    <!--<img slot="icon-active" src="./assets/1.png">-->
+                    <!--<x-icon slot="icon" type="ios-ionic-outline" size="30"></x-icon>-->
+                    <!--<span slot="label">谈笑风生</span>-->
+                <!--</tabbar-item>-->
+
+                <tabbar-item link="/mavon_editor_test">
+                    <img src="./common/PNG/quill.png" slot="icon" alt="icon">
+                    <span slot="label">写断言</span>
                 </tabbar-item>
 
-                <tabbar-item link="/article">
-                    <x-icon slot="icon" type="ios-monitor" size="30"></x-icon>
-                    <!--<span class="cellIcon icon-file-text" slot="icon" ></span>-->
-                    <span slot="label">断言</span>
+                <tabbar-item link="/collect">
+                    <img src="./common/PNG/star-empty.png" slot="icon" alt="icon">
+                    <span slot="label">收藏</span>
                 </tabbar-item>
 
                 <tabbar-item link="/me">
-                    <x-icon slot="icon" type="android-person" size="30"></x-icon>
+                    <img src="./common/PNG/user.png" slot="icon" alt="icon">
                     <span slot="label">我的</span>
                 </tabbar-item>
             </tabbar>
@@ -165,6 +171,10 @@
 
     .weui-bar__item_on .weui-tabbar__label span {
         color: #0870e3;
+    }
+    .weui-tabbar__icon{
+        width: 22px !important;
+        height: 22px !important;
     }
 
     /*固定底部vue-router的样式*/

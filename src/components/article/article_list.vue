@@ -1,5 +1,5 @@
 <template>
-    <div class="about">
+    <div class="article-list">
         <!--v-if="resData" v-for="item in resData"-->
 
         <!--用子路由，盖住父路由页面，返回时刷新滚动条啥的都不用判断了 ：)-->
@@ -8,7 +8,7 @@
         <div class="father-router" v-show="showFather">
 
             <div>
-                <panel :header="'最新文章'" :list="articleList" :type="type"
+                <panel :header="'最新'" :list="articleList" :type="type"
                        @on-click-item="readArticle">
                 </panel>
 
@@ -57,11 +57,17 @@
         },
         beforeMount() {
             log("article_list beforeMount!!!!")
+            // this.showLoading = true
+            // this.showLoadingSymbol = true
             this.getAritcleList()
             // 判断是否是在文章页，因为如果直接输入页面的URL是不会触发路由的改变
             if (this.isInArticle()) {
                 this.showFather = false
             }
+
+            this.getCollectList(this.$store.state.user_id)
+
+
         },
         watch: {
             resData(curVal, oldVal) {
@@ -113,7 +119,10 @@
                         }
                     },
                     error() {
-                        alert("无法获取服务器数据")
+                        _this.$vux.toast.show({
+                            text: "无法获取服务器数据",
+                            type: "warn",
+                        })
                     }
                 })
             },
@@ -136,9 +145,9 @@
 //                            url : "http://yangzq.top/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
 //                            url: "/home",
                             meta: {
-                                source: '来源 - 科技',
+                                source: this.formatSource(resData.data[i].tags),
                                 date: this.formatMsgTime(resData.data[i].dateline * 1000),
-                                other: '其他信息'
+                                other: "" + resData.data[i].author
                             }
                         }
                         arr.push(articleList)
@@ -184,46 +193,82 @@
                 }
                 return timeSpanStr;
             },
+            formatSource(tags) {
+                // 用于列表的标签分割,最多显示3个
+                if (tags === "" || tags === null) {
+                    return ""
+                }
+                let arr = tags.split(",")
+                if (arr.length > 3) {
+                    arr.splice(3, arr.length - 2)
+                }
+                return "<span class=\"tag\">" + arr.join(" ") + "</span>\n" + " &nbsp;•&nbsp; "
+            },
             isInArticle() {
                 let url = window.location.href
                 var regExp = /((read_article)\/(\d+)$)/;
                 return regExp.test(url)
             },
+            getCollectList(user_id,) {
+                let _this = this
+                ajax({
+                    type: "get",
+                    url: "//yangzq.top/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
+                    data: {},
+                    success: function (data) {
+                        let res = JSON.parse(data);
+                        if (res.errno == 0) {
+                            // 在vuex保存收藏列表
+                            _this.$store.commit("setcollectList", res.data)
+                            // 存：localStorage.setItem('weekDay',JSON.stringify(weekArray));
+                            // 取： weekArray = JSON.parse(localStorage.getItem('weekDay'));
+                            localStorage.setItem("collectList", JSON.stringify(res.data))
+                            log("在vuex,localStorage保存收藏列表")
+                        } else if (res.errno == 1) {
+                            _this.$store.commit("setcollectList", "")
+                            localStorage.setItem("collectList", "")
+                            log(res.msg.receiveMsg)
+                        }
+                        else {
+
+                        }
+                    },
+                    error() {
+                        log("getCollectList error")
+                    }
+                })
+            },
+
 
         },
-        computed: {
-//            list() {
-//                let _this = this
-//                let arr = []
-//                if (this.resData !== null) {
-//                    for (let i = 0; i < _this.resData.data.length; i++) {
-//                        let articleList = {
-//                            src: "http://placeholder.qiniudn.com/60x60/3cc51f/ffffff",
-//                            title: _this.resData.data[i].title,
-//                            desc: _this.resData.data[i].description,
-//                            articleId: _this.resData.data[i].id,
-////                            url : "http://yangzq.top/console/get_article.php?pageid=" + _this.resData.data[i].id + "&n=" + Math.random(),
-////                            url: "/home",
-//                        }
-//                        arr.push(articleList)
-//                    }
-//                }
-//                log(arr)
-//                return arr
-//            }
-        },
+        computed: {},
     }
 </script>
 
 <style>
+    .article-list .weui-media-box__title {
+        white-space: normal;
+    }
+
     .get-more-article {
         color: #586C94;
-        margin-left: 15px;
+        margin: 15px;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
     .weui-media-box__info__meta_extra {
-        padding-left: 9em !important;
-        border-left: none !important;
+        /*padding-left: 9em !important;*/
+        /*border-left: none !important;*/
+    }
+
+    .tag {
+        /*background-color: #ececec;*/
+        line-height: 12px;
+        padding: 4px 4px 4px 4px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        text-decoration: none;
+        color: #999;
     }
 </style>

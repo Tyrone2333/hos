@@ -1,18 +1,11 @@
 <template>
     <div class="mavon_editor_test">
 
-        <!--源码显示： <textarea cols="50" rows="8" v-model="editorHtmlValue"></textarea>-->
-
-        <button @click="uploadimg" class="btn-publish">只是一个功能按钮</button>
-
-        <h1>编辑文章</h1>
-
-         <input type="text" v-model="title" name="title" id="title" placeholder="请输入标题"> <br>
-        文章描述:
-        <textarea v-model="description" name="description" id="" cols="50" rows="7"></textarea>
-        <!--<input type="text" v-model="description" id="description"> -->
+        <input type="text" v-model="title" name="title" id="title" placeholder="请输入标题">
+        <br>
         <br>
 
+        <!--<button @click="aTestBtn" class="btn-publish">只是一个功能按钮</button>-->
 
         <div id="editor">
             <mavon-editor ref="mavon-editor" style="height: 80%" v-model="editorValue"
@@ -23,32 +16,45 @@
                           @imgAdd="$imgAdd" @imgDel="$imgDel"></mavon-editor>
         </div>
 
-        <div class="joinTopic ">
-            <transition-group name="list-complete" tag="p">
+        <div class="tag-panel">
+            <div class="joinTopic ">
+                <span class="field">已加入的话题:</span>
+                <transition-group name="list-complete" tag="p">
+                <span v-for="(item,idx) in joinTopicList"
+                      @click="joinClick(item,idx)"
+                      v-bind:key="item"
+                      class="list-complete-item tag">{{item}}</span>
+                </transition-group>
+            </div>
+            <div class="options">
+                <span class="field">待选话题:</span>
 
-        <span v-for="(item,idx) in joinTopicList"
-              @click="joinClick(item,idx)"
-              v-bind:key="item"
-              class="list-complete-item">{{item}}</span>
+                <transition-group name="list-complete-botton" tag="p">
+                <span v-for="(item,idx)  in optionsList "
+                      @click="optionsClick(item,idx)"
+                      v-bind:key="item"
+                      class="list-complete-item tag"
+                >{{item}}</span>
+                </transition-group>
+            </div>
+        </div>
 
-            </transition-group>
-        </div>
-        <hr>
-        <div class="options">
-            <transition-group name="list-complete-botton" tag="p">
-        <span v-for="(item,idx)  in optionsList "
-              @click="optionsClick(item,idx)"
-              v-bind:key="item"
-              class="list-complete-item"
-        >{{item}}</span>
-            </transition-group>
-        </div>
+
+        <group>
+            <datetime title="验证时间"
+                      v-model="minuteListValue"
+                      format="YYYY-MM-DD HH:mm"
+                      :minute-list="['00', '15', '30', '45']"
+                      @on-change="dateTimechange"
+                      :min-year=2018
+                      :max-year=2099
+            ></datetime>
+        </group>
+
 
         <div class="major-publish">
             <button class="btn-publish" @click="uploadArticle">提交文章</button>
         </div>
-        <!--<button v-if="isChild" @click="modifyArticle">提交修改</button>-->
-
 
         <div>
             <popup v-model="showPop" position="bottom" :show-mask="false">
@@ -66,8 +72,7 @@
 
 <script type="text/ecmascript-6">
     import {Loading} from 'vux'
-    import {Popup, Group, Cell, XInput, XButton, XSwitch, Toast, XAddress, ChinaAddressData} from 'vux'
-
+    import {Popup, Group, Cell, XInput, XButton, XSwitch, Toast, Datetime} from 'vux'
     import {mavonEditor} from 'mavon-editor'
     import 'mavon-editor/dist/css/index.css'
     import axios from 'axios'
@@ -89,10 +94,14 @@
                 showToast: false,
                 toastType: "default",
                 toastText: "hello world",
-                banner_img :"", // 文章列表显示的略缩图
+                banner_img: "", // 文章列表显示的略缩图
                 joinTopicList: [],
-                optionsList: ["英语", "环境", "france", "游戏",1, 2, 3, 4, 5, 6, 7, 8, 9],
-
+                optionsList: ["科学", "游戏", "电影", "音乐", "设计", "体育", "时尚", "经济", "政治","军事","编程"],
+                minuteListValue: '2019-01-01 09:00',
+                maxYear: 2099,
+                minYear: 2018,
+                fuckDate: "1546275661",
+                tags: "",
             }
         },
         components: {
@@ -101,16 +110,13 @@
             Popup,
             Group,
             Cell,
-            XSwitch,
+            XSwitch, Datetime,
             Toast,
-            XAddress,
-            XButton, XInput
+            XButton, XInput,
         },
         methods: {
-            uploadimg() {
+            aTestBtn() {
                 let _this = this
-                log(_this.$store)
-                localStorage.setItem("name", "myName")
                 this.$vux.toast.show({
                     showPositionValue: false,
                     text: "localStorage.name: " + localStorage.name,
@@ -138,10 +144,12 @@
                         article: _this.editorHtmlValue,
                         description: _this.description,
                         title: _this.title,
-                        author: _this.$store.state.username,
+                        author: _this.$store.state.nickname,
                         authorId: _this.$store.state.user_id,
                         md: _this.editorMDValue,
-                        banner_img : _this.banner_img,
+                        banner_img: _this.banner_img,
+                        fuck_date: _this.fuckDate,
+                        tags: _this.tags
                     },
                     before: function () {
 //                        console.log("before");
@@ -209,33 +217,40 @@
             },
             contentCheck() {
                 let _this = this
+                this.tags = this.joinTopicList.join(",")
                 if (isEmptyStr(_this.title)) {
                     _this.toastWarn("标题不能为空")
                     return true
                 }
-                // if (isEmptyStr(_this.description)) {
-                //     _this.toastWarn("描述不可为空")
-                //     return true
-                // }
                 if (isEmptyStr(_this.editorMDValue)) {
                     _this.toastWarn("内容不可为空")
                     return true
                 }
+                if (this.tags === "") {
+                    _this.toastWarn("至少加入一个话题")
+                    return true
+                }
             },
             joinClick: function (item, idx) {
-
                 this.joinTopicList.splice(idx, 1)
                 this.optionsList.splice(this.randomIndex(this.optionsList), 0, item)
-
-                // this.optionsList.push(item)
                 console.log(item)
-            }, optionsClick: function (item, idx) {
+            },
+            optionsClick: function (item, idx) {
                 this.optionsList.splice(idx, 1)
                 this.joinTopicList.push(item)
                 console.log(item)
             },
             randomIndex: function (items) {
                 return Math.floor(Math.random() * items.length)
+            },
+            dateTimechange: function (value) {
+                console.log('change', value)
+                let dates = value.split(" ")
+                let date = dates[0].split("-")
+                let time = dates[1].split(":")
+                let humanTime = new Date(Date.UTC(date[0], date[1] - 1, date[2], time[0] - 8, time[1], 0))
+                this.fuckDate = humanTime.getTime() / 1000
             },
 
         },
@@ -265,19 +280,34 @@
         text-align: center;
         padding: 20px;
     }
-    #title{
-        width: 100%;
-        height: 26px;
+
+    #title {
+        width: 98%;
+        border: 0;
+        outline: 0;
+        -webkit-appearance: none;
+        background-color: transparent;
+        color: inherit;
+        height: 1.41176471em;
+        margin: 3px 2px;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 1.5;
+        /*border-top: 1px solid #D9D9D9;*/
+        border-bottom: 1px solid #D9D9D9;
+        &:focus {
+            border-bottom: 2px solid #0f88eb;
+        }
     }
 
     .major-publish {
-        &:after{
+        &:after {
             content: " ";
             display: block;
             visibility: hidden;
             clear: both;
         }
-        .btn-publish{
+        .btn-publish {
             float: right;
             text-align: center;
             padding: 6px 14px;
@@ -295,21 +325,39 @@
         }
     }
 
+    .tag-panel {
+        /*.options */
+        .tag {
+            display: inline-block;
+            white-space: nowrap;
+            margin: 6px;
+            padding: 3px 13px;
+            line-height: 1.62;
+            background-color: #f5f5f5;
+            font-size: 13px;
+            letter-spacing: normal;
+            word-spacing: normal;
+            vertical-align: top;
+            color: #37a;
+            border: 1px solid #e5e5e5;
+        }
+
+        /*.joinTopic span {*/
+        /*padding: 5px 8px;*/
+        /*background-color: #0f88eb;*/
+        /*border-radius: 2px;*/
+        /*margin: 5px;*/
+        /*}*/
+
+    }
+
+    .field {
+        background-color: #fff !important;
+        color: #757575;
+        padding-right: .4em;
+    }
+
     /*添加标签的动画css*/
-    .options span {
-        padding: 5px 8px;
-        background-color: cadetblue;
-        border-radius: 2px;
-
-        margin: 5px;
-    }
-    .joinTopic span {
-        padding: 5px 8px;
-        background-color: #0f88eb;
-        border-radius: 2px;
-        margin: 5px;
-    }
-
     .list-complete-item {
         transition: all 1s;
         display: inline-block;
@@ -317,8 +365,7 @@
     }
 
     .list-complete-enter, .list-complete-leave-to
-        /* .list-complete-leave-active for below version 2.1.8 */
-    {
+        /* .list-complete-leave-active for below version 2.1.8 */ {
         opacity: 0;
         transform: translateY(10px);
     }
@@ -334,8 +381,7 @@
     }
 
     .list-complete-botton-enter, .list-complete-botton-leave-to
-        /* .list-complete-leave-active for below version 2.1.8 */
-    {
+        /* .list-complete-leave-active for below version 2.1.8 */ {
         opacity: 0;
         transform: translateY(-10px);
     }

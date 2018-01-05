@@ -1,17 +1,23 @@
 <template>
-    <div>
+    <div class="me">
 
-        <div class="avatar">
-            <router-link to="/login">
-                <!--<img class="logo" src="../../assets/vux_logo.png">-->
-                <img class="logo" :src="avatar">
-            </router-link>
+        <div class="user-info">
+            <div class="avatar">
+                <router-link to="/login">
+                    <!--<img class="logo" src="../../assets/vux_logo.png">-->
+                    <img :src="avatar">
+                </router-link>
+            </div>
+            <div class="text">
+                <div class="nickname">
+                    {{nickname}} <br>
+                </div>
+                <div class="home-page-edit">User : {{username}}</div>
+            </div>
+
         </div>
-        <group title="应用">
-            <cell title="我的收藏" value="我的收藏" is-link></cell>
-            <cell title="设置" value="cool" is-link>
-                <span class="cellIcon icon-cog" slot="icon"></span>
-            </cell>
+
+        <group title="">
             <cell title="管理控制台"
                   is-link
                   :border-intent="false"
@@ -22,27 +28,37 @@
                     <del>发布文章 使用wang_editor</del>
                 </cell-box>
 
-                <cell-box is-link link="/mavon_editor_test">发表一篇文章</cell-box>
-                <cell-box is-link link="/article_modify">修改文章</cell-box>
+                <cell-box is-link link="/mavon_editor_test">写断言</cell-box>
+                <cell-box is-link link="/article_modify">修改断言</cell-box>
             </div>
+
+            <cell title="我的收藏" value="" is-link link="/collect">
+                <span class="cellIcon small-icon icon-bookmark" slot="icon"></span>
+            </cell>
+            <cell title="设置" value="" is-link>
+                <span class="cellIcon small-icon icon-cog" slot="icon"></span>
+            </cell>
+
         </group>
         <group title="开发者">
-            欢迎,{{username}} <br>
-            id: {{user_id}}
-            <cell title="版本" @click.native="clickVision" inline-desc="v1.0">
+
+            <cell title="版本" @click.native="clickVision" inline-desc="v1.1.3">
                 <x-icon class="cellIcon" slot="icon" type="ios-information" size="30"></x-icon>
             </cell>
-            <cell title="反馈" inline-desc="搞个大新闻,再把我批判一番" is-link>
-                <span class="cellIcon icon-chrome" slot="icon"></span>
+
+            <cell title="反馈" inline-desc="搞个大新闻,再把我批判一番" is-link link="/feedback">
+                <span class="cellIcon icon-question-circle-o" slot="icon"></span>
             </cell>
             <cell title="提高姿势水平" link="https://zh.wikiquote.org/wiki/%E6%B1%9F%E6%B3%BD%E6%B0%91#"></cell>
+
+            <x-button @click.native="signOut" type="warn">退出账户</x-button>
 
         </group>
     </div>
 </template>
 
 <script>
-    import {Group, Cell, CellBox} from 'vux'
+    import {Group, Cell, CellBox, XButton} from 'vux'
     import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
     import {mapMutations} from 'vuex'
@@ -50,7 +66,7 @@
     export default {
         components: {
             Group,
-            Cell, CellBox
+            Cell, CellBox, XButton
         },
         data() {
             return {
@@ -65,13 +81,20 @@
             }
         },
         methods: {
-            toLogin() {
-                alert(11111111)
-            },
-
             clickVision() {
-                console.log(this.$store.state)
+                console.log("%c" + "  当前版本 v 1.13" + " %c",
+                    "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff", "background:transparent")
             },
+            signOut() {
+                log(localStorage)
+                localStorage.clear()
+                log(localStorage)
+
+                this.$store.commit("_clearToken")
+                location.reload()
+                log(this.$store.state)
+            }
+
         },
         computed: {
             ...mapState({
@@ -88,8 +111,8 @@
                 countPlusLocalState(state) {
                     return state.count + this.localCount
                 },
-                user_id (state) {
-                    if(state.user_id === ""){
+                user_id(state) {
+                    if (state.user_id === "") {
                         this.$store.commit('_flashUser')
                     }
                     return state.user_id
@@ -98,6 +121,7 @@
             }),
             ...mapState([
                 "username",
+                "nickname",
             ]),
             ...mapGetters([
                 //映射 this.doneTodosCount 为 store.getters.doneTodosCount
@@ -112,18 +136,38 @@
 </script>
 
 <style lang="less">
-    .avatar {
-        padding-top: 10px;
-        text-align: center;
-        img {
-            border-radius: 5px;
+    .me {
+        .small-icon {
+            /*height: 16px;*/
+            /*width: 16px;*/
+            font-size: 16px;
         }
-
     }
 
-    .logo {
-        width: 100px;
-        height: 100px
+    .user-info {
+        display: flex;
+        padding: 5px 15px;
+        .text {
+            flex-direction: column;
+            margin-left: 20px;
+            color: #4d555d;
+            .nickname {
+                font-size: 1.2em;
+            }
+            .home-page-edit {
+                font-size: 0.9em;
+                color: #ccc;
+            }
+        }
+        .avatar {
+            /*padding-top: 10px;*/
+            text-align: center;
+            img {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+            }
+        }
     }
 
     .slide {
@@ -141,6 +185,9 @@
 
     .cellIcon {
         margin-right: 20px;
+        width: 30px;
+        height: 30px;
+        font-size: 30px;
     }
 
     .icon-chrome {

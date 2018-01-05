@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import { store } from '../store/store.js'
 
-
 import home from '../components/home/home.vue'
 import news from '../components/news/news.vue'
 import header from '../components/header/header.vue'
@@ -13,10 +12,14 @@ import article_modify from '../components/console/article_modify.vue'
 import article from '../components/article/article_list.vue'
 import assert from '../components/article/assert.vue'
 import read_article from '../components/article/read_article.vue'
-// 引入后手机只有chrome能访问，其他都是空白
+import collect from '../components/collect/collect.vue'
+import feedback from '../components/feedback/feedback.vue'
+
 import mavon_editor_test from '../components/console/mavon_editor_test.vue'
+import about from '../components/me/about.vue'
 
 Vue.use(Router)
+
 
 const router = new Router({
     // mode: 'history',
@@ -25,7 +28,7 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            component: home
+            component: article
         },
         // {
         //     path: '/Hello',
@@ -86,11 +89,6 @@ const router = new Router({
             name: 'article_edit',
             component: article_edit
         },
-        // {
-        //     path: '/read_article/:articleId',
-        //     name: 'read_article',
-        //     component: read_article
-        // },
         {
             path: '/mavon_editor_test',
             name: 'mavon_editor_test',
@@ -102,6 +100,29 @@ const router = new Router({
             path: '/article_modify',
             name: 'article_modify',
             component: article_modify
+        }, {
+            path: '/about',
+            name: 'about',
+            component: about
+        }, {
+            path: '/feedback',
+            name: 'feedback',
+            component: feedback
+        },
+        {
+            path: '/collect',
+            name: 'collect',
+            component: collect,
+            children: [
+                {
+                    path: 'read_article/:articleId',
+                    name: 'read_article',
+                    component: read_article
+                },
+            ],
+            meta: {
+                requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+            },
         },
 
     ]
@@ -113,10 +134,12 @@ if (window.localStorage.getItem('token')) {
 }
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
-        if (store.state.token) {  // 通过vuex state获取当前的token是否存在
+        // 通过vuex state获取当前的token是否存在,由于时间所限没有验证token,以后添加
+        if (store.state.token) {
             next();
         }
         else {
+
             next({
                 path: '/login',
                 query: {redirect: to.path}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
