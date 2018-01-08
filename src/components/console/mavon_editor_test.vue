@@ -96,7 +96,7 @@
                 toastText: "hello world",
                 banner_img: "", // 文章列表显示的略缩图
                 joinTopicList: [],
-                optionsList: ["科学", "游戏", "电影", "音乐", "设计", "体育", "时尚", "经济", "政治","军事","编程"],
+                optionsList: ["科学", "游戏", "电影", "音乐", "设计", "体育", "时尚", "经济", "政治", "军事", "编程"],
                 minuteListValue: '2019-01-01 09:00',
                 maxYear: 2099,
                 minYear: 2018,

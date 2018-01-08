@@ -28,7 +28,8 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            component: article
+            // component: article,
+            redirect: '/article'
         },
         // {
         //     path: '/Hello',
@@ -139,7 +140,6 @@ router.beforeEach((to, from, next) => {
             next();
         }
         else {
-
             next({
                 path: '/login',
                 query: {redirect: to.path}  // 将跳转的路由path作为参数，登录成功后跳转到该路由

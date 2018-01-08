@@ -1,7 +1,5 @@
 <template>
     <div class="feedback">
-
-
         <group title="基本信息">
             <x-input title="姓名" name="name" v-model="name" placeholder="请输入姓名" is-type="china-name"></x-input>
 
@@ -10,7 +8,6 @@
                      is-type="china-mobile"></x-input>
         </group>
 
-
         <group title="性别 ">
             <x-switch :title="  value1 ? '男' : '女' " v-model="value1"></x-switch>
         </group>
@@ -18,8 +15,6 @@
         <group title="">
             <x-number :name="('Quantity')" title="你的年龄" v-model="age"></x-number>
         </group>
-
-
 
         <group label-width="5em" label-align="left">
             <x-address :title="title2" v-model="value2" raw-value :list="addressData"

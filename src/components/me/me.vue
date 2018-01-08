@@ -24,12 +24,13 @@
                   :arrow-direction="showContent ? 'up' : 'down'"
                   @click.native="showContent = !showContent"></cell>
             <div class="slide" :class="showContent?'animate':''">
-                <cell-box is-link link="/article_edit">
-                    <del>发布文章 使用wang_editor</del>
-                </cell-box>
+                <!--<cell-box is-link link="/article_edit">-->
+                    <!--<del>发布文章 使用wang_editor</del>-->
+                <!--</cell-box>-->
 
                 <cell-box is-link link="/mavon_editor_test">写断言</cell-box>
-                <cell-box is-link link="/article_modify">修改断言</cell-box>
+                <!--<cell-box is-link link="/article_modify"><del>修改断言</del></cell-box>-->
+                <cell-box is-link ><del>修改断言</del></cell-box>
             </div>
 
             <cell title="我的收藏" value="" is-link link="/collect">
@@ -49,7 +50,7 @@
             <cell title="反馈" inline-desc="搞个大新闻,再把我批判一番" is-link link="/feedback">
                 <span class="cellIcon icon-question-circle-o" slot="icon"></span>
             </cell>
-            <cell title="提高姿势水平" link="https://zh.wikiquote.org/wiki/%E6%B1%9F%E6%B3%BD%E6%B0%91#"></cell>
+            <cell title="假的彩蛋" link="http://t.cn/RHrvjVI"></cell>
 
             <x-button @click.native="signOut" type="warn">退出账户</x-button>
 
@@ -86,10 +87,7 @@
                     "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff", "background:transparent")
             },
             signOut() {
-                log(localStorage)
                 localStorage.clear()
-                log(localStorage)
-
                 this.$store.commit("_clearToken")
                 location.reload()
                 log(this.$store.state)

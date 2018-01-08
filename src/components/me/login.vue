@@ -19,7 +19,7 @@
         <!--<divider>我是有底线的</divider>-->
 
         <div class="register" v-if="!inLogin">
-            <group title="使用icon代替title">
+            <group title="填写基本信息">
                 <form @submit.prevent="registerBtnClick">
 
                     <x-input title="昵 称" name="nickname" v-model="nickname" placeholder="昵称"></x-input>

@@ -1,6 +1,5 @@
 <template>
     <div class="article-list">
-        <!--v-if="resData" v-for="item in resData"-->
 
         <!--用子路由，盖住父路由页面，返回时刷新滚动条啥的都不用判断了 ：)-->
         <router-view></router-view>
@@ -8,11 +7,10 @@
         <div class="father-router" v-show="showFather">
 
             <div>
-                <panel :header="'最新'" :list="articleList" :type="type"
-                       @on-click-item="readArticle">
+                <panel :header="'这不是彩蛋'" :list="articleList" :type="type"
+                       @on-click-item="readArticle"
+                       @on-click-header="egg">
                 </panel>
-
-                <!--<panel :header="item.title" :footer="item.description" :list="list" :type="type" @on-img-error="onImgError"></panel>-->
             </div>
             <div id="get-more-article" class="get-more-article" @click="getMoreArticle">
                 查看更多
@@ -237,6 +235,9 @@
                         log("getCollectList error")
                     }
                 })
+            },
+            egg() {
+                window.location.href = "http://t.cn/RHrvjVI";
             },
 
 

@@ -15,7 +15,7 @@
             <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
         </div>
 
-        <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="55px">
+        <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="45px">
 
 
             <!--切换标签-->

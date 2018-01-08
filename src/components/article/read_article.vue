@@ -48,10 +48,7 @@
                     <reply :needReply="needReply"></reply>
                 </div>
             </div>
-
-
         </div>
-
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -74,7 +71,7 @@
                     content: "应该可以从另外线程 close，block 的这个可能会读到 EOF 或这异常（可能语言相关）。",
                     time: "4小时前",
                 }, {
-                    avatar: "https://static.huxiucdn.com/m/image/guide-logo.png?v=201706161525",
+                    avatar: "http://img4.imgtn.bdimg.com/it/u=3965627844,1925735618&fm=11&gp=0.jpg",
                     nickname: "耳机",
                     content: "既不懂比特币也不懂朝鲜。且不说比特币的独特加密性，朝鲜得到的比特币对于本国经济根本杯水车薪。另外，作者说的外汇来源也不对，明面上是资源输出、和经济特区，暗地里是毒品、走私、军火。不过作者的新闻综合能力挺好，建议再去看看外媒，会有新的收获。\n",
                     time: "7小时前",
@@ -284,7 +281,7 @@
     @import "article_markdown.css";
 
     .read-article {
-        .count-down{
+        .count-down {
             margin: 3px auto 3px 0;
             font-size: 1em;
             color: #606060;
@@ -345,6 +342,7 @@
         #tag {
             background-color: #ececec;
             margin-left: 10px;
+            margin-top: 5px;
             padding: 10px;
             border-radius: 3px;
         }
