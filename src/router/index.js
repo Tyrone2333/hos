@@ -9,7 +9,7 @@ import me from '../components/me/me.vue'
 import login from '../components/me/login.vue'
 import article_edit from '../components/console/article_edit.vue'
 import article_modify from '../components/console/article_modify.vue'
-import article from '../components/article/article_list.vue'
+import article from '@/components/article/article_list.vue'
 import assert from '../components/article/assert.vue'
 import read_article from '../components/article/read_article.vue'
 import collect from '../components/collect/collect.vue'
@@ -60,7 +60,7 @@ const router = new Router({
             children: [
                 {
                     path: 'read_article/:articleId',
-                    name: 'read_article',
+                    name: 'readInAssert',
                     component: read_article
                 },
             ]
@@ -117,7 +117,7 @@ const router = new Router({
             children: [
                 {
                     path: 'read_article/:articleId',
-                    name: 'read_article',
+                    name: 'readInCollect',
                     component: read_article
                 },
             ],

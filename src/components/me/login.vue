@@ -166,7 +166,7 @@
                  * AjaxPlugin 在UC和夸克都无法提交表单
                  *
                  * */
-//                AjaxPlugin.$http.post("http://yangzq.top/phpstorm_test/phpstorm_test/hos_api.php", params)
+//                AjaxPlugin.$http.post(process.env.BASE_API + "/phpstorm_test/phpstorm_test/hos_api.php", params)
 //                    .then((response) => {
 //                    _this.resData = response.data
 //                        console.log(this.resData)
@@ -182,7 +182,7 @@
 //                ]
 //                var params = new URLSearchParams(fromData);
 //                var _this = this
-//                this.axios.post('http://yangzq.top/phpstorm_test/phpstorm_test/hos_api.php', params)
+//                this.axios.post(process.env.BASE_API + "/phpstorm_test/phpstorm_test/hos_api.php', params)
 //                    .then(function (response) {
 //                        _this.resData = response.data
 //                        console.log(_this.resData);
@@ -207,7 +207,7 @@
 
                 ajax({
                     type: "post",
-                    url: "//yangzq.top/console/hos_login.php", //添加自己的接口链接
+                    url: process.env.BASE_API + "/console/hos_login.php", //添加自己的接口链接
                     timeOut: 5000,
                     data: {
                         "username": username,
@@ -277,7 +277,7 @@
                 }
                 ajax({
                     type: "post",
-                    url: "//yangzq.top/console/hos_register.php", //添加自己的接口链接
+                    url: process.env.BASE_API + "/console/hos_register.php", //添加自己的接口链接
                     timeOut: 5000,
                     data: {
                         "username": username,
@@ -332,7 +332,7 @@
                 let _this = this
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);

@@ -138,7 +138,7 @@
                 }
                 ajax({
                     type: "post",
-                    url: "//yangzq.top/console/publish_article.php?n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/publish_article.php?n=" + Math.random(),
                     timeOut: 5000,
                     data: {
                         article: _this.editorHtmlValue,
@@ -187,7 +187,7 @@
                 formData.append("author", _this.author);
 
                 axios({
-                    url: "http://yangzq.top/console/upload_file_test.php?n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
                     method: 'post',
                     data: formData,
                     headers: {'Content-Type': 'multipart/form-data'},

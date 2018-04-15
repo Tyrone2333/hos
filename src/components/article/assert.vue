@@ -52,7 +52,7 @@
                 type: '1',
                 footer: {           // panel的footer Props
                     title: 'more',
-                    url: "http://yangzq.top/console/show_list_test.php?n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/show_list_test.php?n=" + Math.random(),
                 },
                 page: 1, // 文章的页数
                 articleId: 0,
@@ -112,7 +112,7 @@
                 let _this = this
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/show_list_test.php?page=" + _this.page + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/show_list_test.php?page=" + _this.page + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);
@@ -148,7 +148,7 @@
                             desc: resData.data[i].description,
                             articleId: resData.data[i].id,
                             dateline: resData.data[i].dateline,
-//                            url : "http://yangzq.top/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
+//                            url : process.env.BASE_API + "/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
 //                            url: "/home",
                         }
                         arr.push(articleList)
@@ -174,7 +174,7 @@
 //                            title: _this.resData.data[i].title,
 //                            desc: _this.resData.data[i].description,
 //                            articleId: _this.resData.data[i].id,
-////                            url : "http://yangzq.top/console/get_article.php?pageid=" + _this.resData.data[i].id + "&n=" + Math.random(),
+////                            url : process.env.BASE_API + "/console/get_article.php?pageid=" + _this.resData.data[i].id + "&n=" + Math.random(),
 ////                            url: "/home",
 //                        }
 //                        arr.push(articleList)

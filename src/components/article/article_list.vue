@@ -43,7 +43,7 @@
                 type: '5',
                 footer: {           // panel的footer Props
                     title: 'more',
-                    url: "http://yangzq.top/console/show_list_test.php?n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/show_list_test.php?n=" + Math.random(),
                 },
                 page: 1, // 文章的页数
                 articleId: 0,
@@ -55,6 +55,8 @@
         },
         beforeMount() {
             log("article_list beforeMount!!!!")
+            log( process.env)
+
             // this.showLoading = true
             // this.showLoadingSymbol = true
             this.getAritcleList()
@@ -84,7 +86,7 @@
                 }
             },
             $route(to, from) {
-                if (to.name == "article" && from.name == "read_article") {
+                if (to.name === "article" && from.name === "read_article") {
                     this.showFather = true
                 }
             },
@@ -100,7 +102,8 @@
                 let _this = this
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/article_list.php?page=" + _this.page + "&n=" + Math.random(),
+                    // url: process.env.BASE_API + process.env.BASE_API + "/console/article_list.php?page=" + _this.page + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/article_list.php?page=" + _this.page + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);
@@ -140,7 +143,7 @@
                             title: resData.data[i].title,
                             // desc: resData.data[i].description,
                             articleId: resData.data[i].id,
-//                            url : "http://yangzq.top/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
+//                            url : process.env.BASE_API + "/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
 //                            url: "/home",
                             meta: {
                                 source: this.formatSource(resData.data[i].tags),
@@ -211,7 +214,7 @@
                 let _this = this
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);

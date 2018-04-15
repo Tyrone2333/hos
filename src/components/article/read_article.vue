@@ -101,9 +101,11 @@
 //                log("articleId: " + _this.articleId)
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
+                        log( process.env)
+
                         let res = JSON.parse(data)
                         _this.resData = res.data[0]
                         log(_this.resData)
@@ -136,7 +138,7 @@
                 let _this = this
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/hos_collect.php?" + "action=" + "commit" + "&article_id=" + this.articleId + "&user_id=" + _this.$store.state.user_id + "&collect=" + collect + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "commit" + "&article_id=" + this.articleId + "&user_id=" + _this.$store.state.user_id + "&collect=" + collect + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data)

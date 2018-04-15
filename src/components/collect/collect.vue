@@ -41,7 +41,7 @@
                 let _this = this
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);
@@ -73,7 +73,7 @@
                 let _this = this
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/article_list.php?page=" + _this.page + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/article_list.php?page=" + _this.page + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);
@@ -110,7 +110,7 @@
                             title: resData.data[i].title,
                             // desc: resData.data[i].description,
                             articleId: resData.data[i].id,
-//                            url : "http://yangzq.top/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
+//                            url : process.env.BASE_API + "/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
 //                            url: "/home",
                             meta: {
                                 source: this.formatSource(resData.data[i].tags),

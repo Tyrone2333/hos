@@ -83,7 +83,7 @@
 
                 ajax({
                     type: "post",
-                    url: "//yangzq.top/console/modify_article.php?id=" + _this.articleId + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/modify_article.php?id=" + _this.articleId + "&n=" + Math.random(),
                     timeOut: 5000,
                     data: {
                         id: _this.articleId,
@@ -128,7 +128,7 @@
                 formData.append("author", _this.author);
 
                 axios({
-                    url: "http://yangzq.top/console/upload_file_test.php?n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
                     method: 'post',
                     data: formData,
                     headers: {'Content-Type': 'multipart/form-data'},
@@ -158,7 +158,7 @@
                 let _this = this
                 ajax({
                     type: "get",
-                    url: "//yangzq.top/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
+                    url: process.env.BASE_API + "/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
                         var res = JSON.parse(data)
