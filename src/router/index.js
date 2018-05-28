@@ -1,22 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { store } from '../store/store.js'
+import {store} from '@/store/store.js'
 
-import home from '../components/home/home.vue'
-import news from '../components/news/news.vue'
-import header from '../components/header/header.vue'
-import me from '../components/me/me.vue'
-import login from '../components/me/login.vue'
-import article_edit from '../components/console/article_edit.vue'
-import article_modify from '../components/console/article_modify.vue'
+import home from '@/components/home/home.vue'
+import news from '@/components/news/news.vue'
+import header from '@/components/header/header.vue'
+import me from '@/components/me/me.vue'
+import login from '@/components/me/login.vue'
+import article_edit from '@/components/console/article_edit.vue'
+import article_modify from '@/components/console/article_modify.vue'
 import article from '@/components/article/article_list.vue'
-import assert from '../components/article/assert.vue'
-import read_article from '../components/article/read_article.vue'
-import collect from '../components/collect/collect.vue'
-import feedback from '../components/feedback/feedback.vue'
+import assert from '@/components/article/assert.vue'
+import read_article from '@/components/article/read_article.vue'
+import collect from '@/components/collect/collect.vue'
+import feedback from '@/components/feedback/feedback.vue'
+import test from "@/components/test.vue"
 
-import mavon_editor_test from '../components/console/mavon_editor_test.vue'
-import about from '../components/me/about.vue'
+import mavon_editor_test from '@/components/console/mavon_editor_test.vue'
+import about from '@/components/me/about.vue'
 
 Vue.use(Router)
 
@@ -105,7 +106,8 @@ const router = new Router({
             path: '/about',
             name: 'about',
             component: about
-        }, {
+        },
+        {
             path: '/feedback',
             name: 'feedback',
             component: feedback
@@ -114,16 +116,21 @@ const router = new Router({
             path: '/collect',
             name: 'collect',
             component: collect,
-            children: [
-                {
-                    path: 'read_article/:articleId',
-                    name: 'readInCollect',
-                    component: read_article
-                },
-            ],
+            // children: [
+            //     {
+            //         path: 'read_article/:articleId',
+            //         name: 'readInCollect',
+            //         component: read_article
+            //     },
+            // ],
             meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             },
+        },
+        {
+            path: '/test',
+            name: 'test',
+            component: test,
         },
 
     ]

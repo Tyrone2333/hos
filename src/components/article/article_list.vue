@@ -107,10 +107,10 @@
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);
-                        if (res.errno == 0) {
+                        if (res.errno === 0) {
                             _this.resData = res
                             _this.page++
-                        } else if (res.errno == 2) {
+                        } else if (res.errno === 2) {
                             let moreBtn = document.getElementById("get-more-article")
 
                             moreBtn.style.display = "none"
@@ -187,7 +187,7 @@
                 else if (1000 * 60 * 60 * 24 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24 * 15) {
                     timeSpanStr = Math.round(milliseconds / (1000 * 60 * 60 * 24)) + '天前';
                 }
-                else if (milliseconds > 1000 * 60 * 60 * 24 * 15 && year == now.getFullYear()) {
+                else if (milliseconds > 1000 * 60 * 60 * 24 * 15 && year === now.getFullYear()) {
                     timeSpanStr = month + '-' + day + ' ' + hour + ':' + minute;
                 } else {
                     timeSpanStr = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
@@ -218,14 +218,14 @@
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);
-                        if (res.errno == 0) {
+                        if (res.errno === 0) {
                             // 在vuex保存收藏列表
                             _this.$store.commit("setcollectList", res.data)
                             // 存：localStorage.setItem('weekDay',JSON.stringify(weekArray));
                             // 取： weekArray = JSON.parse(localStorage.getItem('weekDay'));
                             localStorage.setItem("collectList", JSON.stringify(res.data))
                             log("在vuex,localStorage保存收藏列表")
-                        } else if (res.errno == 1) {
+                        } else if (res.errno === 1) {
                             _this.$store.commit("setcollectList", "")
                             localStorage.setItem("collectList", "")
                             log(res.msg.receiveMsg)

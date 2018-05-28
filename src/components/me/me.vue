@@ -25,17 +25,28 @@
                   @click.native="showContent = !showContent"></cell>
             <div class="slide" :class="showContent?'animate':''">
                 <!--<cell-box is-link link="/article_edit">-->
-                    <!--<del>发布文章 使用wang_editor</del>-->
+                <!--<del>发布文章 使用wang_editor</del>-->
                 <!--</cell-box>-->
 
                 <cell-box is-link link="/mavon_editor_test">写断言</cell-box>
                 <!--<cell-box is-link link="/article_modify"><del>修改断言</del></cell-box>-->
-                <cell-box is-link ><del>修改断言</del></cell-box>
+                <cell-box is-link>
+                    <del>修改断言</del>
+                </cell-box>
             </div>
 
             <cell title="我的收藏" value="" is-link link="/collect">
                 <span class="cellIcon small-icon icon-bookmark" slot="icon"></span>
             </cell>
+            <cell title="我的回复" value="" is-link link="/collect">
+                <span class="cellIcon small-icon icon-notifications" slot="icon"></span>
+                <span  >
+                    <span class="vertical-middle">新提醒</span>
+                    <badge text="16"></badge>
+                </span>
+
+            </cell>
+
             <cell title="设置" value="" is-link>
                 <span class="cellIcon small-icon icon-cog" slot="icon"></span>
             </cell>
@@ -50,7 +61,6 @@
             <cell title="反馈" inline-desc="搞个大新闻,再把我批判一番" is-link link="/feedback">
                 <span class="cellIcon icon-question-circle-o" slot="icon"></span>
             </cell>
-            <cell title="假的彩蛋" link="http://t.cn/RHrvjVI"></cell>
 
             <x-button @click.native="signOut" type="warn">退出账户</x-button>
 
@@ -59,15 +69,14 @@
 </template>
 
 <script>
-    import {Group, Cell, CellBox, XButton} from 'vux'
+    import {Group, Cell, CellBox, XButton, Badge} from 'vux'
     import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
     import {mapMutations} from 'vuex'
 
     export default {
         components: {
-            Group,
-            Cell, CellBox, XButton
+            Group, Cell, CellBox, XButton, Badge
         },
         data() {
             return {
@@ -78,7 +87,7 @@
                 msg: 'Hello World!',
                 showContent: true,
                 localCount: "localCount",
-                avatar: localStorage.avatar ? localStorage.avatar : "http://placeholder.qiniudn.com/100x100/3c5e91/3c5e91",
+                avatar: localStorage.avatar ? localStorage.avatar : "https://pic4.zhimg.com/354a338c01699ca3bf7556bcd8e4e9ea_xl.jpg",
             }
         },
         methods: {

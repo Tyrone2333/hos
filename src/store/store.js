@@ -30,7 +30,7 @@ export const store = new Vuex.Store({
         },
         doneTodosCount: (state, getters) => {
             return getters.doneTodos.length
-        }
+        },
     },
     mutations: {
         //写法与getters相类似

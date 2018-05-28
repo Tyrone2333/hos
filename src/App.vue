@@ -17,7 +17,6 @@
 
         <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="45px">
 
-
             <!--切换标签-->
             <router-view></router-view>
 
@@ -38,7 +37,7 @@
 
                 <tabbar-item link="/mavon_editor_test">
                     <img src="./common/PNG/quill.png" slot="icon" alt="icon">
-                    <span slot="label">写断言</span>
+                    <span slot="label">写动态</span>
                 </tabbar-item>
 
                 <tabbar-item link="/collect">
@@ -51,8 +50,6 @@
                     <span slot="label">我的</span>
                 </tabbar-item>
             </tabbar>
-
-
         </view-box>
 
     </div>
@@ -92,7 +89,7 @@
                 showModeValue: 'push',
                 showPlacement: 'left',
                 showPlacementValue: 'left',
-                title: "打脸网",
+                title: process.env.APP_NAME,
                 states: {
                     scrollTop: 0,
                 },
@@ -122,18 +119,21 @@
             }
         },
 
+        mounted(){
+
+        },
         watch: {
             $route(to, from) {
                 let _this = this
                 let scrBody = this.$refs.viewBox.getScrollBody()
                 let scrTop = this.$refs.viewBox.getScrollTop()
 //                从列表到具体文章时保存之前的滚动距离
-                if (to.name == "read_article" && from.name == "article") {
+                if (to.name === "read_article" && from.name === "article") {
                     console.warn("从列表到具体文章" + scrTop)
                     this.states.scrollTop = scrTop
                 }
 //                从文章退回列表跳转到之前的位置
-                if (to.name == "article" && from.name == "read_article") {
+                if (to.name === "article" && from.name === "read_article") {
                     console.warn("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
                     setTimeout(() => {
                         this.scrollToBefore(this.states.scrollTop)

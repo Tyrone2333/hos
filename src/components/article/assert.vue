@@ -96,7 +96,7 @@
 
             },
             $route(to,from) {
-                if( to.name == "article" && from.name == "read_article"){
+                if( to.name === "article" && from.name === "read_article"){
                     this.showFather = true
                 }
             },
@@ -116,10 +116,10 @@
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data);
-                        if (res.errno == 0) {
+                        if (res.errno === 0) {
                             _this.resData = res
                             _this.page++
-                        } else if (res.errno == 2) {
+                        } else if (res.errno === 2) {
                             let moreBtn = document.getElementById("get-more-article")
 
                             moreBtn.style.display = "none"

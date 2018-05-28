@@ -129,7 +129,6 @@
             pwdTypeChange() {
                 this.pwdType = this.pwdType === 'password' ? 'text' : 'password'
                 this.pwdClass = this.pwdType === 'password' ? 'cell-icon icon-eye-hidden' : 'cell-icon icon-eye'
-
             },
 
             checkName(val) {
@@ -337,14 +336,14 @@
                     success: function (data) {
                         let res = JSON.parse(data);
                         log(res)
-                        if (res.errno == 0) {
+                        if (res.errno === 0) {
                             // 在vuex保存收藏列表
                             _this.$store.commit("setcollectList", res.data)
 
                             // 存：localStorage.setItem('weekDay',JSON.stringify(weekArray));
                             // 取： weekArray = JSON.parse(localStorage.getItem('weekDay'));
                             localStorage.setItem("setcollectList", JSON.stringify(res.data))
-                        } else if (res.errno == 1) {
+                        } else if (res.errno === 1) {
                             log(res.msg.receiveMsg)
                         }
                         else {

@@ -26,9 +26,11 @@
             </div>
         </div>
 
-        <div class="count-down">
-            距离打脸还有 : {{countDownTime}}
-        </div>
+        <!--这是以前的打脸网！！-->
+        <!--<div class="count-down">-->
+        <!--距离打脸还有 : {{countDownTime}}-->
+        <!--</div>-->
+
         <div class="article-page-split-line"></div>
 
         <div class="comments">
@@ -73,7 +75,9 @@
                 }, {
                     avatar: "http://img4.imgtn.bdimg.com/it/u=3965627844,1925735618&fm=11&gp=0.jpg",
                     nickname: "耳机",
-                    content: "既不懂比特币也不懂朝鲜。且不说比特币的独特加密性，朝鲜得到的比特币对于本国经济根本杯水车薪。另外，作者说的外汇来源也不对，明面上是资源输出、和经济特区，暗地里是毒品、走私、军火。不过作者的新闻综合能力挺好，建议再去看看外媒，会有新的收获。\n",
+                    content: `首先，感觉没人会喜欢工作的时候一直说话，特别是现在这个动不动就要工作10个小时以上的时代；其次，我用鼠标只要动个手腕，用他的工作台我要手舞足蹈\n···最后···工作台1w，还一定要配备他的手机···<br>那么我如果买了工作台是放在家里还是放在办公室呢···恩···
+手机其实没什么问题，就是这个工作台太鸡肋了，无法连续长时间的使用
+···牛逼吹的太大，导致落差太大。凉还不至于，但温度会低一点是肯定的`,
                     time: "7小时前",
                 },
                 ],
@@ -104,7 +108,7 @@
                     url: process.env.BASE_API + "/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
-                        log( process.env)
+                        log(process.env)
 
                         let res = JSON.parse(data)
                         _this.resData = res.data[0]
@@ -142,7 +146,7 @@
                     data: {},
                     success: function (data) {
                         let res = JSON.parse(data)
-                        if (res.errno == 0) {
+                        if (res.errno === 0) {
                             _this.$vux.toast.show({
                                 text: res.msg.receiveMsg,
                                 type: "success",
@@ -182,7 +186,7 @@
                 log(list)
 
                 for (let k in list) {
-                    if (this.articleId == list[k].article_id) {
+                    if (this.articleId === list[k].article_id) {
                         this.collected = true
                         this.collection = this.collected ? "  ★ 已收藏​" : "  ☆ 收藏​"
                     }
@@ -222,7 +226,7 @@
                 else if (1000 * 60 * 60 * 24 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24 * 15) {
                     timeSpanStr = Math.round(milliseconds / (1000 * 60 * 60 * 24)) + '天前';
                 }
-                else if (milliseconds > 1000 * 60 * 60 * 24 * 15 && year == now.getFullYear()) {
+                else if (milliseconds > 1000 * 60 * 60 * 24 * 15 && year === now.getFullYear()) {
                     timeSpanStr = month + '-' + day + ' ' + hour + ':' + minute;
                 } else {
                     timeSpanStr = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
