@@ -3,8 +3,8 @@
         {{resData}}
 
         <form @submit.prevent="submitBtnClick">
-        username: <input type="text" v-model="username" name="username">
-        <input type="submit" value="submit">
+            username: <input type="text" v-model="username" name="username">
+            <input type="submit" value="submit">
         </form>
 
 
@@ -13,6 +13,9 @@
 
 <script type="text/ecmascript-6">
     import {_get, _post} from "@/api"
+    import {getAritcleList} from "@/api/article.js"
+    import {getCollectList} from "@/api/collect.js"
+
     import axios from "axios"
 
     export default {
@@ -20,25 +23,29 @@
         data() {
             return {
                 resData: "",
-                username : "",
+                username: "",
             }
         },
         methods: {
-            submitBtnClick(){
+            async submitBtnClick() {
                 let _this = this
                 let req = {
-                    url: 'http://localhost:3000/user/add_user',
+                    url: 'http://localhost:3000/test',
                     data: {
                         "username": _this.username,
                         age: 11,
-                        "password" : "123456"
+                        "password": "123456"
                     }
                 }
-                axios.post(req.url, {params: req.data})
-                    .then(function (response) {
-                        console.log(response.data);
-                        _this.resData = response.data
-                    })
+                // _get(req)
+                //     .then(function (response) {
+                //         console.log(response.data);
+                //         _this.resData = response.data
+                //     })
+
+                log(1)
+              _this.$store.dispatch("getCollectList",1)
+                log(2)
             }
         },
         mounted() {
@@ -48,7 +55,7 @@
                 data: {
                     "username": "en20",
                     age: 11,
-                     "password" : "seohidnoasdgn"
+                    "password": "seohidnoasdgn"
                 }
             }
 
