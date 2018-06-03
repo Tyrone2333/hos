@@ -108,7 +108,6 @@
                     url: process.env.BASE_API + "/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
                     data: {},
                     success: function (data) {
-                        log(process.env)
 
                         let res = JSON.parse(data)
                         _this.resData = res.data[0]
@@ -182,8 +181,6 @@
             initcollectList() {
                 if (!localStorage.getItem('collectList')) return
                 let list = JSON.parse(localStorage.getItem('collectList'))
-
-                log(list)
 
                 for (let k in list) {
                     if (this.articleId === list[k].article_id) {

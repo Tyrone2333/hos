@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 import collect from './modules/collect'
+import article from './modules/article'
 
 export const store = new Vuex.Store({
     state: {
@@ -57,7 +58,7 @@ export const store = new Vuex.Store({
             state.nickname = ""
             state.token = ""
             state.avatar = ""
-            state.collectList = []
+
         }
 
 
@@ -69,6 +70,6 @@ export const store = new Vuex.Store({
     },
     modules: {
         //引入某一个state的以上集合的模块，会自动分别填充到上面，使得结构更加清晰
-        collect
+        collect,article
     },
 });

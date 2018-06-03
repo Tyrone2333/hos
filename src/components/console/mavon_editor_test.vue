@@ -1,14 +1,15 @@
 <template>
     <div class="mavon_editor_test">
 
-        <input type="text" v-model="title" name="title" id="title" placeholder="请输入标题">
+        <input type="text" v-model="draft.title" name="title" id="title" placeholder="请输入标题">
         <br>
         <br>
 
-        <!--<button @click="aTestBtn" class="btn-publish">只是一个功能按钮</button>-->
+        <button @click="aTestBtn" class="btn-publish">只是一个功能按钮</button>
 
         <div id="editor">
-            <mavon-editor ref="mavon-editor" style="height: 80%" v-model="editorValue"
+            <mavon-editor ref="mavon-editor" style="height: 80%"
+                          v-model="draft.editorValue"
                           default_open="edit"
                           @change="onEditorChange"
                           @htmlcode="onShowHtml"
@@ -20,7 +21,7 @@
             <div class="joinTopic ">
                 <span class="field">已加入的话题:</span>
                 <transition-group name="list-complete" tag="p">
-                <span v-for="(item,idx) in joinTopicList"
+                <span v-for="(item,idx) in draft.joinTopicList"
                       @click="joinClick(item,idx)"
                       v-bind:key="item"
                       class="list-complete-item tag">{{item}}</span>
@@ -30,7 +31,7 @@
                 <span class="field">待选话题:</span>
 
                 <transition-group name="list-complete-botton" tag="p">
-                <span v-for="(item,idx)  in optionsList "
+                <span v-for="(item,idx)  in draft.optionsList "
                       @click="optionsClick(item,idx)"
                       v-bind:key="item"
                       class="list-complete-item tag"
@@ -42,7 +43,7 @@
 
         <group>
             <datetime title="验证时间"
-                      v-model="minuteListValue"
+                      v-model="draft.minuteListValue"
                       format="YYYY-MM-DD HH:mm"
                       :minute-list="['00', '15', '30', '45']"
                       @on-change="dateTimechange"
@@ -71,37 +72,28 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {Loading} from 'vux'
-    import {Popup, Group, Cell, XInput, XButton, XSwitch, Toast, Datetime} from 'vux'
+    import {Loading, Popup, Group, Cell, XInput, XButton, XSwitch, Toast, Datetime} from 'vux'
     import {mavonEditor} from 'mavon-editor'
     import 'mavon-editor/dist/css/index.css'
     import axios from 'axios'
+    import {mapGetters} from 'vuex'
 
     export default {
+
         data() {
             return {
+                draft: this.$store.state.article.draft,
                 isLoading: false,
-                editorValue: this.initVal,
-                editorHtmlValue: "",
-                editorMDValue: "",
-                img_file: {},
+                img_file: {}, // 图片列表
                 resData: null,
-                title: "",
-                author: "enzo",
-                description: "",
+
                 showPop: false,
                 popupText: null,
                 showToast: false,
                 toastType: "default",
                 toastText: "hello world",
-                banner_img: "", // 文章列表显示的略缩图
-                joinTopicList: [],
-                optionsList: ["科学", "游戏", "电影", "音乐", "设计", "体育", "时尚", "经济", "政治", "军事", "编程"],
-                minuteListValue: '2019-01-01 09:00',
-                maxYear: 2099,
-                minYear: 2018,
-                fuckDate: "1546275661",
-                tags: "",
+
+
             }
         },
         components: {
@@ -116,20 +108,7 @@
         },
         methods: {
             aTestBtn() {
-                let _this = this
-                this.$vux.toast.show({
-                    showPositionValue: false,
-                    text: "localStorage.name: " + localStorage.name,
-                    type: "warn",
-                    // width: width,
-                    position: 'middle',
-                    onShow() {
-                        // console.log('Plugin: I\'m showing')
-                    },
-                    onHide() {
-                        // console.log('Plugin: I\'m hiding')
-                    }
-                })
+                log(this.draft)
             },
             uploadArticle() {
                 let _this = this
@@ -141,15 +120,15 @@
                     url: process.env.BASE_API + "/console/publish_article.php?n=" + Math.random(),
                     timeOut: 5000,
                     data: {
-                        article: _this.editorHtmlValue,
-                        description: _this.description,
-                        title: _this.title,
+                        article: _this.draft.editorHtmlValue,
+                        description: _this.draft.description,
+                        title: _this.draft.title,
                         author: _this.$store.state.nickname,
                         authorId: _this.$store.state.user_id,
-                        md: _this.editorMDValue,
-                        banner_img: _this.banner_img,
-                        fuck_date: _this.fuckDate,
-                        tags: _this.tags
+                        md: _this.draft.editorMDValue,
+                        banner_img: _this.draft.banner_img,
+                        fuck_date: _this.draft.fuckDate,
+                        tags: _this.draft.tags
                     },
                     before: function () {
 //                        console.log("before");
@@ -174,8 +153,8 @@
             },
             onEditorChange(value, render) {
 //                编辑区发生变化的回调事件(render: value 经过markdown解析后的结果)
-                this.editorHtmlValue = render
-                this.editorMDValue = value
+                this.draft.editorHtmlValue = render
+                this.draft.editorMDValue = value
             },
             $imgAdd(pos, $file) {
                 let _this = this
@@ -184,7 +163,7 @@
 
                 var formData = new FormData();
                 formData.append("file", $file);
-                formData.append("author", _this.author);
+                formData.append("author", _this.draft.author);
 
                 axios({
                     url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
@@ -195,8 +174,7 @@
                     _this.resData = res.data
                     _this.$refs["mavon-editor"].$imgUpdateByUrl(pos, res.data.data[0]);
                     _this.$refs["mavon-editor"].$img2Url(pos, res.data.data[0]);
-                    _this.banner_img = res.data.data[0]
-                    log(_this.banner_img)
+                    _this.draft.banner_img = res.data.data[0]
                     console.log(res.data);
                 })
 //                console.log('this.img_file',this.img_file);
@@ -217,28 +195,29 @@
             },
             contentCheck() {
                 let _this = this
-                this.tags = this.joinTopicList.join(",")
-                if (isEmptyStr(_this.title)) {
+                this.draft.tags = this.draft.joinTopicList.join(",")
+
+                if (isEmptyStr(_this.draft.title)) {
                     _this.toastWarn("标题不能为空")
                     return true
                 }
-                if (isEmptyStr(_this.editorMDValue)) {
+                if (isEmptyStr(_this.draft.editorMDValue)) {
                     _this.toastWarn("内容不可为空")
                     return true
                 }
-                if (this.tags === "") {
+                if (this.draft.tags === "") {
                     _this.toastWarn("至少加入一个话题")
                     return true
                 }
             },
             joinClick: function (item, idx) {
-                this.joinTopicList.splice(idx, 1)
-                this.optionsList.splice(this.randomIndex(this.optionsList), 0, item)
+                this.draft.joinTopicList.splice(idx, 1)
+                this.draft.optionsList.splice(this.randomIndex(this.draft.optionsList), 0, item)
                 console.log(item)
             },
             optionsClick: function (item, idx) {
-                this.optionsList.splice(idx, 1)
-                this.joinTopicList.push(item)
+                this.draft.optionsList.splice(idx, 1)
+                this.draft.joinTopicList.push(item)
                 console.log(item)
             },
             randomIndex: function (items) {
@@ -250,7 +229,7 @@
                 let date = dates[0].split("-")
                 let time = dates[1].split(":")
                 let humanTime = new Date(Date.UTC(date[0], date[1] - 1, date[2], time[0] - 8, time[1], 0))
-                this.fuckDate = humanTime.getTime() / 1000
+                this.draft.fuckDate = humanTime.getTime() / 1000
             },
 
         },
@@ -262,6 +241,9 @@
                         this.showPop = false
                     }, 1000)
                 }
+            },
+            draft(curVal, oldVal) {
+                this.$store.commit("setdraft", curVal)
             }
         },
     }

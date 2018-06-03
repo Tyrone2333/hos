@@ -54,9 +54,6 @@
             }
         },
         beforeMount() {
-            log("article_list beforeMount!!!!")
-            log( process.env)
-
             // this.showLoading = true
             // this.showLoadingSymbol = true
             this.getAritcleList()
@@ -65,7 +62,6 @@
                 this.showFather = false
             }
 
-            this.getCollectList(this.$store.state.user_id)
 
 
         },
@@ -133,7 +129,7 @@
             },
             transformList(resData) {
 //                let _this = this
-                log(resData)
+//                 log(resData)
                 let arr = []
                 if (resData !== null) {
                     for (let i = 0; i < resData.data.length; i++) {
@@ -210,35 +206,7 @@
                 var regExp = /((read_article)\/(\d+)$)/;
                 return regExp.test(url)
             },
-            getCollectList(user_id,) {
-                let _this = this
-                ajax({
-                    type: "get",
-                    url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
-                    data: {},
-                    success: function (data) {
-                        let res = JSON.parse(data);
-                        if (res.errno === 0) {
-                            // 在vuex保存收藏列表
-                            _this.$store.commit("setcollectList", res.data)
-                            // 存：localStorage.setItem('weekDay',JSON.stringify(weekArray));
-                            // 取： weekArray = JSON.parse(localStorage.getItem('weekDay'));
-                            localStorage.setItem("collectList", JSON.stringify(res.data))
-                            log("在vuex,localStorage保存收藏列表")
-                        } else if (res.errno === 1) {
-                            _this.$store.commit("setcollectList", "")
-                            localStorage.setItem("collectList", "")
-                            log(res.msg.receiveMsg)
-                        }
-                        else {
 
-                        }
-                    },
-                    error() {
-                        log("getCollectList error")
-                    }
-                })
-            },
             egg() {
                 window.location.href = "http://t.cn/RHrvjVI";
             },

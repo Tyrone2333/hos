@@ -102,16 +102,6 @@
         },
         methods: {
 
-            ...mapMutations([
-                'increment', // 将 `this.increment()` 映射为 `this.$store.commit('increment')`
-
-                // `mapMutations` 也支持载荷：
-                'incrementBy', // 将 `this.incrementBy(amount)` 映射为 `this.$store.commit('incrementBy', amount)`
-                "setUsername",
-            ]),
-            ...mapMutations({
-                add: 'increment' // 将 `this.add()` 映射为 `this.$store.commit('increment')`
-            }),
             bePwd: function (value) {
                 let reg = /^[A-Za-z0-9]{6,12}$/
                 if (reg.test(value)) {

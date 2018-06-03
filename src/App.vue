@@ -120,7 +120,7 @@
         },
 
         mounted(){
-
+            this.$store.dispatch("getCollectList", this.$store.state.user_id)
         },
         watch: {
             $route(to, from) {

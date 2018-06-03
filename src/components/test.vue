@@ -14,7 +14,6 @@
 <script type="text/ecmascript-6">
     import {_get, _post} from "@/api"
     import {getAritcleList} from "@/api/article.js"
-    import {getCollectList} from "@/api/collect.js"
 
     import axios from "axios"
 
