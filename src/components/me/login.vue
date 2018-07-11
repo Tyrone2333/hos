@@ -97,8 +97,6 @@
             togleInfo() {
                 return this.inLogin ? "或者,创建账户" : "已有账户,登录"
             },
-
-
         },
         methods: {
 
@@ -196,16 +194,17 @@
 
                 ajax({
                     type: "post",
-                    url: process.env.BASE_API + "/console/hos_login.php", //添加自己的接口链接
+                    // url: "http://127.0.0.1:80" + "/console/hos_login.php", //添加自己的接口链接
+                    url: process.env.BASE_API + "/user/login", //添加自己的接口链接
                     timeOut: 5000,
                     data: {
                         "username": username,
-                        "password": password,
+                        "pwd": password,
                     },
                     success: function (str) {
                         var res = JSON.parse(str)
                         _this.resData = res
-                        console.warn(res);
+                        console.log(res);
 
                         // 登录失败
                         if (res.errno === 1) {
@@ -215,12 +214,16 @@
                             })
                             return
                         }
-                        // 登录成功 显示 Toast
-                        _this.setLocalUserInfo(res)
-                        _this.$store.commit('_flashUser')
-                        _this.getCollectList(res.userInfo.user_id)
 
+                      // 登录成功,保存必要信息进localStorage
+                        _this.$store.commit("setUserInfo", res.userinfo)
+                        _this.$store.commit("setToken", res.token)
+
+                        _this.$store.dispatch("getCollectList", _this.$store.state.user.id)
+
+                        // 登录成功 显示 Toast
                         let redirect = _this.$router.currentRoute.query.redirect
+
                         if (redirect) {
                             _this.$vux.toast.show({
                                 text: "登录成功,2秒后转入之前页面",
@@ -231,7 +234,7 @@
                             }, 2000)
                         } else {
                             _this.$vux.toast.show({
-                                text: res.resMsg,
+                                text: res.message,
                                 type: "success",
                             })
                             setTimeout(() => {
@@ -264,13 +267,14 @@
                     })
                     return
                 }
+
                 ajax({
                     type: "post",
-                    url: process.env.BASE_API + "/console/hos_register.php", //添加自己的接口链接
+                    url: process.env.BASE_API + "/user/register", //添加自己的接口链接
                     timeOut: 5000,
                     data: {
                         "username": username,
-                        "password": password,
+                        "pwd": password,
                         "nickname": nickname,
                     },
                     before: function () {
@@ -280,9 +284,9 @@
                         _this.resData = res
                         console.warn(_this.resData);
                         // 注册失败
-                        if (res.errno === 1) {
+                        if (res.errno === -1) {
                             _this.$vux.toast.show({
-                                text: res.msg.errMsg,
+                                text: res.message,
                                 type: "warn",
                             })
                             // alert(res.resMsg)
@@ -291,7 +295,7 @@
                         // 注册成功
                         // 显示 Toast
                         _this.$vux.toast.show({
-                            text: res.msg.noticeMsg,
+                            text: res.message,
                             type: "success",
                         })
                         // 跳转到登录页,并放置注册的用户名
@@ -309,42 +313,7 @@
                     }
                 });
             },
-            setLocalUserInfo(res) {
-                localStorage.setItem('username', res.userInfo.username);
-                localStorage.setItem('user_id', res.userInfo.user_id);
-                localStorage.setItem('nickname', res.userInfo.nickname);
-                localStorage.setItem('avatar', res.userInfo.avatar);
-                localStorage.setItem('token', res.userInfo.token);
-                log("注册信息已保存 localStorage")
-            },
-            getCollectList(user_id,) {
-                let _this = this
-                ajax({
-                    type: "get",
-                    url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "getlist" + "&user_id=" + user_id + "&n=" + Math.random(),
-                    data: {},
-                    success: function (data) {
-                        let res = JSON.parse(data);
-                        log(res)
-                        if (res.errno === 0) {
-                            // 在vuex保存收藏列表
-                            _this.$store.commit("setcollectList", res.data)
 
-                            // 存：localStorage.setItem('weekDay',JSON.stringify(weekArray));
-                            // 取： weekArray = JSON.parse(localStorage.getItem('weekDay'));
-                            localStorage.setItem("setcollectList", JSON.stringify(res.data))
-                        } else if (res.errno === 1) {
-                            log(res.msg.receiveMsg)
-                        }
-                        else {
-
-                        }
-                    },
-                    error() {
-                        log("getCollectList error")
-                    }
-                })
-            },
         },
         beforeMount() {
             let redirect = this.$router.currentRoute.query.redirect

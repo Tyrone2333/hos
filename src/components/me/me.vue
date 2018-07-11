@@ -5,14 +5,14 @@
             <div class="avatar">
                 <router-link to="/login">
                     <!--<img class="logo" src="../../assets/vux_logo.png">-->
-                    <img :src="avatar">
+                    <img :src="userInfo.avatar">
                 </router-link>
             </div>
             <div class="text">
                 <div class="nickname">
-                    {{nickname}} <br>
+                    {{userInfo.nickname}} <br>
                 </div>
-                <div class="home-page-edit">User : {{username}}</div>
+                <div class="home-page-edit">User : {{userInfo.username}}</div>
             </div>
 
         </div>
@@ -40,7 +40,7 @@
             </cell>
             <cell title="我的回复" value="" is-link link="/collect">
                 <span class="cellIcon small-icon icon-notifications" slot="icon"></span>
-                <span  >
+                <span>
                     <span class="vertical-middle">新提醒</span>
                     <badge text="16"></badge>
                 </span>
@@ -72,7 +72,7 @@
     import {Group, Cell, CellBox, XButton, Badge} from 'vux'
     import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
-    import {mapMutations} from 'vuex'
+
 
     export default {
         components: {
@@ -94,6 +94,8 @@
             clickVision() {
                 console.log("%c" + "  当前版本 v 1.13" + " %c",
                     "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff", "background:transparent")
+
+
             },
             signOut() {
                 localStorage.clear()
@@ -104,40 +106,7 @@
 
         },
         computed: {
-            ...mapState({
-                // 箭头函数可使代码更简练
-                count: state => state.count,
-
-                // 传字符串参数 'count' 等同于 `state => state.count`
-                countAlias: 'count',
-                list: state => {
-                    return state.todos
-                },
-
-                // 为了能够使用 `this` 获取局部状态，必须使用常规函数
-                countPlusLocalState(state) {
-                    return state.count + this.localCount
-                },
-                user_id(state) {
-                    if (state.user_id === "") {
-                        this.$store.commit('_flashUser')
-                    }
-                    return state.user_id
-                },
-
-            }),
-            ...mapState([
-                "username",
-                "nickname",
-            ]),
-            ...mapGetters([
-                //映射 this.doneTodosCount 为 store.getters.doneTodosCount
-                'doneTodosCount',
-                "doneTodos",
-                //'getter名称',
-
-
-            ])
+            ...mapGetters(["userInfo"]),
         }
     }
 </script>

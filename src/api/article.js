@@ -12,7 +12,7 @@ export const getAritcleList = (page) => {
     return _get(req)
 }
 
-export const getCollectList = (user_id) => {
+export const  getCollectList = (user_id) => {
     let req = {
         url: "console/hos_collect.php",
         data:{
@@ -21,5 +21,7 @@ export const getCollectList = (user_id) => {
             n:Math.random(),
         },
     }
+
+
     return _get(req)
 }

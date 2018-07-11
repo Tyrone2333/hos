@@ -1,4 +1,7 @@
 function log(meg) {
+    const date = new Date()
+    const time = `[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}]\t`
+
     if (typeof meg === "string"  ) {
         console.log("%c " + meg + " %c",
             "background:#fff; padding: 1px; color: #1b54f2", "background:transparent")
@@ -7,6 +10,7 @@ function log(meg) {
             "background:#41b883 ; padding: 1px; border-radius: 3px ;  color: #fff", "background:transparent")
     }
     else {
+        // console.log(time, ...arguments)
         console.log(meg)
     }
 }

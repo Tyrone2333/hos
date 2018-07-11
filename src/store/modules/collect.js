@@ -19,6 +19,9 @@ export default {
 
     actions: {
         // 使得mutations能够实现异步调用，实现例如延迟调用
+
+
+        // 获取收藏列表,将其存入localStorage和store
         getCollectList({commit, state}, user_id) {
             getCollectList(user_id).then((response) => {
                 let list = response.data.data;
