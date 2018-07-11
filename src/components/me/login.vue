@@ -12,7 +12,7 @@
 
             <!--用来显示登录数据,正式版会关闭-->
             <!--<div v-if="resData" v-for="(val,key) in resData">-->
-                <!--<span>{{key}}</span> ==> <span>{{val}}</span>-->
+            <!--<span>{{key}}</span> ==> <span>{{val}}</span>-->
             <!--</div>-->
 
         </div>
@@ -63,6 +63,7 @@
     import {AjaxPlugin} from 'vux'
     import {Loading} from 'vux'
     import {Divider} from 'vux'
+    import {login, register} from "../../api/user";
 
     export default {
         components: {
@@ -133,21 +134,21 @@
 
 //            AjaxPlugin、axios 在移动端兼容性都不好，不使用
             submitForm() {
-                var username = this.username
-                var tel = this.tel
-                var email = this.email
-                var password = this.password
+                let username = this.username
+                let tel = this.tel
+                let email = this.email
+                let password = this.password
                 let _this = this
 
                 this.submitBtnLodingState = true
 //                this.submitBtnDisabled = true
 
 
-                var fromData = [
+                let fromData = [
                     ["username", username],
                     ["password", password],
                 ]
-                var params = new URLSearchParams(fromData);
+                let params = new URLSearchParams(fromData);
 
                 /**
                  * AjaxPlugin 在UC和夸克都无法提交表单
@@ -163,12 +164,12 @@
                  * axios 在UC和夸克都无法提交表单
                  * @type {[*]}
                  */
-//                var fromData = [
+//                let fromData = [
 //                    ["username",username],
 //                    ["password",password],
 //                ]
-//                var params = new URLSearchParams(fromData);
-//                var _this = this
+//                let params = new URLSearchParams(fromData);
+//                let _this = this
 //                this.axios.post(process.env.BASE_API + "/phpstorm_test/phpstorm_test/hos_api.php', params)
 //                    .then(function (response) {
 //                        _this.resData = response.data
@@ -186,79 +187,61 @@
 
 //            登录按钮事件
             loginBtnClick() {
-                var username = this.username
-                var tel = this.tel
-                var email = this.email
-                var password = this.password
+                let username = this.username
+                let password = this.password
                 let _this = this
 
-                ajax({
-                    type: "post",
-                    // url: "http://127.0.0.1:80" + "/console/hos_login.php", //添加自己的接口链接
-                    url: process.env.BASE_API + "/user/login", //添加自己的接口链接
-                    timeOut: 5000,
-                    data: {
-                        "username": username,
-                        "pwd": password,
-                    },
-                    success: function (str) {
-                        var res = JSON.parse(str)
-                        _this.resData = res
-                        console.log(res);
+                login(username, password).then((response) => {
+                    let res = response.data
+                    _this.resData = res
+                    console.log(res);
 
-                        // 登录失败
-                        if (res.errno === 1) {
-                            _this.$vux.toast.show({
-                                text: res.resMsg,
-                                type: "warn",
-                            })
-                            return
-                        }
-
-                      // 登录成功,保存必要信息进localStorage
-                        _this.$store.commit("setUserInfo", res.userinfo)
-                        _this.$store.commit("setToken", res.token)
-
-                        _this.$store.dispatch("getCollectList", _this.$store.state.user.id)
-
-                        // 登录成功 显示 Toast
-                        let redirect = _this.$router.currentRoute.query.redirect
-
-                        if (redirect) {
-                            _this.$vux.toast.show({
-                                text: "登录成功,2秒后转入之前页面",
-                                type: "success",
-                            })
-                            setTimeout(() => {
-                                _this.$router.push({path: redirect})
-                            }, 2000)
-                        } else {
-                            _this.$vux.toast.show({
-                                text: res.message,
-                                type: "success",
-                            })
-                            setTimeout(() => {
-                                _this.$router.push({path: "/me"})
-                            }, 2000)
-                        }
-                    },
-                    error: function () {
-                        if (res.errno === 1) {
-                            _this.$vux.toast.show({
-                                text: "出错了",
-                                type: "warn",
-                            })
-                        }
+                    // 登录失败
+                    if (res.errno === 1) {
+                        _this.$vux.toast.show({
+                            text: res.message,
+                            type: "warn",
+                        })
+                        return
                     }
-                });
+
+                    // 登录成功,保存必要信息进localStorage
+                    _this.$store.commit("setUserInfo", res.userinfo)
+                    _this.$store.commit("setToken", res.token)
+
+                    _this.$store.dispatch("getCollectList", _this.$store.state.user.id)
+
+                    // 登录成功 路由跳转并显示 Toast
+                    let redirect = _this.$router.currentRoute.query.redirect
+                    if (redirect) {
+                        _this.$vux.toast.show({
+                            text: "登录成功,2秒后转入之前页面",
+                            type: "success",
+                        })
+                        setTimeout(() => {
+                            _this.$router.push({path: redirect})
+                        }, 2000)
+                    } else {
+                        _this.$vux.toast.show({
+                            text: res.message,
+                            type: "success",
+                        })
+                        setTimeout(() => {
+                            _this.$router.push({path: "/me"})
+                        }, 2000)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+
             },
             registerBtnClick() {
-                var username = this.username
-                var tel = this.tel
-                var email = this.email
-                var password = this.password
-                var password2 = this.password2
-                var nickname = this.nickname
+                let username = this.username
+                let tel = this.tel
+                let email = this.email
+                let password = this.password
+                let password2 = this.password2
+                let nickname = this.nickname
                 let _this = this
                 if (isEmptyStr(password) || password2 !== password) {
                     _this.$vux.toast.show({
@@ -268,50 +251,43 @@
                     return
                 }
 
-                ajax({
-                    type: "post",
-                    url: process.env.BASE_API + "/user/register", //添加自己的接口链接
-                    timeOut: 5000,
-                    data: {
-                        "username": username,
-                        "pwd": password,
-                        "nickname": nickname,
-                    },
-                    before: function () {
-                    },
-                    success: function (str) {
-                        var res = JSON.parse(str)
-                        _this.resData = res
-                        console.warn(_this.resData);
-                        // 注册失败
-                        if (res.errno === -1) {
-                            _this.$vux.toast.show({
-                                text: res.message,
-                                type: "warn",
-                            })
-                            // alert(res.resMsg)
-                            return
-                        }
-                        // 注册成功
-                        // 显示 Toast
+                let data = {
+                    "username": username,
+                    "pwd": password,
+                    "nickname": nickname,
+                }
+                register(data).then((response) =>{
+                    let res = response.data
+                    _this.resData = res
+                    console.warn(_this.resData);
+                    // 注册失败
+                    if (res.errno === -1) {
                         _this.$vux.toast.show({
                             text: res.message,
-                            type: "success",
-                        })
-                        // 跳转到登录页,并放置注册的用户名
-                        setTimeout(() => {
-                            _this.inLogin = true
-                            _this.username = username
-                            _this.password = ""
-                        }, 1500)
-                    },
-                    error: function () {
-                        _this.$vux.toast.show({
-                            text: "error",
                             type: "warn",
                         })
+                        // alert(res.resMsg)
+                        return
                     }
-                });
+                    // 注册成功
+                    // 显示 Toast
+                    _this.$vux.toast.show({
+                        text: res.message,
+                        type: "success",
+                    })
+                    // 跳转到登录页,并放置注册的用户名
+                    setTimeout(() => {
+                        _this.inLogin = true
+                        _this.username = username
+                        _this.password = ""
+                    }, 1500)
+                }).catch(err => {
+                    console.log(err)
+                    _this.$vux.toast.show({
+                        text: "error",
+                        type: "warn",
+                    })
+                })
             },
 
         },
@@ -324,7 +300,6 @@
                     type: "text",
                 })
             }
-
 
         },
     }

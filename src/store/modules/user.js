@@ -37,5 +37,7 @@ export default {
         },
     },
 
-    actions: {},
+    actions: {
+
+    },
 }
