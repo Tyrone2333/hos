@@ -120,7 +120,6 @@
         },
 
         mounted(){
-            this.$store.dispatch("getCollectList", this.$store.state.user_id)
         },
         watch: {
             $route(to, from) {
@@ -129,12 +128,12 @@
                 let scrTop = this.$refs.viewBox.getScrollTop()
 //                从列表到具体文章时保存之前的滚动距离
                 if (to.name === "read_article" && from.name === "article") {
-                    console.warn("从列表到具体文章" + scrTop)
+                    log("从列表到具体文章" + scrTop)
                     this.states.scrollTop = scrTop
                 }
 //                从文章退回列表跳转到之前的位置
                 if (to.name === "article" && from.name === "read_article") {
-                    console.warn("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
+                    log("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
                     setTimeout(() => {
                         this.scrollToBefore(this.states.scrollTop)
                     }, 0)

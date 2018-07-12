@@ -1,4 +1,4 @@
-import {getCollectList} from "@/api/article.js"
+import {getAritcleList} from "@/api/article.js"
 
 export default {
     state: {

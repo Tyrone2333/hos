@@ -25,6 +25,7 @@
 
 <script type="text/ecmascript-6">
     import {mapGetters, mapState} from 'vuex'
+    import {getCollectList} from "@/api/collect.js"
 
     export default {
         name: "collect",
@@ -54,7 +55,16 @@
             },
         },
         mounted() {
-            this.$store.dispatch("getCollectList", this.$store.state.user_id)
+            let _this = this
+            getCollectList(_this.$store.state.user.user.id, _this.$store.state.user.user.username, _this.$store.state.user.token)
+                .then((response) => {
+                if (response.data.errno === 0) {
+                    let list = response.data.data;
+                    _this.$store.commit("setcollectList", list)
+                }else {
+                    _this.$store.commit("setcollectList", undefined)
+                }
+            })
         },
         watch: {},
     }

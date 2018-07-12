@@ -55,6 +55,7 @@
 </template>
 <script type="text/ecmascript-6">
     import reply from "./reply.vue"
+    import {getAritcleList,getAritcleById} from "@/api/article.js"
 
     export default {
         components: {
@@ -73,7 +74,7 @@
                     content: "应该可以从另外线程 close，block 的这个可能会读到 EOF 或这异常（可能语言相关）。",
                     time: "4小时前",
                 }, {
-                    avatar: "http://img4.imgtn.bdimg.com/it/u=3965627844,1925735618&fm=11&gp=0.jpg",
+                    avatar: "https://static.huxiucdn.com/m/image/guide-logo.png?v=201706161525",
                     nickname: "耳机",
                     content: `首先，感觉没人会喜欢工作的时候一直说话，特别是现在这个动不动就要工作10个小时以上的时代；其次，我用鼠标只要动个手腕，用他的工作台我要手舞足蹈\n···最后···工作台1w，还一定要配备他的手机···<br>那么我如果买了工作台是放在家里还是放在办公室呢···恩···
 手机其实没什么问题，就是这个工作台太鸡肋了，无法连续长时间的使用
@@ -103,26 +104,39 @@
                 let url = window.location.href
                 _this.articleId = _this.$route.params.articleId || _this.getIdByURL(url)
 //                log("articleId: " + _this.articleId)
-                ajax({
-                    type: "get",
-                    url: process.env.BASE_API + "/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
-                    data: {},
-                    success: function (data) {
-
-                        let res = JSON.parse(data)
-                        _this.resData = res.data[0]
-                        log(_this.resData)
-                        _this.getTagsList(_this.resData.tags)
-
-                    },
-                    error() {
-                        _this.$vux.toast.show({
-                            text: "无法获取服务器数据",
-                            type: "warn",
-                        })
-
-                    }
+                getAritcleById(_this.articleId).then((response) =>{
+                    let res = response.data
+                    _this.resData = res.data[0]
+                    log(_this.resData)
+                    _this.getTagsList(_this.resData.tags)
+                }).catch(err => {
+                    // console.log(err)
+                    _this.$vux.toast.show({
+                        text: "无法获取服务器数据",
+                        type: "warn",
+                    })
                 })
+
+                // ajax({
+                //     type: "get",
+                //     url: process.env.BASE_API + "/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
+                //     data: {},
+                //     success: function (data) {
+                //
+                //         let res = JSON.parse(data)
+                //         _this.resData = res.data[0]
+                //         log(_this.resData)
+                //         _this.getTagsList(_this.resData.tags)
+                //
+                //     },
+                //     error() {
+                //         _this.$vux.toast.show({
+                //             text: "无法获取服务器数据",
+                //             type: "warn",
+                //         })
+                //
+                //     }
+                // })
             },
             toggleCollect() {
                 if (!this.$store.state.user_id) {
@@ -248,7 +262,6 @@
                     this.countDownTime = d + " 天 " + hour + " 时 " + min + " 分 " + sec + " 秒 ";
 
                 }, 1000);
-                this.$store.commit("setclock", clo)
 
             }
 

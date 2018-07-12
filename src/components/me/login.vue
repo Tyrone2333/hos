@@ -209,8 +209,6 @@
                     _this.$store.commit("setUserInfo", res.userinfo)
                     _this.$store.commit("setToken", res.token)
 
-                    _this.$store.dispatch("getCollectList", _this.$store.state.user.id)
-
                     // 登录成功 路由跳转并显示 Toast
                     let redirect = _this.$router.currentRoute.query.redirect
                     if (redirect) {
@@ -256,7 +254,7 @@
                     "pwd": password,
                     "nickname": nickname,
                 }
-                register(data).then((response) =>{
+                register(data).then((response) => {
                     let res = response.data
                     _this.resData = res
                     console.warn(_this.resData);

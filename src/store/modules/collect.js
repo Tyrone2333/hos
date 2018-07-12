@@ -1,4 +1,4 @@
-import {getCollectList} from "@/api/article.js"
+import {getCollectList} from "@/api/collect.js"
 
 export default {
     state: {
@@ -14,22 +14,12 @@ export default {
     mutations: {
         setcollectList(state, payload) {
             state.collectList = payload
+            localStorage.setItem("collectList", JSON.stringify(payload))
+            log("在vuex,localStorage保存收藏列表")
         },
     },
 
     actions: {
-        // 使得mutations能够实现异步调用，实现例如延迟调用
-
-
-        // 获取收藏列表,将其存入localStorage和store
-        getCollectList({commit, state}, user_id) {
-            getCollectList(user_id).then((response) => {
-                let list = response.data.data;
-                commit("setcollectList", list)
-                localStorage.setItem("collectList", JSON.stringify(list))
-                log("在vuex,localStorage保存收藏列表")
-            })
-        },
 
 
     },

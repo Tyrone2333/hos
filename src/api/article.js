@@ -2,26 +2,18 @@ import {_get, _post} from "@/api"
 
 export const getAritcleList = (page) => {
     let req = {
-        url: "console/article_list.php",
-        data:{
+        url: "/article",
+        data: {
             page,
-            n:Math.random(),
+            n: Math.random(),
         },
 
     }
     return _get(req)
 }
-
-export const  getCollectList = (user_id) => {
+export const getAritcleById = (id) => {
     let req = {
-        url: "console/hos_collect.php",
-        data:{
-            action:"getlist",
-            user_id,
-            n:Math.random(),
-        },
+        url: "/article/" + id,
     }
-
-
     return _get(req)
 }
