@@ -290,14 +290,15 @@
 
         },
         beforeMount() {
-            let redirect = this.$router.currentRoute.query.redirect
-
-            if (redirect) {
-                this.$vux.toast.show({
-                    text: "本页面需要登录",
-                    type: "text",
-                })
-            }
+            // 重定向的提示处理已经给了axios拦截器
+            // let redirect = this.$router.currentRoute.query.redirect
+            //
+            // if (redirect) {
+            //     // this.$vux.toast.show({
+            //     //     text: "本页面需要登录",
+            //     //     type: "text",
+            //     // })
+            // }
 
         },
     }

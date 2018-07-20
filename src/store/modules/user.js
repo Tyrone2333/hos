@@ -12,6 +12,7 @@ export default {
             register_time: "",
         },
         token: "",
+        status:"unAuth",// 用户状态,登录后变ok,过期的话会变unAuth
 
     },
 // 由于分了模块，在组件里面不能直接用　...mapState 分发一个数组，要用
@@ -25,6 +26,7 @@ export default {
         setUserInfo(state, payload) {
             state.user = {...payload}
             localStorage.setItem("user", JSON.stringify(payload))
+            state.status = "ok"
         },
         setToken(state, payload) {
             state.token = payload
@@ -34,6 +36,7 @@ export default {
         _initUser(state) {
             state.user = JSON.parse(localStorage.user)
             state.token = JSON.parse(localStorage.token)
+            state.status = "ok"
         },
     },
 

@@ -60,6 +60,7 @@
                 .then((response) => {
                 if (response.data.errno === 0) {
                     let list = response.data.data;
+                    log(response.data)
                     _this.$store.commit("setcollectList", list)
                 }else {
                     _this.$store.commit("setcollectList", undefined)

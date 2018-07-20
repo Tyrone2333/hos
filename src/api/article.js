@@ -17,3 +17,14 @@ export const getAritcleById = (id) => {
     }
     return _get(req)
 }
+
+export const public_article = (username, password) => {
+    let req = {
+        data: {
+            "username": username,
+            "pwd": password,
+        },
+        url: '/article/public'
+    }
+    return _post(req);
+}

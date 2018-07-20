@@ -78,6 +78,8 @@
     import axios from 'axios'
     import {mapGetters} from 'vuex'
 
+    import {public_article} from "../../api/article";
+
     export default {
 
         data() {
@@ -92,8 +94,6 @@
                 showToast: false,
                 toastType: "default",
                 toastText: "hello world",
-
-
             }
         },
         components: {
@@ -115,37 +115,49 @@
                 if (_this.contentCheck()) {
                     return
                 }
-                ajax({
-                    type: "post",
-                    url: process.env.BASE_API + "/console/publish_article.php?n=" + Math.random(),
-                    timeOut: 5000,
-                    data: {
-                        article: _this.draft.editorHtmlValue,
-                        description: _this.draft.description,
-                        title: _this.draft.title,
-                        author: _this.$store.state.nickname,
-                        authorId: _this.$store.state.user_id,
-                        md: _this.draft.editorMDValue,
-                        banner_img: _this.draft.banner_img,
-                        fuck_date: _this.draft.fuckDate,
-                        tags: _this.draft.tags
-                    },
-                    before: function () {
-//                        console.log("before");
-                    },
-                    success: function (str) {
-                        var res = JSON.parse(str)
-                        console.log(res)
-                        if (res.errno == 0) {
-                            _this.toastSuccess(res.msg.receiveMsg)
-                        } else {
-                            _this.toastWarn(res.msg.errMsg)
-                        }
-                    },
-                    error: function (err) {
-                        console.log(err);
+                // _this.contentCheck()
+                public_article("foo", "bar").then((response) =>{
+                    let res = response.data
+                    if (res.errno === 0) {
+                        _this.toastSuccess(res.msg.receiveMsg)
+                    } else {
+                        _this.toastWarn(res.msg.errMsg)
                     }
+                }).catch(err => {
+                    console.error(err)
                 })
+
+//                 ajax({
+//                     type: "post",
+//                     url: process.env.BASE_API + "/console/publish_article.php?n=" + Math.random(),
+//                     timeOut: 5000,
+//                     data: {
+//                         article: _this.draft.editorHtmlValue,
+//                         description: _this.draft.description,
+//                         title: _this.draft.title,
+//                         author: _this.$store.state.nickname,
+//                         authorId: _this.$store.state.user_id,
+//                         md: _this.draft.editorMDValue,
+//                         banner_img: _this.draft.banner_img,
+//                         fuck_date: _this.draft.fuckDate,
+//                         tags: _this.draft.tags
+//                     },
+//                     before: function () {
+// //                        console.log("before");
+//                     },
+//                     success: function (str) {
+//                         var res = JSON.parse(str)
+//                         console.log(res)
+//                         if (res.errno == 0) {
+//                             _this.toastSuccess(res.msg.receiveMsg)
+//                         } else {
+//                             _this.toastWarn(res.msg.errMsg)
+//                         }
+//                     },
+//                     error: function (err) {
+//                         console.log(err);
+//                     }
+//                 })
 
             },
             onShowHtml(status, value) {
@@ -166,7 +178,9 @@
                 formData.append("author", _this.draft.author);
 
                 axios({
-                    url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
+                    // url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
+                    // url: "http://127.0.0.1:80" + "/console/upload_file_test.php?n=" + Math.random(),
+                    url: process.env.BASE_API + "/article/upload_img",
                     method: 'post',
                     data: formData,
                     headers: {'Content-Type': 'multipart/form-data'},
@@ -212,6 +226,7 @@
             },
             joinClick: function (item, idx) {
                 this.draft.joinTopicList.splice(idx, 1)
+                // 从"已加入的话题"点击选项回到"待选话题"时随机顺序
                 this.draft.optionsList.splice(this.randomIndex(this.draft.optionsList), 0, item)
                 console.log(item)
             },

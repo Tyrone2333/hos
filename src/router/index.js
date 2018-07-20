@@ -137,13 +137,13 @@ const router = new Router({
 })
 
 // 页面刷新时，重新赋值store
-if (window.localStorage.getItem('token')) {
-    store.commit("_initUser")
-}
+// if (window.localStorage.getItem('token')) {
+//     store.commit("_initUser")
+// }
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
         // 通过vuex state获取当前的token是否存在,由于时间所限没有验证token,以后添加
-        if (store.state.user.token) {
+        if (store.state.user.token && store.state.user.status==="ok") {
             next();
         }
         else {

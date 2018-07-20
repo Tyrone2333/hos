@@ -55,7 +55,7 @@
 </template>
 <script type="text/ecmascript-6">
     import reply from "./reply.vue"
-    import {getAritcleList,getAritcleById} from "@/api/article.js"
+    import {getAritcleList, getAritcleById} from "@/api/article.js"
 
     export default {
         components: {
@@ -104,7 +104,7 @@
                 let url = window.location.href
                 _this.articleId = _this.$route.params.articleId || _this.getIdByURL(url)
 //                log("articleId: " + _this.articleId)
-                getAritcleById(_this.articleId).then((response) =>{
+                getAritcleById(_this.articleId).then((response) => {
                     let res = response.data
                     _this.resData = res.data[0]
                     log(_this.resData)
@@ -139,7 +139,7 @@
                 // })
             },
             toggleCollect() {
-                if (!this.$store.state.user_id) {
+                if (!this.$store.state.user.user.id) {
                     this.$vux.toast.show({
                         text: "请先登录",
                         type: "warn",
@@ -147,7 +147,9 @@
                     return
                 }
                 this.collected = !this.collected
-                this.collection = this.collected ? "  ★ 已收藏​" : "  ☆ 收藏​"
+                this.collection = this.collected
+                    ? "  ★ 已收藏​"
+                    : "  ☆ 收藏​"
                 this.commitCollect()
             },
             commitCollect() {

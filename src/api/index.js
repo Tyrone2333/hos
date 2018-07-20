@@ -1,3 +1,9 @@
+
+import Vue from 'vue'
+import  { ToastPlugin } from 'vux'
+import router from "../router"
+Vue.use(ToastPlugin)
+
 const BASE_URL = process.env.BASE_API
 
 log(BASE_URL)
@@ -24,6 +30,53 @@ const axios = require('axios').create({
 
 })
 
+
+// http response 拦截器
+axios.interceptors.response.use(
+    response => {
+        if(response.data.errno === 401){
+            Vue.$vux.toast.show({
+                text: response.data.message,
+                type: "warn",
+            })
+
+            router.replace({
+                path: 'login',
+                query: {redirect: router.currentRoute.fullPath}
+            })
+        }
+
+        return response;
+    },
+    error => {
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                    // 返回 401 清除token信息并跳转到登录页面
+                    // store.commit(types.LOGOUT);
+                    // router.replace({
+                    //     path: 'login',
+                    //     query: {redirect: router.currentRoute.fullPath}
+                    // })
+                    break
+                case 404:
+                    Vue.$vux.toast.show({
+                        text: "404啦,请联系管理员",
+                        type: "warn",
+                    })
+                    break
+                case 500:
+                    Vue.$vux.toast.show({
+                        text: "服务器错误,请联系管理员",
+                        type: "warn",
+                    })
+                    break
+            }
+        }
+
+        // return Promise.reject(error.response.data)   // 返回接口返回的错误信息
+        return Promise.reject(error)   // 返回接口返回的错误信息
+    });
 
 // get
 export const _get = (req) => {

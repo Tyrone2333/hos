@@ -7,20 +7,20 @@ import VueRouter from 'vue-router'
 import App from './App'
 import VueRouterIndex from './router/index.js'
 import  { ToastPlugin } from 'vux'
-// import Vuex from 'vuex'
 
-// Vue.use(Vuex)
 Vue.use(ToastPlugin)
 Vue.use(VueRouter)
 
 import "./common/style.css"
 
-
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
-
+// 页面刷新时，重新赋值store
+if (window.localStorage.getItem('token')) {
+    store.commit("_initUser")
+}
 
 
 /* eslint-disable no-new */
