@@ -1,7 +1,7 @@
-
 import Vue from 'vue'
-import  { ToastPlugin } from 'vux'
+import {ToastPlugin} from 'vux'
 import router from "../router"
+
 Vue.use(ToastPlugin)
 
 const BASE_URL = process.env.BASE_API
@@ -12,7 +12,7 @@ const axios = require('axios').create({
     timeout: 0,
     // withCredentials: true, // 允许跨域 cookie ! 后端Access-Control-Allow-Credentials 必须设置 true
     // headers: {'X-Requested-With': 'XMLHttpRequest'},
-    // headers: {'token': window.localStorage.getItem('token')},
+    // headers: {'token': JSON.parse(localStorage.token) || ""},
     maxContentLength: 2000,
     transformResponse: [function (data) {
         try {
@@ -34,7 +34,7 @@ const axios = require('axios').create({
 // http response 拦截器
 axios.interceptors.response.use(
     response => {
-        if(response.data.errno === 401){
+        if (response.data.errno === 401) {
             Vue.$vux.toast.show({
                 text: response.data.message,
                 type: "warn",

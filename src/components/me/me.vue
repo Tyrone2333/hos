@@ -73,6 +73,8 @@
     import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
 
+    import {tokenLogin} from "../../api/user";
+
 
     export default {
         components: {
@@ -107,7 +109,52 @@
         },
         computed: {
             ...mapGetters(["userInfo"]),
-        }
+        },
+        // beforeMount() {
+        //     let username = JSON.parse(localStorage.user)
+        //     let token = JSON.parse(localStorage.token)
+        //     let _this = this
+        //     tokenLogin(username, token).then((response) => {
+        //         let res = response.data
+        //
+        //         console.log(res);
+        //
+        //         // 登录失败
+        //         if (res.errno === 1) {
+        //             _this.$vux.toast.show({
+        //                 text: res.message,
+        //                 type: "warn",
+        //             })
+        //             return
+        //         }
+        //
+        //         // 登录成功,保存必要信息进localStorage
+        //         _this.$store.commit("setUserInfo", res.userinfo)
+        //         _this.$store.commit("setToken", res.token)
+        //
+        //         // 登录成功 路由跳转并显示 Toast
+        //         let redirect = _this.$router.currentRoute.query.redirect
+        //         if (redirect) {
+        //             _this.$vux.toast.show({
+        //                 text: "登录成功,2秒后转入之前页面",
+        //                 type: "success",
+        //             })
+        //             setTimeout(() => {
+        //                 _this.$router.push({path: redirect})
+        //             }, 2000)
+        //         } else {
+        //             _this.$vux.toast.show({
+        //                 text: res.message,
+        //                 type: "success",
+        //             })
+        //             setTimeout(() => {
+        //                 _this.$router.push({path: "/me"})
+        //             }, 2000)
+        //         }
+        //     }).catch(err => {
+        //         console.log(err)
+        //     })
+        // },
     }
 </script>
 

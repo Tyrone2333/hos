@@ -57,6 +57,8 @@
     import reply from "./reply.vue"
     import {getAritcleList, getAritcleById} from "@/api/article.js"
 
+    import {collect} from "../../api/collect";
+
     export default {
         components: {
             reply
@@ -117,26 +119,6 @@
                     })
                 })
 
-                // ajax({
-                //     type: "get",
-                //     url: process.env.BASE_API + "/console/get_article.php?articleId=" + this.articleId + "&n=" + Math.random(),
-                //     data: {},
-                //     success: function (data) {
-                //
-                //         let res = JSON.parse(data)
-                //         _this.resData = res.data[0]
-                //         log(_this.resData)
-                //         _this.getTagsList(_this.resData.tags)
-                //
-                //     },
-                //     error() {
-                //         _this.$vux.toast.show({
-                //             text: "无法获取服务器数据",
-                //             type: "warn",
-                //         })
-                //
-                //     }
-                // })
             },
             toggleCollect() {
                 if (!this.$store.state.user.user.id) {
@@ -153,35 +135,61 @@
                 this.commitCollect()
             },
             commitCollect() {
-                let collect = this.collected ? 1 : 0
-                let _this = this
-                ajax({
-                    type: "get",
-                    url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "commit" + "&article_id=" + this.articleId + "&user_id=" + _this.$store.state.user_id + "&collect=" + collect + "&n=" + Math.random(),
-                    data: {},
-                    success: function (data) {
-                        let res = JSON.parse(data)
-                        if (res.errno === 0) {
-                            _this.$vux.toast.show({
-                                text: res.msg.receiveMsg,
-                                type: "success",
-                            })
-                        } else {
-                            _this.$vux.toast.show({
-                                text: res.msg.receiveMsg,
-                                type: "warn",
-                            })
-                        }
 
-                    },
-                    error() {
+                let _this = this
+                let userId = _this.$store.state.user.user.id
+                let username = _this.$store.state.user.user.username
+                let articleId = this.articleId
+                let collectAction = this.collected ? 1 : 0  // 1 是执行收藏,0 是取消收藏
+                let token = _this.$store.state.user.token
+
+                collect(userId,username,token,articleId,collectAction).then((response) => {
+                    let res = response.data
+                    if (res.errno === 0) {
                         _this.$vux.toast.show({
-                            text: "无法获取服务器数据",
+                            text: res.message,
+                            type: "success",
+                        })
+                    } else {
+                        _this.$vux.toast.show({
+                            text: res.message,
                             type: "warn",
                         })
-
                     }
+                }).catch(err => {
+                    // console.log(err)
+                    _this.$vux.toast.show({
+                        text: "无法获取服务器数据",
+                        type: "warn",
+                    })
                 })
+                // ajax({
+                //     type: "get",
+                //     url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "commit" + "&article_id=" + this.articleId + "&user_id=" + _this.$store.state.user_id + "&collect=" + collect + "&n=" + Math.random(),
+                //     data: {},
+                //     success: function (data) {
+                //         let res = JSON.parse(data)
+                //         if (res.errno === 0) {
+                //             _this.$vux.toast.show({
+                //                 text: res.msg.receiveMsg,
+                //                 type: "success",
+                //             })
+                //         } else {
+                //             _this.$vux.toast.show({
+                //                 text: res.msg.receiveMsg,
+                //                 type: "warn",
+                //             })
+                //         }
+                //
+                //     },
+                //     error() {
+                //         _this.$vux.toast.show({
+                //             text: "无法获取服务器数据",
+                //             type: "warn",
+                //         })
+                //
+                //     }
+                // })
             },
             commonTime(timestamp) {
                 let unixTimestamp = new Date(timestamp * 1000)

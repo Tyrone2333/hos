@@ -11,6 +11,16 @@ export const login = (username, password) => {
     }
     return _post(req);
 }
+export const tokenLogin = (username, token) => {
+    let req = {
+        data: {
+            "username": username,
+            "token": token,
+        },
+        url: '/user/token_login'
+    }
+    return _post(req);
+}
 
 //  注册
 export const register = (data) => {

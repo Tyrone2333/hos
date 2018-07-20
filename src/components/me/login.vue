@@ -100,7 +100,6 @@
             },
         },
         methods: {
-
             bePwd: function (value) {
                 let reg = /^[A-Za-z0-9]{6,12}$/
                 if (reg.test(value)) {
@@ -290,16 +289,11 @@
 
         },
         beforeMount() {
-            // 重定向的提示处理已经给了axios拦截器
-            // let redirect = this.$router.currentRoute.query.redirect
-            //
-            // if (redirect) {
-            //     // this.$vux.toast.show({
-            //     //     text: "本页面需要登录",
-            //     //     type: "text",
-            //     // })
-            // }
-
+            // 有重定向,说明用户需要登录,这时应该更改用户状态为未验证(或清除localStorage的数据?)
+            let redirect = this.$router.currentRoute.query.redirect
+            if(redirect){
+                this.$store.commit("changeUserStatus","unAuth")
+            }
         },
     }
 </script>

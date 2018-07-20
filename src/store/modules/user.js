@@ -32,6 +32,10 @@ export default {
             state.token = payload
             localStorage.setItem("token", JSON.stringify(payload))
         },
+        changeUserStatus(state, payload) {
+            // payload 必须是 "unAuth" or "ok"
+            state.status = payload
+        },
         // 从localStorage取出数据赋给store用户信息
         _initUser(state) {
             state.user = JSON.parse(localStorage.user)

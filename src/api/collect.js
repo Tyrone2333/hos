@@ -12,3 +12,15 @@ export const  getCollectList = (id,username,token) => {
 
     return _post(req)
 }
+
+export const  collect = (userId,username,token,articleId,collect) => {
+    let req = {
+        url: "/collection/collect",
+        data:{
+            userId,username,token,articleId,collect
+        },
+    }
+
+    return _post(req)
+}
+
