@@ -18,11 +18,11 @@ export const getAritcleById = (id) => {
     return _get(req)
 }
 
-export const public_article = (username, password) => {
+export const public_article = ({id, token, username, title, author, author_id, description, content, md, banner_img, dateline, fuck_date, tags}) => {
     let req = {
         data: {
-            "username": username,
-            "pwd": password,
+            id, token, username,
+            title, author, author_id, description, content, md, banner_img, fuck_date, tags
         },
         url: '/article/public'
     }

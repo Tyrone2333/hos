@@ -92,9 +92,6 @@
             this.fetchData()
             this.initcollectList()
         },
-        mounted() {
-
-        },
         methods: {
             getIdByURL(url) {
                 let regExp = /((read-article)\/(\d+)$)/;
@@ -156,6 +153,10 @@
                             type: "warn",
                         })
                     }
+                    // 刷新收藏列表
+                    let list = response.data.data;
+                    _this.$store.commit("setcollectList", list)
+
                 }).catch(err => {
                     // console.log(err)
                     _this.$vux.toast.show({
@@ -163,33 +164,6 @@
                         type: "warn",
                     })
                 })
-                // ajax({
-                //     type: "get",
-                //     url: process.env.BASE_API + "/console/hos_collect.php?" + "action=" + "commit" + "&article_id=" + this.articleId + "&user_id=" + _this.$store.state.user_id + "&collect=" + collect + "&n=" + Math.random(),
-                //     data: {},
-                //     success: function (data) {
-                //         let res = JSON.parse(data)
-                //         if (res.errno === 0) {
-                //             _this.$vux.toast.show({
-                //                 text: res.msg.receiveMsg,
-                //                 type: "success",
-                //             })
-                //         } else {
-                //             _this.$vux.toast.show({
-                //                 text: res.msg.receiveMsg,
-                //                 type: "warn",
-                //             })
-                //         }
-                //
-                //     },
-                //     error() {
-                //         _this.$vux.toast.show({
-                //             text: "无法获取服务器数据",
-                //             type: "warn",
-                //         })
-                //
-                //     }
-                // })
             },
             commonTime(timestamp) {
                 let unixTimestamp = new Date(timestamp * 1000)

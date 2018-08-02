@@ -109,19 +109,41 @@
         methods: {
             aTestBtn() {
                 log(this.draft)
+
+                // log(this.$store.state.user.token)
+
             },
             uploadArticle() {
                 let _this = this
                 if (_this.contentCheck()) {
                     return
                 }
+
+                let data = {
+                    // id,token,username,
+                    // title, author,author_id, description, content, md,banner_img,fuck_date,tags,
+                    id:_this.$store.state.user.user.id,
+                    token:_this.$store.state.user.token,
+                    username:_this.$store.state.user.user.username,
+
+                    content: _this.draft.editorHtmlValue,
+                    description: _this.draft.description,
+                    title: _this.draft.title,
+                    author: _this.$store.state.user.user.nickname,
+                    author_id: _this.$store.state.user.user.id,
+                    md: _this.draft.editorMDValue,
+                    banner_img: _this.draft.banner_img,
+                    fuck_date: _this.draft.fuckDate,
+                    tags: _this.draft.tags || _this.draft.joinTopicList.join(",")
+                }
                 // _this.contentCheck()
-                public_article("foo", "bar").then((response) =>{
+
+                public_article({...data}).then((response) => {
                     let res = response.data
                     if (res.errno === 0) {
-                        _this.toastSuccess(res.msg.receiveMsg)
+                        _this.toastSuccess(res.message)
                     } else {
-                        _this.toastWarn(res.msg.errMsg)
+                        _this.toastWarn(res.message)
                     }
                 }).catch(err => {
                     console.error(err)
@@ -175,15 +197,15 @@
 
                 var formData = new FormData();
                 formData.append("file", $file);
-                formData.append("author", _this.draft.author);
-
+                formData.append("author", _this.$store.state.user.user.username);
+                formData.append("username", _this.$store.state.user.user.username);
                 axios({
                     // url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
                     // url: "http://127.0.0.1:80" + "/console/upload_file_test.php?n=" + Math.random(),
                     url: process.env.BASE_API + "/article/upload_img",
                     method: 'post',
                     data: formData,
-                    headers: {'Content-Type': 'multipart/form-data'},
+                    headers: {'Content-Type': 'multipart/form-data', 'token': _this.$store.state.user.token},
                 }).then((res) => {
                     _this.resData = res.data
                     _this.$refs["mavon-editor"].$imgUpdateByUrl(pos, res.data.data[0]);

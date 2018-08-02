@@ -110,12 +110,12 @@
                         moreBtn.style.display = "none"
                         _this.showLoading = true
                         _this.showLoadingSymbol = false
-                        _this.loadMoreText = res.data.errMsg
+                        _this.loadMoreText = "没有更多了"
                     }
                 }).catch(err => {
-                    // console.log(err)
+                    console.log(err)
                     _this.$vux.toast.show({
-                        text: "无法获取服务器数据",
+                        text: "无法获取服务器数据!!",
                         type: "warn",
                     })
                 })
