@@ -6,7 +6,7 @@ Vue.use(ToastPlugin)
 
 const BASE_URL = process.env.BASE_API
 
-log(BASE_URL)
+log("BASE_URL:" + BASE_URL)
 const axios = require('axios').create({
     baseURL: BASE_URL,            //api请求的baseURL
     timeout: 0,
@@ -21,8 +21,6 @@ const axios = require('axios').create({
             data = {};
         }
         if (data.status === 403) {
-            // removeInfo();
-            // router.push('/login');
             log("data.status === 403 ?????")
         }
         return data;

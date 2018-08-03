@@ -63,9 +63,6 @@
             if (this.isInArticle()) {
                 this.showFather = false
             }
-
-
-
         },
         watch: {
             resData(curVal, oldVal) {
@@ -113,38 +110,12 @@
                         _this.loadMoreText = "没有更多了"
                     }
                 }).catch(err => {
-                    console.log(err)
+                    console.error(err)
                     _this.$vux.toast.show({
-                        text: "无法获取服务器数据!!",
+                        text: "无法获取服务器数据",
                         type: "warn",
                     })
                 })
-                // ajax({
-                //     type: "get",
-                //     // url: process.env.BASE_API + process.env.BASE_API + "/console/article_list.php?page=" + _this.page + "&n=" + Math.random(),
-                //     url: process.env.BASE_API + "/console/article_list.php?page=" + _this.page + "&n=" + Math.random(),
-                //     data: {},
-                //     success: function (data) {
-                //         let res = JSON.parse(data);
-                //         if (res.errno === 0) {
-                //             _this.resData = res
-                //             _this.page++
-                //         } else if (res.errno === 2) {
-                //             let moreBtn = document.getElementById("get-more-article")
-                //
-                //             moreBtn.style.display = "none"
-                //             _this.showLoading = true
-                //             _this.showLoadingSymbol = false
-                //             _this.loadMoreText = res.data.errMsg
-                //         }
-                //     },
-                //     error() {
-                //         _this.$vux.toast.show({
-                //             text: "无法获取服务器数据",
-                //             type: "warn",
-                //         })
-                //     }
-                // })
             },
             getMoreArticle() {
 //                this.showLoading = true

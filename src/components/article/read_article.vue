@@ -32,24 +32,47 @@
         <!--</div>-->
 
         <div class="article-page-split-line"></div>
-
-        <div class="comments">
+        <!--评论-->
+        <div class="comments" v-if="commentList.length ">
             <div class="comment-wrapper" v-for="(val,key) in commentList">
                 <div class="avatar">
                     <img :src="val.avatar" alt="">
                 </div>
                 <div class="comment-right">
-                    <div class="nickname">{{val.nickname}}</div>
+                    <div class="nickname">{{val.from_nickname}}</div>
                     <div class="content">
                         {{val.content}}
                     </div>
                     <div class="footer">
-                        <span class="left">{{val.time}}</span>
-                        <span class="right" @click="replyText">回复</span>
+                        <span class="left">{{key + 1}}楼 {{formatMsgTime(val.timestamp * 1000)}}</span>
+                        <span class="right icon icon-question_answer" @click="replyText(val)"></span>
                     </div>
-                    <reply :needReply="needReply"></reply>
                 </div>
             </div>
+        </div>
+        <div class="comments no-comment" v-else>
+            暂无评论
+        </div>
+        <!--<reply :needReply="needReply"></reply>-->
+
+        <div v-transfer-dom>
+            <x-dialog v-model="showReplyDialog"
+                      :hide-on-blur="true">
+
+                <div class="reply">
+                    <form>
+                        <textarea name="content" maxlength="10000" class="mll" id="reply_content"
+                      style="overflow: hidden; word-wrap: break-word; resize: none; height: 112px;"></textarea>
+                    </form>
+
+                    <!--<span class="icon   icon-send" @click="reply"></span>-->
+                    <span class="weui-btn weui-btn_mini btn-none" >取消</span>
+                    <span class="weui-btn weui-btn_mini weui-btn_primary">确认</span>
+                    <x-button mini  type="primary">primary</x-button>
+                    <x-button mini  type="primary" @click.native="showReplyDialog=false">取消</x-button>
+
+                </div>
+            </x-dialog>
         </div>
     </div>
 </template>
@@ -57,11 +80,17 @@
     import reply from "./reply.vue"
     import {getAritcleList, getAritcleById} from "@/api/article.js"
 
+    import {XDialog,XButton} from 'vux'
+    import {TransferDomDirective as TransferDom} from 'vux'
+
     import {collect} from "../../api/collect";
 
     export default {
         components: {
-            reply
+            reply, XDialog,XButton
+        },
+        directives: {
+            TransferDom
         },
         data() {
             return {
@@ -70,28 +99,17 @@
                 collected: false,
                 collection: "  ☆ 收藏​",
                 tags: [],
-                commentList: [{
-                    avatar: "https://static.huxiucdn.com/m/image/guide-logo.png?v=201706161525",
-                    nickname: "水明",
-                    content: "应该可以从另外线程 close，block 的这个可能会读到 EOF 或这异常（可能语言相关）。",
-                    time: "4小时前",
-                }, {
-                    avatar: "https://static.huxiucdn.com/m/image/guide-logo.png?v=201706161525",
-                    nickname: "耳机",
-                    content: `首先，感觉没人会喜欢工作的时候一直说话，特别是现在这个动不动就要工作10个小时以上的时代；其次，我用鼠标只要动个手腕，用他的工作台我要手舞足蹈\n···最后···工作台1w，还一定要配备他的手机···<br>那么我如果买了工作台是放在家里还是放在办公室呢···恩···
-手机其实没什么问题，就是这个工作台太鸡肋了，无法连续长时间的使用
-···牛逼吹的太大，导致落差太大。凉还不至于，但温度会低一点是肯定的`,
-                    time: "7小时前",
-                },
-                ],
-                needReply: false,
+                commentList: [],
+                needReply: true,
                 countDownTime: "",  // 打脸日倒计时
+                showReplyDialog:true,
             }
         },
         beforeMount() {
             this.fetchData()
             this.initcollectList()
         },
+
         methods: {
             getIdByURL(url) {
                 let regExp = /((read-article)\/(\d+)$)/;
@@ -108,6 +126,7 @@
                     _this.resData = res.data[0]
                     log(_this.resData)
                     _this.getTagsList(_this.resData.tags)
+                    _this.commentList = res.reply
                 }).catch(err => {
                     // console.log(err)
                     _this.$vux.toast.show({
@@ -140,7 +159,7 @@
                 let collectAction = this.collected ? 1 : 0  // 1 是执行收藏,0 是取消收藏
                 let token = _this.$store.state.user.token
 
-                collect(userId,username,token,articleId,collectAction).then((response) => {
+                collect(userId, username, token, articleId, collectAction).then((response) => {
                     let res = response.data
                     if (res.errno === 0) {
                         _this.$vux.toast.show({
@@ -187,8 +206,19 @@
                     }
                 }
             },
-            replyText() {
+            replyText(val) {
                 this.needReply = !this.needReply
+
+                this.showReplyDialog=true
+                document.querySelector("#reply_content").focus()
+
+                // 有bug,由于放在最底部所以可以这样,如果reply组件底下还有东西就应该
+                let offsetTop = document.querySelector('.reply').offsetTop
+                setTimeout(() => {
+                    this.$parent.$parent.$parent.$refs.viewBox.scrollTo(offsetTop)
+                }, 0)
+
+                log(val)
             },
             formatMsgTime(timespan) {
                 // 传入的是 new Date().getTime() 的毫秒数时间戳
@@ -228,6 +258,7 @@
                 }
                 return timeSpanStr;
             },
+
             getCountDown(timestamp) {
                 window.clearInterval(this.$store.state.clock)
                 let clo = setInterval(() => {
@@ -295,6 +326,7 @@
             .comment-wrapper {
                 display: flex;
                 .comment-right {
+                    flex: 4;
                     flex-direction: column;
                     border-top: 1px solid #e8e8e8;
                     margin-right: 1em;
@@ -326,13 +358,20 @@
                         justify-content: space-between;
                     }
                 }
-                img {
-                    margin: 10px;
-                    height: 50px;
-                    width: 50px;
+                .avatar {
+                    flex: 1;
+                    img {
+                        margin: 10px;
+                        height: 50px;
+                        width: 50px;
+                    }
                 }
+
             }
 
+            &.no-comment {
+                text-align: center;
+            }
         }
 
         .icon {

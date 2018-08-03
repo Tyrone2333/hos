@@ -137,7 +137,6 @@
                     setTimeout(() => {
                         this.scrollToBefore(this.states.scrollTop)
                     }, 0)
-
 //                    this.$refs.viewBox.scrollTo(this.states.scrollTop)
                 }
             },
