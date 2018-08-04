@@ -58,14 +58,13 @@
             let _this = this
             getCollectList(_this.$store.state.user.user.id, _this.$store.state.user.user.username, _this.$store.state.user.token)
                 .then((response) => {
-                if (response.data.errno === 0) {
-                    let list = response.data.data;
-                    log(response.data)
-                    _this.$store.commit("setcollectList", list)
-                }else {
-                    _this.$store.commit("setcollectList", undefined)
-                }
-            })
+                    if (response.data.errno === 0) {
+                        let list = response.data.data;
+                        _this.$store.commit("setcollectList", list)
+                    } else {
+                        _this.$store.commit("setcollectList", undefined)
+                    }
+                })
         },
         watch: {},
     }

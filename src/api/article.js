@@ -28,3 +28,15 @@ export const public_article = ({id, token, username, title, author, author_id, d
     }
     return _post(req);
 }
+
+export const reply = ({id, token, username,from_id, to_id, content, timestamp, article_id, from_nickname, to_nickname}) => {
+    let req = {
+        data: {
+            id, token, username,
+            from_id, to_id, content, timestamp, article_id, from_nickname, to_nickname
+        },
+        url: '/article/reply'
+    }
+    return _post(req);
+}
+

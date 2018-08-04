@@ -1,17 +1,19 @@
-function log(meg) {
+function log(message) {
     const date = new Date()
     const time = `[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}]\t`
 
-    if (typeof meg === "string"  ) {
-        console.log("%c " + meg + " %c",
+    if (typeof message === "string"  ) {
+        console.log("%c " + message + " %c",
             "background:#fff; padding: 1px; color: #1b54f2", "background:transparent")
-    } else if (typeof meg === "number"){
-        console.log("%c " + meg + " %c",
+    } else if (typeof message === "number"){
+        console.log("%c " + message + " %c",
             "background:#41b883 ; padding: 1px; border-radius: 3px ;  color: #fff", "background:transparent")
+    }else if (Array.isArray(message)){
+        console.table(message)
     }
     else {
         // console.log(time, ...arguments)
-        console.log(meg)
+        console.log(message)
     }
 }
 window.log = log;

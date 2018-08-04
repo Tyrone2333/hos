@@ -31,8 +31,17 @@
         <!--距离打脸还有 : {{countDownTime}}-->
         <!--</div>-->
 
+        <!--分界线-->
         <div class="article-page-split-line"></div>
-        <!--评论-->
+
+        <!--发表评论-->
+        <div class="top-title">
+            <div class="left ">精彩评论</div>
+            <div class="right icon  icon-quill" @click="replyDialogShow()">写评论</div>
+        </div>
+
+
+        <!--评论列表-->
         <div class="comments" v-if="commentList.length ">
             <div class="comment-wrapper" v-for="(val,key) in commentList">
                 <div class="avatar">
@@ -41,11 +50,12 @@
                 <div class="comment-right">
                     <div class="nickname">{{val.from_nickname}}</div>
                     <div class="content">
+                        <a href="" class="at-someone">{{val.to_id ?"@" +val.to_nickname + "\t" :"" }}</a>
                         {{val.content}}
                     </div>
                     <div class="footer">
                         <span class="left">{{key + 1}}楼 {{formatMsgTime(val.timestamp * 1000)}}</span>
-                        <span class="right icon icon-question_answer" @click="replyText(val)"></span>
+                        <span class="right icon icon-question_answer" @click="replyDialogShow(val)"></span>
                     </div>
                 </div>
             </div>
@@ -62,14 +72,16 @@
                 <div class="reply">
                     <form>
                         <textarea name="content" maxlength="10000" class="mll" id="reply_content"
-                      style="overflow: hidden; word-wrap: break-word; resize: none; height: 112px;"></textarea>
+                                  v-model="commentContent"
+                                  :placeholder="replyPlaceholder"
+                                  style="overflow: hidden; word-wrap: break-word; resize: none; height: 112px;"></textarea>
                     </form>
 
                     <!--<span class="icon   icon-send" @click="reply"></span>-->
-                    <span class="weui-btn weui-btn_mini btn-none" >取消</span>
-                    <span class="weui-btn weui-btn_mini weui-btn_primary">确认</span>
-                    <x-button mini  type="primary">primary</x-button>
-                    <x-button mini  type="primary" @click.native="showReplyDialog=false">取消</x-button>
+                    <span class="weui-btn weui-btn_mini btn-none" @click="showReplyDialog=false">取消</span>
+                    <span class="weui-btn weui-btn_mini weui-btn_primary" @click="replySend">确认</span>
+                    <!--<x-button mini  type="primary">primary</x-button>-->
+                    <!--<x-button mini  type="primary" @click.native="showReplyDialog=false">取消</x-button>-->
 
                 </div>
             </x-dialog>
@@ -77,17 +89,17 @@
     </div>
 </template>
 <script type="text/ecmascript-6">
-    import reply from "./reply.vue"
-    import {getAritcleList, getAritcleById} from "@/api/article.js"
 
-    import {XDialog,XButton} from 'vux'
+    import {getAritcleList, getAritcleById, reply} from "../../api/article.js"
+
+    import {XDialog, XButton} from 'vux'
     import {TransferDomDirective as TransferDom} from 'vux'
 
     import {collect} from "../../api/collect";
 
     export default {
         components: {
-            reply, XDialog,XButton
+            XDialog, XButton
         },
         directives: {
             TransferDom
@@ -99,15 +111,19 @@
                 collected: false,
                 collection: "  ☆ 收藏​",
                 tags: [],
-                commentList: [],
-                needReply: true,
+                commentList: [],    // 评论列表
+                commentReply: {},    // 要回复的评论信息
+                commentContent: "",  // 评论的内容
+                replyPlaceholder: "",
                 countDownTime: "",  // 打脸日倒计时
-                showReplyDialog:true,
+                showReplyDialog: false,
             }
         },
         beforeMount() {
             this.fetchData()
             this.initcollectList()
+
+
         },
 
         methods: {
@@ -124,7 +140,7 @@
                 getAritcleById(_this.articleId).then((response) => {
                     let res = response.data
                     _this.resData = res.data[0]
-                    log(_this.resData)
+                    console.log("文章信息: %O", _this.resData)
                     _this.getTagsList(_this.resData.tags)
                     _this.commentList = res.reply
                 }).catch(err => {
@@ -206,20 +222,80 @@
                     }
                 }
             },
-            replyText(val) {
-                this.needReply = !this.needReply
+            replyDialogShow(commentInfo) {
+                this.showReplyDialog = true
+                this.commentReply = commentInfo || {}
 
-                this.showReplyDialog=true
-                document.querySelector("#reply_content").focus()
 
-                // 有bug,由于放在最底部所以可以这样,如果reply组件底下还有东西就应该
-                let offsetTop = document.querySelector('.reply').offsetTop
-                setTimeout(() => {
+                this.replyPlaceholder = this.commentReply.from_nickname ? "@" + this.commentReply.from_nickname : ""
+                setTimeout(function () {
+                    document.getElementById("reply_content").focus()
+                }, 1)
+
+                /**
+                 * 有bug,放在最底部可以这样,如果reply组件底下还有东西就应该
+                 *
+                 * 现在换成x-dialog,不用滚动到底下
+                 *
+                 let offsetTop = document.querySelector('.reply').offsetTop
+                 setTimeout(() => {
                     this.$parent.$parent.$parent.$refs.viewBox.scrollTo(offsetTop)
                 }, 0)
+                 *
+                 */
 
-                log(val)
+
             },
+            replySend() {
+                let _this = this
+                let url = window.location.href
+                _this.articleId = _this.$route.params.articleId || _this.getIdByURL(url)
+
+                let commentInfo = _this.commentReply || {}
+
+                log(_this.$store.state.user)
+                let data = {
+                    // id,token,username,
+                    //  from_id, to_id, content, timestamp, article_id, from_nickname, to_nickname
+
+                    id: _this.$store.state.user.user.id,
+                    token: _this.$store.state.user.token,
+                    username: _this.$store.state.user.user.username,
+
+                    from_id: _this.$store.state.user.user.id,
+                    to_id: commentInfo.from_id || 0,
+                    content: _this.commentContent,
+                    // timestamp: ,
+                    article_id: _this.articleId,
+                    from_nickname: _this.$store.state.user.user.nickname,
+                    to_nickname: commentInfo.from_nickname || 0,
+
+                }
+                reply({...data}).then((response) => {
+                    let res = response.data
+                    log(res)
+                    if (res.errno === 0) {
+                        _this.commentContent = ""
+                        _this.showReplyDialog = false
+                        _this.$vux.toast.show({
+                            text: res.message,
+                            type: "success",
+                        })
+
+                    } else {
+                        _this.$vux.toast.show({
+                            text: res.message,
+                            type: "warn",
+                        })
+                    }
+                    _this.fetchData()
+                    _this.initcollectList()
+                }).catch(err => {
+                    console.error(err)
+                })
+
+            },
+            // 格式化时间为"xx小时前"
             formatMsgTime(timespan) {
                 // 传入的是 new Date().getTime() 的毫秒数时间戳
                 let dateTime = new Date(timespan);
@@ -259,6 +335,7 @@
                 return timeSpanStr;
             },
 
+            // 倒计时
             getCountDown(timestamp) {
                 window.clearInterval(this.$store.state.clock)
                 let clo = setInterval(() => {
@@ -406,6 +483,30 @@
             width: 100%;
             margin: 10px 0;
         }
+        .at-someone{
+            color: #3194d0;
+            text-decoration: none;
+            word-break: break-all;
+            cursor: pointer;
+
+        }
+        a{
+            text-decoration: none;
+        }
+        .top-title{
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 10px;
+            .left{
+
+            }
+            .right{
+                float: right;
+                color: #3194d0;
+                line-height: 22px;
+            }
+
+        }
     }
 
     .article-info {
@@ -420,5 +521,32 @@
         transition: all 1s;
     }
 
+    // 评论css
+    .reply {
+        .btn-none {
+            border: none !important;
+            background: transparent !important;
+            color: black;
+            &.btn-none:after {
+                content: none;
+            }
+        }
+    }
+
+    .mll {
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+        border-radius: 3px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        display: block;
+        height: 8em;
+        overflow-y: auto;
+        font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+        resize: vertical;
+    }
+
+    // END 评论css
 
 </style>
