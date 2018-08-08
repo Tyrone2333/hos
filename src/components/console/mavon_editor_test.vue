@@ -5,7 +5,7 @@
         <br>
         <br>
 
-        <button @click="aTestBtn" class="btn-publish">只是一个功能按钮</button>
+        <!--<button @click="aTestBtn" class="btn-publish">只是一个功能按钮</button>-->
 
         <div id="editor">
             <mavon-editor ref="mavon-editor" style="height: 80%"
@@ -41,16 +41,16 @@
         </div>
 
 
-        <group>
-            <datetime title="验证时间"
-                      v-model="draft.minuteListValue"
-                      format="YYYY-MM-DD HH:mm"
-                      :minute-list="['00', '15', '30', '45']"
-                      @on-change="dateTimechange"
-                      :min-year=2018
-                      :max-year=2099
-            ></datetime>
-        </group>
+        <!--<group>-->
+            <!--<datetime title="验证时间"-->
+                      <!--v-model="draft.minuteListValue"-->
+                      <!--format="YYYY-MM-DD HH:mm"-->
+                      <!--:minute-list="['00', '15', '30', '45']"-->
+                      <!--@on-change="dateTimechange"-->
+                      <!--:min-year=2018-->
+                      <!--:max-year=2099-->
+            <!--&gt;</datetime>-->
+        <!--</group>-->
 
 
         <div class="major-publish">

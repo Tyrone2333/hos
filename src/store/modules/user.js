@@ -38,9 +38,12 @@ export default {
         },
         // 从localStorage取出数据赋给store用户信息
         _initUser(state) {
-            state.user = JSON.parse(localStorage.user)
-            state.token = JSON.parse(localStorage.token)
-            state.status = "ok"
+            if(localStorage.user && localStorage.token){
+                state.user = JSON.parse(localStorage.user)
+                state.token = JSON.parse(localStorage.token)
+                state.status = "ok"
+            }
+
         },
     },
 

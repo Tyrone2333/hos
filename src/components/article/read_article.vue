@@ -50,7 +50,7 @@
                 <div class="comment-right">
                     <div class="nickname">{{val.from_nickname}}</div>
                     <div class="content">
-                        <a href="" class="at-someone">{{val.to_id ?"@" +val.to_nickname + "\t" :"" }}</a>
+                        <a href="" class="at-someone">{{!val.is_for_author ?"@" +val.to_nickname + "\t" :"" }}</a>
                         {{val.content}}
                     </div>
                     <div class="footer">
@@ -143,6 +143,8 @@
                     console.log("文章信息: %O", _this.resData)
                     _this.getTagsList(_this.resData.tags)
                     _this.commentList = res.reply
+
+
                 }).catch(err => {
                     // console.log(err)
                     _this.$vux.toast.show({
@@ -243,17 +245,12 @@
                 }, 0)
                  *
                  */
-
-
             },
             replySend() {
                 let _this = this
                 let url = window.location.href
                 _this.articleId = _this.$route.params.articleId || _this.getIdByURL(url)
 
-                let commentInfo = _this.commentReply || {}
-
-                log(_this.$store.state.user)
                 let data = {
                     // id,token,username,
                     //  from_id, to_id, content, timestamp, article_id, from_nickname, to_nickname
@@ -261,15 +258,11 @@
                     id: _this.$store.state.user.user.id,
                     token: _this.$store.state.user.token,
                     username: _this.$store.state.user.user.username,
-
                     from_id: _this.$store.state.user.user.id,
-                    to_id: commentInfo.from_id || 0,
+                    to_id:  _this.commentReply.from_id || _this.resData.author_id || 0,
                     content: _this.commentContent,
                     // timestamp: ,
                     article_id: _this.articleId,
-                    from_nickname: _this.$store.state.user.user.nickname,
-                    to_nickname: commentInfo.from_nickname || 0,
-
                 }
                 reply({...data}).then((response) => {
                     let res = response.data
