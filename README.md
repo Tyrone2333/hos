@@ -31,11 +31,11 @@
    线上地址：>[http://dushizz.top/hos](http://dushizz.top/hos)
    <br>
    请用 chrome/firefox 的手机模式,由于服务器在美国故访问缓慢
-> 用户名:root
-  <br>
+> 用户名:root  <br>
 > 密码:admin
  
-#####扫码查看,内容可能不是最新:
+##### 扫码查看,内容可能不是最新:
+
 <br>
 
 ![扫码查看](static/qr.png)
