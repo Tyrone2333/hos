@@ -26,15 +26,22 @@
 - 话题板块
 - 改善白屏时间
 
+
 ## 线上地址 ##
-    http://dushizz.top/hos
-    请用 chrome/firefox 的手机模式,由于服务器在美国故访问缓慢
+   线上地址：>[http://dushizz.top/hos](http://dushizz.top/hos)
+   <br>
+   请用 chrome/firefox 的手机模式,由于服务器在美国故访问缓慢
+> 用户名:root
+  <br>
+> 密码:admin
+ 
+#####扫码查看,内容可能不是最新:
+<br>
 
-## 后端项目地址
-    后端项目地址：>[GitHub：https://github.com/Tyrone2333/hos_Server](https://github.com/Tyrone2333/hos_Server)
-    
 ![扫码查看](static/qr.png)
-
+## 后端项目地址
+   后端项目地址：>[GitHub：https://github.com/Tyrone2333/hos_Server](https://github.com/Tyrone2333/hos_Server)
+    
 ## 效果演示
 ### 主界面 ###
 ![主界面](static/screenshot_main.png)
