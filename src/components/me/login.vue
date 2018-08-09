@@ -4,7 +4,7 @@
             <form @submit.prevent="loginBtnClick">
                 <x-input name="username" v-model="username" @on-change="checkName"
                          placeholder="用户名/邮箱"></x-input>
-                <x-input v-model="password" :type="pwdType" placeholder="打脸网登录密码">
+                <x-input v-model="password" :type="pwdType" placeholder="登录密码">
                     <span :class="pwdClass" @click="pwdTypeChange" slot="right"></span>
                 </x-input>
                 <button class="handleSubmitBtn" type="submit">登录</button>
@@ -74,14 +74,14 @@
         },
         data() {
             return {
-                password: '',
+                password: 'admin',
                 password2: "",
                 resData: "",
                 enterText: '',
                 iconType: '',
                 tel: "",
                 email: "",
-                username: "",
+                username: "root",
                 nickname: "",
                 pwdType: "password",    //用于显示隐藏密码
                 pwdClass: "cell-icon icon-eye-hidden",
@@ -291,8 +291,8 @@
         beforeMount() {
             // 有重定向,说明用户需要登录,这时应该更改用户状态为未验证(或清除localStorage的数据?)
             let redirect = this.$router.currentRoute.query.redirect
-            if(redirect){
-                this.$store.commit("changeUserStatus","unAuth")
+            if (redirect) {
+                this.$store.commit("changeUserStatus", "unAuth")
             }
         },
     }
