@@ -3,7 +3,7 @@
 
         <div class="user-info">
             <div class="avatar">
-                <router-link to="/login">
+                <router-link :to="/user/+userInfo.id">
                     <!--<img class="logo" src="../../assets/vux_logo.png">-->
                     <img :src="userInfo.avatar">
                 </router-link>
@@ -18,7 +18,11 @@
         </div>
 
         <group title="">
-            <cell title="管理控制台"
+            <cell title="我的主页" value="" is-link :link="/user/+userInfo.id">
+                <span class="cellIcon small-icon icon-user" slot="icon"></span>
+            </cell>
+
+            <cell title="与我相关"
                   is-link
                   :border-intent="false"
                   :arrow-direction="showContent ? 'up' : 'down'"
@@ -27,25 +31,20 @@
                 <!--<cell-box is-link link="/article_edit">-->
                 <!--<del>发布文章 使用wang_editor</del>-->
                 <!--</cell-box>-->
-
-                <cell-box is-link link="/mavon_editor_test">写断言</cell-box>
-                <!--<cell-box is-link link="/article_modify"><del>修改断言</del></cell-box>-->
-                <cell-box is-link>
-                    <del>修改断言</del>
-                </cell-box>
-            </div>
-
-            <cell title="我的收藏" value="" is-link link="/collect">
-                <span class="cellIcon small-icon icon-bookmark" slot="icon"></span>
-            </cell>
-            <cell title="我的回复" value="" is-link link="/collect">
-                <span class="cellIcon small-icon icon-notifications" slot="icon"></span>
-                <span>
+                <cell title="我的收藏" value="" is-link link="/collect">
+                    <span class="cellIcon small-icon icon-bookmark" slot="icon"></span>
+                </cell>
+                <cell title="我的回复" value="" is-link link="/collect">
+                    <span class="cellIcon small-icon icon-notifications" slot="icon"></span>
+                    <span>
                     <span class="vertical-middle">新提醒</span>
                     <badge text="16"></badge>
                 </span>
+                </cell>
 
-            </cell>
+            </div>
+
+
 
             <cell title="设置" value="" is-link>
                 <span class="cellIcon small-icon icon-cog" slot="icon"></span>

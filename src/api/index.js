@@ -20,12 +20,8 @@ const axios = require('axios').create({
         } catch (e) {
             data = {};
         }
-        if (data.status === 403) {
-            log("data.status === 403 ?????")
-        }
         return data;
     }],
-
 })
 
 

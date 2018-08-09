@@ -56,8 +56,7 @@
 </template>
 
 <script>
-    import appHome from './components/home/home.vue'
-    import appFooter from './components/footer/footer'
+
     import {Tab, TabItem, Sticky} from 'vux'
     import {ViewBox} from 'vux'
     import {Tabbar,Actionsheet, TabbarItem, XHeader, XImg} from 'vux'
@@ -65,8 +64,7 @@
     export default {
         name: 'app',
         components: {
-            appHome,
-            appFooter,
+
             Tab,
             TabItem,
             Sticky,

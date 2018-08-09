@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {store} from '@/store/store.js'
 
-import home from '@/components/home/home.vue'
+
 import news from '@/components/news/news.vue'
 import header from '@/components/header/header.vue'
 import me from '@/components/me/me.vue'
@@ -15,6 +15,7 @@ import read_article from '@/components/article/read_article.vue'
 import collect from '@/components/collect/collect.vue'
 import feedback from '@/components/feedback/feedback.vue'
 import test from "@/components/test.vue"
+import user from "@/components/me/user.vue"
 
 import mavon_editor_test from '@/components/console/mavon_editor_test.vue'
 import about from '@/components/me/about.vue'
@@ -37,11 +38,7 @@ const router = new Router({
         //     name: 'Hello',
         //     component: Hello
         // },
-        {
-            path: '/home',
-            name: 'home',
-            component: home
-        },
+
         {
             path: '/article',
             name: 'article',
@@ -116,17 +113,17 @@ const router = new Router({
             path: '/collect',
             name: 'collect',
             component: collect,
-            // children: [
-            //     {
-            //         path: 'read_article/:articleId',
-            //         name: 'readInCollect',
-            //         component: read_article
-            //     },
-            // ],
             meta: {
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             },
         },
+        {
+            path: '/user/:id',
+            name: 'user',
+            component: user,
+
+        },
+
         {
             path: '/test',
             name: 'test',
@@ -136,10 +133,6 @@ const router = new Router({
     ]
 })
 
-// 页面刷新时，重新赋值store
-// if (window.localStorage.getItem('token')) {
-//     store.commit("_initUser")
-// }
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
         // 通过vuex state获取当前的token是否存在,由于时间所限没有验证token,以后添加

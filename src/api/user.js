@@ -36,3 +36,10 @@ export const register = (data) => {
     }
     return _post(req);
 }
+// 获取用户信息
+export const getUserInfo = (id) => {
+    let req = {
+        url: "/user/" + id,
+    }
+    return _get(req)
+}
