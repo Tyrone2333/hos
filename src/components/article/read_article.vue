@@ -44,13 +44,18 @@
         <!--评论列表-->
         <div class="comments" v-if="commentList.length ">
             <div class="comment-wrapper" v-for="(val,key) in commentList">
-                <div class="avatar">
-                    <img :src="val.avatar" alt="">
-                </div>
+                <!--点击头像进入用户主页-->
+                <router-link :to="/user/+val.from_id">
+                    <div class="avatar">
+                        <img :src="val.avatar" alt="">
+                    </div>
+                </router-link>
                 <div class="comment-right">
                     <div class="nickname">{{val.from_nickname}}</div>
                     <div class="content">
-                        <a href="" class="at-someone">{{!val.is_for_author ?"@" +val.to_nickname + "\t" :"" }}</a>
+                        <router-link :to="/user/+val.to_id">
+                            <span  class="at-someone">{{!val.is_for_author ?"@" +val.to_nickname + "\t" :"" }}</span>
+                        </router-link>
                         {{val.content}}
                     </div>
                     <div class="footer">
@@ -122,7 +127,6 @@
         beforeMount() {
             this.fetchData()
             this.initcollectList()
-
 
         },
 
