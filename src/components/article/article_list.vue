@@ -42,11 +42,8 @@
                 showFather: true,
                 resData: "",
                 articleList: [],
-                type: '5',
-                footer: {           // panel的footer Props
-                    title: 'more',
-                    url: process.env.BASE_API + "/console/show_list_test.php?n=" + Math.random(),
-                },
+                type: '5',  // vux panel 的类型，第5种
+
                 page: 1, // 文章的页数
                 articleId: 0,
                 showLoading: false,
@@ -157,7 +154,6 @@
                 var minute = dateTime.getMinutes();
                 var second = dateTime.getSeconds();
                 var now = new Date();
-                // var now_new = Date.parse(now.toDateString());  //typescript转换写法
                 var now_new = new Date().getTime()
 
                 var milliseconds = 0;

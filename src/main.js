@@ -10,6 +10,7 @@ import VueRouterIndex from './router/index.js'
 import  { ToastPlugin } from 'vux'
 
 Vue.use(ToastPlugin)
+
 Vue.use(VueRouter)
 
 import "./common/style.css"
