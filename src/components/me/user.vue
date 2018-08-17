@@ -15,19 +15,20 @@
             </div>
         </div>
 
-        <div class="user-article">
-            <tab :line-width=2 active-color='#fc378c' v-model="index">
-                <tab-item class="vux-center" v-for="(item, index) in swiperList"
-                          :selected="selected === item"
-                          @click="selected = item" :key="index">{{item}}
-                </tab-item>
-            </tab>
-            <swiper v-model="index" :show-dots="false" height="500px">
-                <!--<swiper-item v-for="(item, index) in swiperList" :key="index">-->
-                <!--<div class="tab-swiper vux-center">{{item}} Container</div>-->
-                <!--</swiper-item>-->
+        <div class="user-article ">
+            <sticky scroll-box="vux_view_box_body" :offset="46" :check-sticky-support="false">
 
-                <swiper-item key="index">
+                <tab :line-width=2 active-color="#fc378c" v-model="tabIndex">
+                    <tab-item class="vux-center" v-for="(item, index) in swiperList"
+                              :selected="selected === item"
+                              @click="selected = item" :key="index">{{item}}
+                    </tab-item>
+                </tab>
+            </sticky>
+
+            <swiper class="swiper-wrapper w-e-clear-fix" v-model="tabIndex" :show-dots="false" height="400px">
+                <!--文章-->
+                <swiper-item>
                     <div class="user-article-title"> {{userInfo.nickname}} 的 所有文章</div>
                     <div class="user-article-list" v-if="userArticle">
                         <div class="user-article-list-item" v-for="item in userArticle"
@@ -36,7 +37,7 @@
                                 <img :src="item.banner_img">
                             </div>
                             <div class="text">
-                                <div class="title">
+                                <div class="big-title">
                                     {{item.title}} <br>
                                 </div>
                                 <div class="info">
@@ -48,7 +49,8 @@
                     </div>
 
                 </swiper-item>
-                <swiper-item key="index">
+                <!--收藏-->
+                <swiper-item>
                     <div class="user-article-title"> {{userInfo.nickname}} 的 所有收藏</div>
                     <div class="user-article-list" v-if="userCollection">
                         <div class="user-article-list-item" v-for="item in userCollection"
@@ -57,7 +59,7 @@
                                 <img :src="item.banner_img">
                             </div>
                             <div class="text">
-                                <div class="title">
+                                <div class="big-title">
                                     {{item.title}} <br>
                                 </div>
                                 <div class="info">
@@ -67,6 +69,29 @@
                             </div>
                         </div>
                     </div>
+                </swiper-item>
+                <!--回复-->
+                <swiper-item>
+                    <div class="user-article-title"> {{userInfo.nickname}} 的 所有评论</div>
+                    <div class="user-article-list" v-if="userReply">
+                        <div class="user-article-list-item" v-for="item in userReply.comment"
+                             @click="readMore(item.article_id)">
+                            <div class="text">
+                                <div class="title">
+                                    {{item.from_nickname}}
+                                    在文章 {{item.title}}
+                                    评论了 {{item.to_nickname}}
+                                </div>
+                                <div class="content">
+                                    {{item.comment_content}}
+                                </div>
+                                <div class="info">
+                                    <span class="dateline">{{ commonTime(item.timestamp)}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </swiper-item>
 
             </swiper>
@@ -76,7 +101,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {Panel, Group, Radio, Swiper, SwiperItem, Tab, TabItem} from 'vux'
+    import {Panel, Group, Radio, Swiper, SwiperItem, Tab, TabItem, Sticky} from 'vux'
     import {mapGetters} from 'vuex'
 
     import {getUserInfo} from "@/api/user"
@@ -84,7 +109,7 @@
     export default {
         name: "feedback",
         components: {
-            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem
+            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky
         },
         data() {
             return {
@@ -92,16 +117,46 @@
                 userInfo: {},
                 userArticle: [],
                 userCollection: [],
-                swiperList: ['文章', '收藏', '回复', '点赞', '其他'],
+                userReply: {},
+                swiperList: ['文章', '收藏', '回复',],
                 selected: '文章',
-                index: 0,
-
+                tabIndex: 0,
             }
         },
         computed: {
             // ...mapGetters(["userInfo"]),
         },
+        mounted() {
+            this.fetchData()
+
+            this.initSwiperHeight()
+        },
+
+        watch: {
+            tabIndex(curVal, oldVal) {
+                let swiper = document.getElementsByClassName("vux-swiper")[0]
+                let swipers = document.getElementsByClassName("vux-swiper-item")
+
+                swiper.style.height = swipers[curVal].offsetHeight + "px"
+            },
+        },
         methods: {
+            changeMsg() {
+                this.msg = "Hello world."
+                this.msg1 = this.$refs.msgDiv.innerHTML
+                this.$nextTick(() => {
+                    this.msg2 = this.$refs.msgDiv.innerHTML
+                })
+                this.msg3 = this.$refs.msgDiv.innerHTML
+            },
+
+            initSwiperHeight() {
+                let swiper = document.getElementsByClassName("vux-swiper")[0]
+                let swipers = document.getElementsByClassName("vux-swiper-item")
+
+                swiper.style.height = swipers[0].offsetHeight + "px"
+
+            },
             getIdByURL(url) {
                 let regExp = /((user)\/(\d+)$)/;
 //                let str = "http://192.168.1.186:10086/#read-article/66";
@@ -109,19 +164,19 @@
             },
             fetchData() {
                 let _this = this
-                let url = window.location.href
-                _this.userId = _this.$route.params.id || _this.getIdByURL(url)
-//                log("articleId: " + _this.articleId)
-                getUserInfo(_this.userId).then((response) => {
+                this.userId = this.$route.params.id || this.getIdByURL(window.location.href)
+//                log("articleId: " + this.articleId)
+                getUserInfo(this.userId).then((response) => {
                     let res = response.data
-                    _this.userInfo = res.data.userInfo
-                    _this.userArticle = res.data.userArticle
-                    _this.userCollection = res.data.userCollection
+                    this.userInfo = res.data.userInfo
+                    this.userArticle = res.data.userArticle
+                    this.userCollection = res.data.userCollection
+                    this.userReply = res.data.userReply
                     console.log("用户信息: %O", res)
 
                 }).catch(err => {
                     // console.log(err)
-                    _this.$vux.toast.show({
+                    this.$vux.toast.show({
                         text: "无法获取服务器数据",
                         type: "warn",
                     })
@@ -133,14 +188,11 @@
                 return unixTimestamp.toLocaleString()
             },
             readMore(id) {
-                log(this.userArticle)
-                log(this.userCollection)
                 this.$router.push({name: 'read_article', params: {articleId: id}})
             },
+
         },
-        mounted() {
-            this.fetchData()
-        }
+
     }
 </script>
 
@@ -186,9 +238,19 @@
                     padding: 15px;
                     position: relative;
                     .text {
-                        .title {
+                        .big-title, .content {
                             font-weight: 400;
-                            font-size: 17px;
+                            font-size: 18px;
+                            margin-bottom: 8px;
+                            white-space: normal;
+                            width: auto;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            word-wrap: normal;
+                            word-break: break-all;
+                        }
+                        .title {
+                            font-size: 12px;
                             margin-bottom: 8px;
                             white-space: normal;
                             width: auto;
@@ -233,4 +295,7 @@
 
     }
 
+    .vux-slider > .vux-swiper > .vux-swiper-item {
+        height: auto !important;
+    }
 </style>

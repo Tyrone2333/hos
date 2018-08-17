@@ -7,6 +7,11 @@
             <input type="submit" value="submit">
         </form>
 
+        <div class="transform-test">
+            <div class="transform-test-item">
+
+            </div>
+        </div>
 
     </div>
 </template>
@@ -27,36 +32,23 @@
         },
         methods: {
             async submitBtnClick() {
-                let _this = this
-                let req = {
-                    url: 'http://localhost:3000/test',
-                    data: {
-                        "username": _this.username,
-                        age: 11,
-                        "password": "123456"
-                    }
-                }
-                // _get(req)
-                //     .then(function (response) {
-                //         console.log(response.data);
-                //         _this.resData = response.data
-                //     })
+//                let _this = this
 
-                log(1)
-              _this.$store.dispatch("getCollectList",1)
-                log(2)
             }
         },
         mounted() {
             let _this = this
             let req = {
-                url: 'http://localhost:3000/user/add_user',
+                url: process.env.BASE_API + '/test',
                 data: {
                     "username": "en20",
                     age: 11,
                     "password": "seohidnoasdgn"
                 }
             }
+
+            _get(req)
+
 
             // _post(req).then(function (response) {
             //     console.log(response.data);

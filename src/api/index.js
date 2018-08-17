@@ -26,7 +26,7 @@ const axios = require('axios').create({
 })
 
 // 设置重试次数及重试延迟
-axios.defaults.retry = 4
+axios.defaults.retry = 2
 axios.defaults.retryDelay = 1000
 // http response 拦截器
 axios.interceptors.response.use(
@@ -35,6 +35,7 @@ axios.interceptors.response.use(
         // 如请求正确,则将 loading 关闭
         Vue.$vux.loading.hide()
 
+        // 统一管理error的错误
         if (response.data.errno === 401) {
             Vue.$vux.toast.show({
                 text: response.data.message,
@@ -42,10 +43,17 @@ axios.interceptors.response.use(
             })
 
             router.replace({
-                path: 'login',
+                path: '/login',
                 query: {
                     redirect: router.currentRoute.fullPath
                 }
+            })
+        } else if (response.data.errno === -1
+            || response.data.errno === 1
+            || response.data.errno === 3) {
+            Vue.$vux.toast.show({
+                text: response.data.message || "出错了",
+                type: "warn",
             })
         }
 
@@ -79,44 +87,51 @@ axios.interceptors.response.use(
                         type: "warn",
                     })
                     break
-                default:
-
 
             }
         }
 
-        // 请求失败后重试
-        let config = error.config
-        // 如果 config 不存在，或 retry 未设置, reject
-        if (!config || !config.retry) {
-            return Promise.reject(error)
-        }
 
-        // 保存重试次数
-        config.__retryCount = config.__retryCount || 0
-
-        // 重试次数大于设置的次数，reject
-        if (config.__retryCount >= config.retry) {
-            Vue.$vux.loading.hide()
-            return Promise.reject(error)
-        }
-        console.log(`第 ${config.__retryCount + 1} 次重试`)
-
-        // 重试统计 +1
-        config.__retryCount += 1
-
-        // 创建一个 promise 处理新请求
-        return new Promise(resolve => {
-            setTimeout(resolve, config.retryDelay || 1)
-        }).then(() => {
-            if (!Vue.$vux.loading.isVisible()) {
-
-                Vue.$vux.loading.show({
-                    text: "网络错误，正在重试",
-                })
+        // 请求超时后重试
+        if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
+            let config = error.config
+            // 如果 config 不存在，或 retry 未设置, reject
+            if (!config || !config.retry) {
+                return Promise.reject(error)
             }
-            return axios(config)
-        })
+
+            // 保存重试次数
+            config.__retryCount = config.__retryCount || 0
+
+            // 重试次数大于设置的次数，reject
+            if (config.__retryCount >= config.retry) {
+                Vue.$vux.loading.hide()
+                return Promise.reject(error)
+            }
+            console.log(`请求超时,第 ${config.__retryCount + 1} 次重试`)
+
+            // 重试统计 +1
+            config.__retryCount += 1
+
+            // 创建一个 promise 处理新请求
+            return new Promise(resolve => {
+                setTimeout(resolve, config.retryDelay || 1)
+            }).then(() => {
+
+                // 显示一个loading
+                if (!Vue.$vux.loading.isVisible()) {
+                    Vue.$vux.loading.show({
+                        text: "请求超时，正在重试",
+                    })
+                }
+                return axios(config)
+            })
+
+
+        }
+
+
+        return Promise.reject(error)
 
     },
 )

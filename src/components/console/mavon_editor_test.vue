@@ -149,38 +149,6 @@
                     console.error(err)
                 })
 
-//                 ajax({
-//                     type: "post",
-//                     url: process.env.BASE_API + "/console/publish_article.php?n=" + Math.random(),
-//                     timeOut: 5000,
-//                     data: {
-//                         article: _this.draft.editorHtmlValue,
-//                         description: _this.draft.description,
-//                         title: _this.draft.title,
-//                         author: _this.$store.state.nickname,
-//                         authorId: _this.$store.state.user_id,
-//                         md: _this.draft.editorMDValue,
-//                         banner_img: _this.draft.banner_img,
-//                         fuck_date: _this.draft.fuckDate,
-//                         tags: _this.draft.tags
-//                     },
-//                     before: function () {
-// //                        console.log("before");
-//                     },
-//                     success: function (str) {
-//                         var res = JSON.parse(str)
-//                         console.log(res)
-//                         if (res.errno == 0) {
-//                             _this.toastSuccess(res.msg.receiveMsg)
-//                         } else {
-//                             _this.toastWarn(res.msg.errMsg)
-//                         }
-//                     },
-//                     error: function (err) {
-//                         console.log(err);
-//                     }
-//                 })
-
             },
             onShowHtml(status, value) {
                 // value 是 markdown 代码

@@ -44,13 +44,13 @@
         <!--评论列表-->
         <div class="comments" v-if="commentList.length ">
             <div class="comment-wrapper" v-for="(val,key) in commentList">
-                <div class="avatar">
+                <div class="avatar" @click="clickSomebody(val.from_id)">
                     <img :src="val.avatar" alt="">
                 </div>
                 <div class="comment-right">
                     <div class="nickname">{{val.from_nickname}}</div>
                     <div class="content">
-                        <a href="" class="at-someone">{{!val.is_for_author ?"@" +val.to_nickname + "\t" :"" }}</a>
+                        <span  @click="clickSomebody(val.to_id)" class="at-someone">{{!val.is_for_author ?"@" +val.to_nickname + "\t" :"" }}</span>
                         {{val.content}}
                     </div>
                     <div class="footer">
@@ -153,6 +153,9 @@
                     })
                 })
 
+            },
+            clickSomebody(userId){
+                this.$router.push({name: 'user', params: {id: userId}})
             },
             toggleCollect() {
                 if (!this.$store.state.user.user.id) {
@@ -273,12 +276,6 @@
                         _this.$vux.toast.show({
                             text: res.message,
                             type: "success",
-                        })
-
-                    } else {
-                        _this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
                         })
                     }
                     _this.fetchData()
