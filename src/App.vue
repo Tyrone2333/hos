@@ -61,6 +61,8 @@
     import {ViewBox} from 'vux'
     import {Tabbar,Actionsheet, TabbarItem, XHeader, XImg} from 'vux'
 
+    import {tokenLogin} from "./api/user";
+
     export default {
         name: 'app',
         components: {
@@ -118,6 +120,25 @@
         },
 
         mounted(){
+
+            // 每次打开如果token没过期就会自动刷新,很久未访问就要重新登录
+            if(localStorage.token && localStorage.token !== "undefined"){
+                tokenLogin().then( (response) =>{
+                    let res = response.data
+                    // 登录失败
+                    if (res.errno !== 0) {
+                        this.$vux.toast.show({
+                            text: res.message,
+                            type: "warn",
+                        })
+                        return
+                    }
+                    // 登录成功,保存必要信息进localStorage
+                    this.$store.commit("setUserInfo", res.userinfo)
+                    this.$store.commit("setToken", res.token)
+                })
+            }
+
         },
         watch: {
             $route(to, from) {

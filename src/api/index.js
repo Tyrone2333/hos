@@ -25,13 +25,24 @@ const axios = require('axios').create({
     }],
 })
 
+// http request 拦截器
+axios.interceptors.request.use(
+    config => {
+        if (localStorage.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+            config.headers.Authorization = JSON.parse(localStorage.token)
+        }
+        return config;
+    },
+    err => {
+        return Promise.reject(err);
+    })
+
 // 设置重试次数及重试延迟
 axios.defaults.retry = 2
 axios.defaults.retryDelay = 1000
 // http response 拦截器
 axios.interceptors.response.use(
     response => {
-
         // 如请求正确,则将 loading 关闭
         Vue.$vux.loading.hide()
 
@@ -91,7 +102,6 @@ axios.interceptors.response.use(
             }
         }
 
-
         // 请求超时后重试
         if (error.code === 'ECONNABORTED' && error.message.indexOf('timeout') !== -1) {
             let config = error.config
@@ -130,9 +140,7 @@ axios.interceptors.response.use(
 
         }
 
-
         return Promise.reject(error)
-
     },
 )
 

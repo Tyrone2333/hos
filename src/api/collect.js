@@ -13,11 +13,11 @@ export const  getCollectList = (id,username,token) => {
     return _post(req)
 }
 
-export const  collect = (userId,username,token,articleId,collect) => {
+export const  collect = (articleId,collect) => {
     let req = {
         url: "/collection/collect",
         data:{
-            userId,username,token,articleId,collect
+           articleId,collect
         },
     }
 

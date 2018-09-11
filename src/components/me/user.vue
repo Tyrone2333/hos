@@ -163,15 +163,18 @@
                 return url.match(regExp)[3]
             },
             fetchData() {
-                let _this = this
                 this.userId = this.$route.params.id || this.getIdByURL(window.location.href)
-//                log("articleId: " + this.articleId)
                 getUserInfo(this.userId).then((response) => {
                     let res = response.data
                     this.userInfo = res.data.userInfo
                     this.userArticle = res.data.userArticle
                     this.userCollection = res.data.userCollection
                     this.userReply = res.data.userReply
+                    this.$nextTick().then(function () {
+                        // DOM 更新了
+                        log(" this.nextTick().then(function () {")
+
+                    })
                     console.log("用户信息: %O", res)
 
                 }).catch(err => {

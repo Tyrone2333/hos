@@ -180,7 +180,7 @@
                 let collectAction = this.collected ? 1 : 0  // 1 是执行收藏,0 是取消收藏
                 let token = _this.$store.state.user.token
 
-                collect(userId, username, token, articleId, collectAction).then((response) => {
+                collect( articleId, collectAction).then((response) => {
                     let res = response.data
                     if (res.errno === 0) {
                         _this.$vux.toast.show({

@@ -11,11 +11,11 @@ export const login = (username, password) => {
     }
     return _post(req);
 }
-export const tokenLogin = (username, token) => {
+export const tokenLogin = () => {
     let req = {
         data: {
-            "username": username,
-            "token": token,
+            // "username": username,
+            // "token": token,
         },
         url: '/user/token_login'
     }

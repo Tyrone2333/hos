@@ -45,7 +45,6 @@
             </div>
 
 
-
             <cell title="设置" value="" is-link>
                 <span class="cellIcon small-icon icon-cog" slot="icon"></span>
             </cell>
@@ -72,7 +71,6 @@
     import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
 
-    import {tokenLogin} from "../../api/user";
 
 
     export default {

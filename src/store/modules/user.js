@@ -12,7 +12,7 @@ export default {
             register_time: "",
         },
         token: "",
-        status:"unAuth",// 用户状态,登录后变ok,过期的话会变unAuth
+        status: "unAuth",// 用户状态,登录后变ok,过期的话会变unAuth
 
     },
 // 由于分了模块，在组件里面不能直接用　...mapState 分发一个数组，要用
@@ -38,7 +38,7 @@ export default {
         },
         // 从localStorage取出数据赋给store用户信息
         _initUser(state) {
-            if(localStorage.user && localStorage.token){
+            if (localStorage.user && localStorage.token && localStorage.user !== "undefined" && localStorage.token !== "undefined") {
                 state.user = JSON.parse(localStorage.user)
                 state.token = JSON.parse(localStorage.token)
                 state.status = "ok"
@@ -47,7 +47,5 @@ export default {
         },
     },
 
-    actions: {
-
-    },
+    actions: {},
 }
