@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="setting">
         <div class="user-info">
             <div class="avatar">
@@ -90,6 +90,7 @@
                 oldPwd: '', // 改密码
                 newPwd: '',
                 newPwd2: '',
+ // contributor test
             }
         },
         computed: {
