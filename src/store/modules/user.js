@@ -15,9 +15,7 @@ export default {
         status: "unAuth",// 用户状态,登录后变ok,过期的话会变unAuth
 
     },
-// 由于分了模块，在组件里面不能直接用　...mapState 分发一个数组，要用
-//              collectList: state => state.collect.collectList
-// 所以使用getter
+
     getters: {
         userInfo: state => state.user,
     },
@@ -43,8 +41,27 @@ export default {
                 state.token = JSON.parse(localStorage.token)
                 state.status = "ok"
             }
-
         },
+        // 清除用户信息
+        _clearUser(state){
+            state = {
+                // 用户登录信息
+                user: {
+                    id: "",
+                    username: "",
+                    nickname: "",
+                    token: "",
+                    avatar: "",
+                    age: "",
+                    email: "",
+                    register_time: "",
+                },
+                token: "",
+                status: "unAuth",// 用户状态,登录后变ok,过期的话会变unAuth
+
+            }
+        }
+
     },
 
     actions: {},

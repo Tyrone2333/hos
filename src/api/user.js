@@ -36,6 +36,28 @@ export const register = (data) => {
     }
     return _post(req);
 }
+
+//  改密码
+export const changePwd = (oldPwd, newPwd) => {
+    let req = {
+        data: {
+            oldPwd, newPwd
+        },
+        url: '/user/password'
+    }
+    return _post(req);
+}
+
+// 改用户信息,传过来的是一个 obj
+export const changeInformation = ({nickname, age, sex, email, address}) => {
+    let req = {
+        data: {
+            nickname, age, sex, email, address
+        },
+        url: '/user/information'
+    }
+    return _post(req);
+}
 // 获取用户信息
 export const getUserInfo = (id) => {
     let req = {

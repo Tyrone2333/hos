@@ -16,6 +16,7 @@ import collect from '@/components/collect/collect.vue'
 import feedback from '@/components/feedback/feedback.vue'
 import test from "@/components/test.vue"
 import user from "@/components/me/user.vue"
+import setting from "@/components/me/setting.vue"
 
 import mavon_editor_test from '@/components/console/mavon_editor_test.vue'
 import about from '@/components/me/about.vue'
@@ -121,9 +122,12 @@ const router = new Router({
             path: '/user/:id',
             name: 'user',
             component: user,
-
         },
-
+        {
+            path: '/setting',
+            name: 'setting',
+            component: setting,
+        },
         {
             path: '/test',
             name: 'test',
@@ -136,7 +140,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
         // 通过vuex state获取当前的token是否存在,由于时间所限没有验证token,以后添加
-        if (store.state.user.token && store.state.user.status==="ok") {
+        if (store.state.user.token && store.state.user.status === "ok") {
             next();
         }
         else {
