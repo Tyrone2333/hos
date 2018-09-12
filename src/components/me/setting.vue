@@ -2,9 +2,7 @@
     <div class="setting">
         <div class="user-info">
             <div class="avatar">
-                <router-link to="/me">
-                    <img :src="userInfo.avatar">
-                </router-link>
+                <img :src="userInfo.avatar">
             </div>
             <div class="text">
                 <div class="nickname">
@@ -18,14 +16,18 @@
             <group title="基本信息">
                 <x-input title="用户名" name="name" v-model="informationDraft.nickname" placeholder="请输入姓名"></x-input>
 
-                <x-input title="邮箱" name="email" placeholder="请输入邮箱地址" is-type="email"></x-input>
+                <x-input title="邮箱" name="email" placeholder="请输入邮箱地址" is-type="email"
+                         v-model="informationDraft.email"></x-input>
 
                 <x-switch :title="informationDraft.sex ? '男' : '女' " v-model="informationDraft.sex"></x-switch>
 
                 <x-number title="你的年龄" v-model="informationDraft.age"></x-number>
 
-                <x-address title="你的地址" v-model="informationDraft.address" raw-value :list="addressData"
-                           value-text-align="left"></x-address>
+                <x-address title="你的地址"
+                           v-model="informationDraft.address"
+                           raw-value
+                           :list="addressData"
+                           value-text-align="right"></x-address>
 
                 <cell>
                     <x-button mini type="primary" @click.native="changeInformation">修改基本信息</x-button>
@@ -90,7 +92,6 @@
                 oldPwd: '', // 改密码
                 newPwd: '',
                 newPwd2: '',
- // contributor test
             }
         },
         computed: {
@@ -99,7 +100,6 @@
         mounted() {
             // 复制一下 userInfo,不需要深拷贝
             this.createInformationDraft()
-            // contributor test
         },
 
         methods: {
@@ -107,19 +107,29 @@
                 let unixTimestamp = new Date(timestamp * 1000)
                 return unixTimestamp.toLocaleString()
             },
+
+            // 创建符合 vux 组件要求的 用户信息数据
             createInformationDraft() {
-                // 创建符合 vux 组件要求的 用户信息数据
                 this.informationDraft = JSON.parse(JSON.stringify(this.userInfo))
                 if (this.informationDraft.address == null || isEmptyStr(this.informationDraft.address)) {
                     this.informationDraft.address = []
+                } else {
+                    this.informationDraft.address = this.informationDraft.address.split(",")
                 }
-                if (this.informationDraft.age == null ) {
+                if (this.informationDraft.age == null) {
                     this.informationDraft.age = 0
                 }
 
+                // 男的时候为真,女为假
+                this.informationDraft.sex = this.informationDraft.sex !== 0;
+
+                if (this.informationDraft.email == null || isEmptyStr(this.informationDraft.email)) {
+                    this.informationDraft.email = ""
+                }
             },
             // 修改个人信息
             changeInformation() {
+                // 将 vux 组件格式的数据改为可以存入数据库的格式
                 let data = {
                     nickname: this.informationDraft.nickname,
                     age: this.informationDraft.age,
@@ -134,6 +144,8 @@
                             text: res.message,
                             type: "success",
                         })
+                        // 更新用户信息
+                        this.$store.commit("setUserInfo", res.userinfo)
                     } else {
                         this.$vux.toast.show({
                             text: res.message,
@@ -141,12 +153,13 @@
                         })
                     }
                 })
-                log(this.informationDraft)
 
 
             },
             // 修改密码
             changePwd() {
+                log(this.informationDraft)
+
                 changePwd(this.oldPwd, this.newPwd).then((response) => {
                     let res = response.data
                     if (res.errno === 0) {
