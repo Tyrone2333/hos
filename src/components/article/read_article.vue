@@ -264,7 +264,6 @@
                     from_id: _this.$store.state.user.user.id,
                     to_id:  _this.commentReply.from_id || _this.resData.author_id || 0,
                     content: _this.commentContent,
-                    // timestamp: ,
                     article_id: _this.articleId,
                 }
                 reply({...data}).then((response) => {

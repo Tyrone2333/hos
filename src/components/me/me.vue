@@ -45,7 +45,7 @@
             </div>
 
 
-            <cell title="设置" value="" is-link>
+            <cell title="设置" value="" is-link link="/setting">
                 <span class="cellIcon small-icon icon-cog" slot="icon"></span>
             </cell>
 
@@ -93,10 +93,8 @@
 
             },
             signOut() {
-                localStorage.clear()
-                this.$store.commit("_clearToken")
+                this.$store.dispatch("_signOut")
                 location.reload()
-                log(this.$store.state)
             }
 
         },

@@ -136,6 +136,7 @@
                     // 登录成功,保存必要信息进localStorage
                     this.$store.commit("setUserInfo", res.userinfo)
                     this.$store.commit("setToken", res.token)
+                    console.log("已刷新token和用户信息")
                 })
             }
 
