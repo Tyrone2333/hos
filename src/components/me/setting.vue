@@ -98,6 +98,7 @@
         mounted() {
             // 复制一下 userInfo,不需要深拷贝
             this.createInformationDraft()
+            // contributor test
         },
 
         methods: {
