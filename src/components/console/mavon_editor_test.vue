@@ -42,14 +42,14 @@
 
 
         <!--<group>-->
-            <!--<datetime title="验证时间"-->
-                      <!--v-model="draft.minuteListValue"-->
-                      <!--format="YYYY-MM-DD HH:mm"-->
-                      <!--:minute-list="['00', '15', '30', '45']"-->
-                      <!--@on-change="dateTimechange"-->
-                      <!--:min-year=2018-->
-                      <!--:max-year=2099-->
-            <!--&gt;</datetime>-->
+        <!--<datetime title="验证时间"-->
+        <!--v-model="draft.minuteListValue"-->
+        <!--format="YYYY-MM-DD HH:mm"-->
+        <!--:minute-list="['00', '15', '30', '45']"-->
+        <!--@on-change="dateTimechange"-->
+        <!--:min-year=2018-->
+        <!--:max-year=2099-->
+        <!--&gt;</datetime>-->
         <!--</group>-->
 
 
@@ -122,9 +122,9 @@
                 let data = {
                     // id,token,username,
                     // title, author,author_id, description, content, md,banner_img,fuck_date,tags,
-                    id:_this.$store.state.user.user.id,
-                    token:_this.$store.state.user.token,
-                    username:_this.$store.state.user.user.username,
+                    id: _this.$store.state.user.user.id,
+                    token: _this.$store.state.user.token,
+                    username: _this.$store.state.user.user.username,
 
                     content: _this.draft.editorHtmlValue,
                     description: _this.draft.description,
@@ -160,32 +160,39 @@
             },
             $imgAdd(pos, $file) {
                 let _this = this
-                console.log('imgAdd', pos, $file);
-                this.img_file[pos] = $file;
+                console.log('$imgAdd:', pos, $file)
+                this.img_file[pos] = $file
 
-                var formData = new FormData();
-                formData.append("file", $file);
-                formData.append("author", _this.$store.state.user.user.username);
-                formData.append("username", _this.$store.state.user.user.username);
+                /**
+                 *  巨坑!必须把文件放在最底下,否则在后台会先收到文件,这时用 multer.diskStorage 处理会获取不到req.body
+                 *  因为req.body还没收到.
+                 *  github 相关 issue: https://github.com/expressjs/multer/issues/146
+                 */
+                let formData = new FormData()
+                formData.append("author", _this.$store.state.user.user.username)
+                // 用 type 区分文章配图,头像,以及后续的其他图片
+                formData.append("type", "article")
+                formData.append("file", $file)
+
                 axios({
                     // url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
                     // url: "http://127.0.0.1:80" + "/console/upload_file_test.php?n=" + Math.random(),
-                    url: process.env.BASE_API + "/article/upload_img",
+                    url: process.env.BASE_API + "/upload/article_img",
                     method: 'post',
                     data: formData,
                     headers: {'Content-Type': 'multipart/form-data', 'token': _this.$store.state.user.token},
                 }).then((res) => {
                     _this.resData = res.data
-                    _this.$refs["mavon-editor"].$imgUpdateByUrl(pos, res.data.data[0]);
-                    _this.$refs["mavon-editor"].$img2Url(pos, res.data.data[0]);
+                    _this.$refs["mavon-editor"].$imgUpdateByUrl(pos, res.data.data[0])
+                    _this.$refs["mavon-editor"].$img2Url(pos, res.data.data[0])
                     _this.draft.banner_img = res.data.data[0]
-                    console.log(res.data);
+                    console.log(res.data)
                 })
-//                console.log('this.img_file',this.img_file);
+//                console.log('this.img_file',this.img_file)
             },
             $imgDel(pos) {
-                console.log('imgDel', pos);
-                delete this.img_file[pos];
+                console.log('imgDel', pos)
+                delete this.img_file[pos]
             },
             toastWarn(text) {
                 this.toastType = "warn"

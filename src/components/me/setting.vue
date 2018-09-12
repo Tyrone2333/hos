@@ -2,6 +2,9 @@
     <div class="setting">
         <div class="user-info">
             <div class="avatar">
+                <!--头像上传,透明度设为0隐藏-->
+                <input id="uploadInput" type="file"
+                       accept="image/gif,image/jpeg,image/jpg,image/png" >
                 <img :src="userInfo.avatar">
             </div>
             <div class="text">
@@ -100,6 +103,10 @@
         mounted() {
             // 复制一下 userInfo,不需要深拷贝
             this.createInformationDraft()
+            // 头像上传
+            this.uploadInput = document.getElementById("uploadInput")
+            this.uploadInput.addEventListener('change', this.uploadAvatar);
+
         },
 
         methods: {
@@ -108,6 +115,45 @@
                 return unixTimestamp.toLocaleString()
             },
 
+            uploadAvatar() {
+
+                // 就传一个
+                let curFiles = this.uploadInput.files[0]
+                log(curFiles)
+                // import axios from 'axios'
+                const axios = require("axios")
+
+                let formData = new FormData()
+                formData.append("username", this.userInfo.username)
+                // 用 type 区分文章配图,头像,以及后续的其他图片
+                formData.append("type", "avatar")
+                formData.append("file", curFiles)
+
+                axios({
+                    // url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
+                    // url: "http://127.0.0.1:80" + "/console/upload_file_test.php?n=" + Math.random(),
+                    url: process.env.BASE_API + "/upload/avatar",
+                    method: 'post',
+                    data: formData,
+                    headers: {'Content-Type': 'multipart/form-data', 'Authorization': this.$store.state.user.token},
+                }).then((response) => {
+                    let res = response.data
+                    if(res.errno === 0){
+                        this.$store.commit("changeAvatar",res.avatarUrl)
+                        this.$vux.toast.show({
+                            text: res.message,
+                            type: "success",
+                        })
+                    } else {
+                        this.$vux.toast.show({
+                            text: res.message,
+                            type: "warn",
+                        })
+                    }
+                    console.log("修改头像:",res.data)
+                })
+                
+            },
             // 创建符合 vux 组件要求的 用户信息数据
             createInformationDraft() {
                 this.informationDraft = JSON.parse(JSON.stringify(this.userInfo))
@@ -158,7 +204,6 @@
             },
             // 修改密码
             changePwd() {
-                log(this.informationDraft)
 
                 changePwd(this.oldPwd, this.newPwd).then((response) => {
                     let res = response.data
@@ -204,6 +249,7 @@
             }
             .avatar {
                 /*padding-top: 10px;*/
+                position: relative;
                 text-align: center;
                 img {
                     width: 60px;
@@ -211,6 +257,16 @@
                     border-radius: 20%;
                 }
             }
+        }
+        #uploadInput {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /*font-size: 100px;*/
+            right: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
         }
 
     }

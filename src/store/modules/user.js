@@ -26,6 +26,9 @@ export default {
             localStorage.setItem("user", JSON.stringify(payload))
             state.status = "ok"
         },
+        changeAvatar(state, payload){
+            state.user.avatar = payload
+        },
         setToken(state, payload) {
             state.token = payload
             localStorage.setItem("token", JSON.stringify(payload))
@@ -34,6 +37,7 @@ export default {
             // payload 必须是 "unAuth" or "ok"
             state.status = payload
         },
+
         // 从localStorage取出数据赋给store用户信息
         _initUser(state) {
             if (localStorage.user && localStorage.token && localStorage.user !== "undefined" && localStorage.token !== "undefined") {
