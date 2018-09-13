@@ -1,6 +1,7 @@
 <template>
     <div class="me">
 
+        <!--用户信息-->
         <div class="user-info">
             <div class="avatar">
                 <router-link :to="/user/+userInfo.id">
@@ -14,7 +15,6 @@
                 </div>
                 <div class="home-page-edit">User : {{userInfo.username}}</div>
             </div>
-
         </div>
 
         <group title="">
@@ -41,18 +41,15 @@
                     <badge text="16"></badge>
                 </span>
                 </cell>
-
             </div>
-
 
             <cell title="设置" value="" is-link link="/setting">
                 <span class="cellIcon small-icon icon-cog" slot="icon"></span>
             </cell>
-
         </group>
-        <group title="开发者">
 
-            <cell title="版本" @click.native="clickVision" inline-desc="v1.1.3">
+        <group title="开发者">
+            <cell title="版本" @click.native="clickVision" :inline-desc=" 'v' + version">
                 <x-icon class="cellIcon" slot="icon" type="ios-information" size="30"></x-icon>
             </cell>
 
@@ -72,7 +69,6 @@
     import {mapGetters} from 'vuex'
 
 
-
     export default {
         components: {
             Group, Cell, CellBox, XButton, Badge
@@ -87,10 +83,9 @@
         },
         methods: {
             clickVision() {
-                console.log("%c" + "  当前版本 v 1.13" + " %c",
-                    "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff", "background:transparent")
-
-
+                console.log("%c" + "  当前版本 v " + this.version + " %c",
+                    "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",
+                    "background:transparent")
             },
             signOut() {
                 this.$store.dispatch("_signOut")
@@ -99,7 +94,7 @@
 
         },
         computed: {
-            ...mapGetters(["userInfo"]),
+            ...mapGetters(["userInfo", "version"]),
         },
 
     }

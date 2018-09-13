@@ -150,7 +150,7 @@
                             type: "warn",
                         })
                     }
-                    console.log("修改头像:",res.data)
+                    console.log("修改头像:",res)
                 })
                 
             },

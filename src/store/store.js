@@ -10,9 +10,13 @@ import user from './modules/user'
 
 export const store = new Vuex.Store({
     state: {
+        // 一些特殊的 state 写在这里,内容多了再另分模块
         clock: 0,  //打脸倒计时的Interval ID
+        version: 1.1
     },
-    getters: {},
+    getters: {
+        version: state => state.version,
+    },
     mutations: {
         //写法与 getters 相类似
         //组件想要对于 vuex 中的数据进行的处理

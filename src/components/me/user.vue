@@ -30,45 +30,12 @@
                 <!--文章-->
                 <swiper-item>
                     <div class="user-article-title"> {{userInfo.nickname}} 的 所有文章</div>
-                    <div class="user-article-list" v-if="userArticle">
-                        <div class="user-article-list-item" v-for="item in userArticle"
-                             @click="readMore(item.article_id)">
-                            <div class="banner" v-if="item.banner_img">
-                                <img :src="item.banner_img">
-                            </div>
-                            <div class="text">
-                                <div class="big-title">
-                                    {{item.title}} <br>
-                                </div>
-                                <div class="info">
-                                    <span class="dateline">{{ commonTime(item.dateline)}}</span>
-                                    <span class="agree">{{ item.agree }} 赞同</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <cell-list :articleList="userArticle"></cell-list>
                 </swiper-item>
                 <!--收藏-->
                 <swiper-item>
                     <div class="user-article-title"> {{userInfo.nickname}} 的 所有收藏</div>
-                    <div class="user-article-list" v-if="userCollection">
-                        <div class="user-article-list-item" v-for="item in userCollection"
-                             @click="readMore(item.article_id)">
-                            <div class="banner" v-if="item.banner_img">
-                                <img :src="item.banner_img">
-                            </div>
-                            <div class="text">
-                                <div class="big-title">
-                                    {{item.title}} <br>
-                                </div>
-                                <div class="info">
-                                    <span class="dateline">{{ commonTime(item.dateline)}}</span>
-                                    <span class="agree">{{ item.agree }} 赞同</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <cell-list :articleList="userCollection"></cell-list>
                 </swiper-item>
                 <!--回复-->
                 <swiper-item>
@@ -103,13 +70,14 @@
 <script type="text/ecmascript-6">
     import {Panel, Group, Radio, Swiper, SwiperItem, Tab, TabItem, Sticky} from 'vux'
     import {mapGetters} from 'vuex'
-
     import {getUserInfo} from "@/api/user"
+    import cellList from "../common/cellList"
+
 
     export default {
-        name: "feedback",
+        name: "user",
         components: {
-            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky
+            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky, cellList
         },
         data() {
             return {
