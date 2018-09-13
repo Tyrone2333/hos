@@ -249,17 +249,7 @@
 
                         }
                     }
-                    .banner {
-                        margin-right: .8em;
-                        width: 60px;
-                        height: 60px;
-                        line-height: 60px;
-                        text-align: center;
-                        img {
-                            width: 60px;
-                            height: 60px;
-                        }
-                    }
+
                 }
             }
         }

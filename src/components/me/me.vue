@@ -86,6 +86,11 @@
                 console.log("%c" + "  当前版本 v " + this.version + " %c",
                     "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",
                     "background:transparent")
+
+                this.$vux.toast.show({
+                    text: "  当前版本 v " + this.version,
+                    type: "text",
+                })
             },
             signOut() {
                 this.$store.dispatch("_signOut")
