@@ -7,6 +7,7 @@ Vue.use(Vuex);
 import collect from './modules/collect'
 import article from './modules/article'
 import user from './modules/user'
+import websocket from './modules/websocket'
 
 export const store = new Vuex.Store({
     state: {
@@ -32,6 +33,6 @@ export const store = new Vuex.Store({
     },
     modules: {
         //引入某一个state的以上集合的模块，会自动分别填充到上面，使得结构更加清晰
-        collect, article, user
+        collect, article, user,websocket
     },
 });

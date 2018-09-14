@@ -10,9 +10,12 @@
 
         <div class="nextTickTest" @click="nextTickTest">nextTickTest</div>
 
+        <div class="websocket">
+            <p>websocket test:</p>
+            <input type="text" v-model="username">
+        </div>
         <div class="transform-test">
             <div class="transform-test-item">
-
             </div>
         </div>
 

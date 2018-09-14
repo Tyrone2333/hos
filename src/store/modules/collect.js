@@ -1,4 +1,3 @@
-import {getCollectList} from "@/api/collect.js"
 
 export default {
     state: {

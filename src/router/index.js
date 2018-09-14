@@ -17,6 +17,7 @@ import feedback from '@/components/feedback/feedback.vue'
 import test from "@/components/test.vue"
 import user from "@/components/me/user.vue"
 import setting from "@/components/me/setting.vue"
+import chatRoom from "@/components/chatRoom/chatRoom.vue"
 
 import mavon_editor_test from '@/components/console/mavon_editor_test.vue'
 import about from '@/components/me/about.vue'
@@ -127,6 +128,11 @@ const router = new Router({
             path: '/setting',
             name: 'setting',
             component: setting,
+        },
+        {
+            path: '/chatRoom',
+            name: 'chatRoom',
+            component: chatRoom,
         },
         {
             path: '/test',
