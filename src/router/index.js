@@ -10,7 +10,6 @@ import login from '@/components/me/login.vue'
 import article_edit from '@/components/console/article_edit.vue'
 import article_modify from '@/components/console/article_modify.vue'
 import article from '@/components/article/article_list.vue'
-import assert from '@/components/article/assert.vue'
 import read_article from '@/components/article/read_article.vue'
 import collect from '@/components/collect/collect.vue'
 import feedback from '@/components/feedback/feedback.vue'
@@ -53,19 +52,7 @@ const router = new Router({
                 },
             ]
         },
-        {
-            path: '/assert',
-            name: 'assert',
-            component: assert,
-            children: [
-                {
-                    path: 'read_article/:articleId',
-                    name: 'readInAssert',
-                    component: read_article
-                },
-            ]
 
-        },
         {
             path: '/news',
             name: 'news',

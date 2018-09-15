@@ -1,8 +1,5 @@
 <template>
     <div class="chatRoom">
-        <input type="text" v-model="message">
-
-        <button @click="sendMessage"> btn sendMessage</button>
 
         <button @click="test"> btn test</button>
 
@@ -23,46 +20,67 @@
             <!--</div>-->
             <!--</div>-->
 
-            <ul class="rounded-messages reveal-messages
+            <div class="rounded-messages reveal-messages
              messages-width-medium msg-animation-fast">
-                <!--真正的消息体-->
-                <li contenteditable="true"
-                    v-for="(item,idx) in chatList"
-                    class="msg-visible"
-                    :class="userInfo.username === item.username ? 'right-msg' : 'left'">
-                    {{item.message}}
-                </li>
+
+                <!--消息体-->
+                <div contenteditable="true"
+                     v-for="(item,idx) in chatList"
+                     class="item-wrapper"
+                     :class="userInfo.username === item.username ? 'right-item-wrapper' : 'left-item-wrapper'">
+
+                    <!--左边的头像-->
+                    <div class="avatar">
+                        <img :src="item.avatar" alt="avatar">
+                    </div>
+                    <!--右边是 昵称 和 消息-->
+                    <div class="right-wrapper">
+                        <!--昵称-->
+                        <div class="nickname">{{item.nickname}}</div>
+                        <!--消息-->
+                        <div class=" msg msg-visible"
+                             :class="userInfo.username === item.username ? 'right-msg' : 'left'">{{item.message}}
+                        </div>
+                    </div>
+                </div>
 
                 <!--这边是用来演示的消息-->
-                <li class="time"><strong>Yesterday</strong> 12:25 pm</li>
-                <li class="left">Hello!</li>
-                <li class="time"><strong>Yesterday</strong> 12:25 pm</li>
-                <li class="right-msg">Hey, how are you?</li>
+                <div class="time msg"><strong>Yesterday</strong> 12:25 pm</div>
+                <div class="left msg">Hello!</div>
+                <div class="time msg"><strong>Yesterday</strong> 12:25 pm</div>
+                <div class="right-msg msg">Hey, how are you?</div>
 
-                <li>
-                    <div class="item-wrapper"></div>
-                    I'm doing well
-                </li>
+                <!--<div>-->
+                <!--<div class="user-info">-->
+                <!--<img :src="item.avatar" alt="">-->
+                <!--<div class="nickname">{{item.nickname}}</div>-->
+                <!--</div>-->
+                <!--<div class="item-wrapper msg">I'm doing well</div>-->
+                <!--</div>-->
 
-
-                <li>What about you?</li>
-                <li class="right-msg">Hardy har har.</li>
-                <li class="right-msg"><img
+                <div class="msg">What about you?</div>
+                <div class="right-msg msg">Hardy har har.</div>
+                <div class="right-msg msg"><img
                         src="https://tse4.mm.bing.net/th?id=OIP.Ma51851cded2f1d4bf2da6ff1e98df912o0&pid=15.1">I'm
                     doing great! ;)
-                </li>
-                <li class="right-msg">LOL</li>
-                <li class="time"><strong>Yesterday</strong> 3:44pm</li>
-                <li>Heck, yea! FOOTBALL!</li>
-                <li>😁</li>
-            </ul>
+                </div>
+                <div class="right-msg msg">LOL</div>
+                <div class="time  msg"><strong>Yesterday</strong> 3:44pm</div>
+                <div class="msg">Heck, yea! FOOTBALL!</div>
+                <div class="msg">😁</div>
+            </div>
+        </div>
+
+        <div class="foot-wrapper">
+            <input class="chat-input" type="text" v-model="message">
+
+            <button class="chat-send" @click="sendMessage"> btn sendMessage</button>
         </div>
     </div>
 </template>
 
 <script>
     import {mapGetters, mapMutations} from "vuex"
-    import Divider from "vux/src/components/divider/index";
 
     /**
      *   进入组件触发 beforeCreate, created, mounted
@@ -72,7 +90,6 @@
      */
     export default {
         name: "chatRoom",
-        components: {Divider},
         data() {
             return {
                 message: "ws chat room message",
@@ -89,25 +106,31 @@
             ...mapGetters(["chatWSServer", "userInfo",]),
         },
         created() {
-            log(this.chatWSServer)
+
             // 防止热加载调试建立多个ws连接
             this.wsConnecting = false
             this.creatw3cSocket()
 
         },
         beforeDestroy() {
-            log("beforeDestroy")
+
+            let tabbar = document.getElementsByClassName("weui-tabbar")[0]
+            tabbar.style.visibility = "visible"
+
             this.ws.close(1000, "用户离开聊天室")
         },
+        mounted(){
+            // 隐藏底部的 tabbar
+            let tabbar = document.getElementsByClassName("weui-tabbar")[0]
+            tabbar.style.visibility = "hidden"
 
+        },
         methods: {
             ...mapMutations(["setchatWSServerStatus",]),
             test() {
-                console.log("this.chatWSServer.status:", this.chatWSServer.status)
-
                 // close 发送 code,reason 是在后台的关闭事件接收,而非本地的 onclose 事件
                 this.ws.close(3333, "离开聊天室,关闭 websocket 连接")
-                log(this.retryCount)
+
             },
             creatw3cSocket() {
                 if (!window.WebSocket) return
@@ -175,7 +198,7 @@
 
 
                     }
-                    console.log("echo-protocol ws " + closeReason, event)
+                    console.log("echo-protocol ws " + closeReason)
 
                     let nullAct = () => {
                     }
@@ -187,9 +210,6 @@
 
                     _this.wsConnecting = false
                     _this.setchatWSServerStatus(false)
-
-
-                    // _this.creatw3cSocket()
                 }
                 ws.onerror = function (ev) {
                     console.log("ws 出现连接错误", ev)
@@ -277,6 +297,50 @@
                 position: relative;
             }
         }
+        /*消息框公共部分*/
+        .item-wrapper {
+            display: flex;
+            position: relative;
+            .avatar {
+                position: absolute;
+                img {
+                    width: 36px;
+                    height: 36px;
+                }
+            }
+            .right-wrapper {
+                flex: 1;
+                position: relative;
+                .nickname {
+                }
+            }
+        }
+        /*消息在左边的情况*/
+        .left-item-wrapper {
+            .avatar {
+                left: 0;
+                top: 0;
+            }
+            .right-wrapper {
+                .nickname {
+                    padding-left: 55px;
+                    font-size: 12px;
+                    color: #555;
+                }
+            }
+        }
+        /*消息在右边的情况*/
+        .right-item-wrapper {
+            .avatar {
+                right: 0;
+                bottom: 0;
+            }
+            .right-wrapper {
+                .nickname {
+                    display: none;
+                }
+            }
+        }
 
         /*codepen 的气泡特效*/
         .messages-width-small {
@@ -298,7 +362,7 @@
         }
 
         /* Basic List Styling */
-        ul.rounded-messages {
+        div.rounded-messages {
             list-style: none;
             display: inline-block;
             overflow: hidden;
@@ -317,15 +381,15 @@
                 margin-top: 10px;
             }
         }
-        ul.rounded-messages.reveal-messages li {
+        div.rounded-messages.reveal-messages .msg {
             /*visibility: hidden;*/
         }
 
-        ul.rounded-messages.msg-animation-superfast li.msg-visible,
-        ul.rounded-messages.msg-animation-fast li.msg-visible,
-        ul.rounded-messages.msg-animation-slow li.msg-visible,
-        ul.rounded-messages.msg-animation-normal li.msg-visible,
-        ul.rounded-messages li.msg-visible {
+        div.rounded-messages.msg-animation-superfast .msg.msg-visible,
+        div.rounded-messages.msg-animation-fast .msg.msg-visible,
+        div.rounded-messages.msg-animation-slow .msg.msg-visible,
+        div.rounded-messages.msg-animation-normal .msg.msg-visible,
+        div.rounded-messages .msg.msg-visible {
             animation: message-reveal-animation;
             animation-duration: 0.3s;
             /* Default Animation Length */
@@ -333,18 +397,18 @@
             visibility: visible;
         }
 
-        ul.rounded-messages.msg-animation-superfast li.msg-visible {
+        div.rounded-messages.msg-animation-superfast .msg.msg-visible {
             animation-duration: 0.2s;
             /* Super Fast Animation Length */
         }
 
-        ul.rounded-messages.msg-animation-slow li.msg-visible {
+        div.rounded-messages.msg-animation-slow .msg.msg-visible {
             animation-duration: 0.5s;
             /* Slow Animation Length */
         }
 
         /* Message Bubbles */
-        ul.rounded-messages li {
+        div.rounded-messages .msg {
             position: relative;
             clear: both;
             display: block;
@@ -356,7 +420,7 @@
             font-family: sans-serif;
             text-align: left;
             line-height: 1.5em;
-            margin: 5px 50px;
+            margin: 5px 55px;
             padding: 10px;
             cursor: default;
             border-radius: 15px;
@@ -364,15 +428,15 @@
         }
 
         /* Left Message Bubble */
-        ul.rounded-messages li:not(.right-msg),
-        ul.rounded-messages li.left-msg {
+        div.rounded-messages .msg:not(.right-msg),
+        div.rounded-messages .msg.left-msg {
             float: left;
             color: #292929;
             background: #E3E2DF;
         }
 
-        ul.rounded-messages li:not(.right-msg)::before,
-        ul.rounded-messages li.left-msg::before {
+        div.rounded-messages .msg:not(.right-msg)::before,
+        div.rounded-messages .msg.left-msg::before {
             /* Left Message Bubble Tail */
             content: "";
             position: absolute;
@@ -383,13 +447,13 @@
         }
 
         /* Right Message Bubble */
-        ul.rounded-messages li.right-msg {
+        div.rounded-messages .msg.right-msg {
             float: right;
             color: #F8F8F8;
             background: #27AE60;
         }
 
-        ul.rounded-messages li.right-msg::before {
+        div.rounded-messages .msg.right-msg::before {
             /* Right Message Bubble Tail */
             content: "";
             position: absolute;
@@ -400,7 +464,7 @@
         }
 
         /* Bubble with image */
-        ul.rounded-messages li img {
+        div.rounded-messages .msg img {
             display: block;
             max-width: 100%;
             border-radius: 5px;
@@ -408,14 +472,14 @@
         }
 
         /* Bubble with no tail */
-        ul.rounded-messages li.no-tail::before,
-        ul.rounded-messages li.time::before {
+        div.rounded-messages .msg.no-tail::before,
+        div.rounded-messages .msg.time::before {
             content: "";
             display: none;
         }
 
         /* Time Stamp */
-        ul.rounded-messages li.time {
+        div.rounded-messages .msg.time {
             width: 100%;
             max-width: 100%;
             background: transparent;
@@ -427,7 +491,7 @@
 
         /*@media screen and (max-width: 500px) {*/
         /*!* Fit the screen for all chats *!*/
-        /*ul.rounded-messages,*/
+        /*div.rounded-messages,*/
         /*.messages-width-large,*/
         /*.messages-width-medium,*/
         /*.messages-width-small {*/
@@ -436,5 +500,22 @@
         /*}*/
         /*}*/
 
+    }
+
+    .foot-wrapper{
+        height: 48px;
+        width: 100%;
+        display: flex;
+        position: absolute;
+        bottom: 0;
+        .chat-input{
+            flex: 70%;
+        }
+        .chat-send{
+            flex: 30%;
+        }
+    }
+    .weui-tabbar {
+        visibility: hidden;
     }
 </style>

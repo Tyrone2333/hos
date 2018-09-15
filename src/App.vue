@@ -143,6 +143,7 @@
         },
         watch: {
             $route(to, from) {
+                // TODO 这段代码写这里非常恶心,文章回退写的不好,有空必改
                 let _this = this
                 let scrBody = this.$refs.viewBox.getScrollBody()
                 let scrTop = this.$refs.viewBox.getScrollTop()
@@ -154,9 +155,13 @@
 //                从文章退回列表跳转到之前的位置
                 if (to.name === "article" && from.name === "read_article") {
                     log("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
-                    setTimeout(() => {
+                   // 都可以
+                    // setTimeout(() => {
+                    //     this.scrollToBefore(this.states.scrollTop)
+                    // }, 0)
+                    this.$nextTick(() =>{
                         this.scrollToBefore(this.states.scrollTop)
-                    }, 0)
+                    })
 //                    this.$refs.viewBox.scrollTo(this.states.scrollTop)
                 }
             },

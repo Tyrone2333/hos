@@ -233,9 +233,13 @@
 
 
                 this.replyPlaceholder = this.commentReply.from_nickname ? "@" + this.commentReply.from_nickname : ""
-                setTimeout(function () {
+                // setTimeout(function () {
+                //     document.getElementById("reply_content").focus()
+                // }, 1)
+                this.$nextTick(() =>{
                     document.getElementById("reply_content").focus()
-                }, 1)
+
+                })
 
                 /**
                  * 有bug,放在最底部可以这样,如果reply组件底下还有东西就应该
