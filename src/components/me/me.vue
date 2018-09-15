@@ -22,6 +22,11 @@
                 <span class="cellIcon small-icon icon-user" slot="icon"></span>
             </cell>
 
+            <cell title="尬聊室(beta)" value="" is-link link="/chatRoom">
+                <span class="cellIcon small-icon icon-user" slot="icon"></span>
+            </cell>
+
+
             <cell title="与我相关"
                   is-link
                   :border-intent="false"
