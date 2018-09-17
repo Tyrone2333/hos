@@ -6,7 +6,6 @@ import { store } from './store/store'
 import VueRouter from 'vue-router'
 import App from './App'
 import VueRouterIndex from './router/index.js'
-
 import  { ToastPlugin } from 'vux'
 
 Vue.use(ToastPlugin)

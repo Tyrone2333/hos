@@ -1,31 +1,41 @@
 <template>
-    <div class="chatRoom">
+    <div class="chat-room">
 
-        <button @click="test"> btn test</button>
 
         <div class="chat-wrapper" v-if="chatList">
-            <!--单条消息-->
-            <!--<div class="chat-item clearfix" v-for="(item,idx) in chatList">-->
-
-            <!--&lt;!&ndash;时间,昵称,头像&ndash;&gt;-->
-            <!--<div class="head-wrapper">-->
-            <!--{{item.nickname}} : {{commonTime(item.timeStamp)}} :-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash;消息本体&ndash;&gt;-->
-            <!--&lt;!&ndash; 用username判断自己发的&ndash;&gt;-->
-            <!--<div class="message-wrapper"-->
-            <!--:class="userInfo.username === item.username ? 'right' : 'left'">-->
-            <!--{{item.message}}-->
-            <!--</div>-->
-            <!--</div>-->
 
             <div class="rounded-messages reveal-messages
              messages-width-medium msg-animation-fast">
 
+
+                <!--这边是用来演示的消息-->
+                <div class="time msg"><strong>Yesterday</strong> 12:25 pm</div>
+                <div class="left msg">Hello!</div>
+                <div class="time msg"><strong>Yesterday</strong> 12:25 pm</div>
+                <div class="right-msg msg">Hey, how are you?</div>
+
+                <!--<div>-->
+                <!--<div class="user-info">-->
+                <!--<img :src="item.avatar" alt="">-->
+                <!--<div class="nickname">{{item.nickname}}</div>-->
+                <!--</div>-->
+                <!--<div class="item-wrapper msg">I'm doing well</div>-->
+                <!--</div>-->
+                <div class=" msg">I'm doing well</div>
+                <div class="msg">What about you?</div>
+                <div class="right-msg msg">Hardy har har.</div>
+                <div class="right-msg msg"><img
+                        src="https://tse4.mm.bing.net/th?id=OIP.Ma51851cded2f1d4bf2da6ff1e98df912o0&pid=15.1">I'm
+                    doing great! ;)
+                </div>
+                <div class="right-msg msg">LOL</div>
+                <div class="time  msg"><strong>Yesterday</strong> 3:44pm</div>
+                <div class="msg">Heck, yea! FOOTBALL!</div>
+
+                <div class="clearfix"></div>
+
                 <!--消息体-->
-                <div contenteditable="true"
-                     v-for="(item,idx) in chatList"
+                <div v-for="(item,idx) in chatList"
                      class="item-wrapper"
                      :class="userInfo.username === item.username ? 'right-item-wrapper' : 'left-item-wrapper'">
 
@@ -43,38 +53,13 @@
                         </div>
                     </div>
                 </div>
-
-                <!--这边是用来演示的消息-->
-                <div class="time msg"><strong>Yesterday</strong> 12:25 pm</div>
-                <div class="left msg">Hello!</div>
-                <div class="time msg"><strong>Yesterday</strong> 12:25 pm</div>
-                <div class="right-msg msg">Hey, how are you?</div>
-
-                <!--<div>-->
-                <!--<div class="user-info">-->
-                <!--<img :src="item.avatar" alt="">-->
-                <!--<div class="nickname">{{item.nickname}}</div>-->
-                <!--</div>-->
-                <!--<div class="item-wrapper msg">I'm doing well</div>-->
-                <!--</div>-->
-
-                <div class="msg">What about you?</div>
-                <div class="right-msg msg">Hardy har har.</div>
-                <div class="right-msg msg"><img
-                        src="https://tse4.mm.bing.net/th?id=OIP.Ma51851cded2f1d4bf2da6ff1e98df912o0&pid=15.1">I'm
-                    doing great! ;)
-                </div>
-                <div class="right-msg msg">LOL</div>
-                <div class="time  msg"><strong>Yesterday</strong> 3:44pm</div>
-                <div class="msg">Heck, yea! FOOTBALL!</div>
-                <div class="msg">😁</div>
             </div>
         </div>
 
         <div class="foot-wrapper">
-            <input class="chat-input" type="text" v-model="message">
+            <input class="chat-input" type="text" v-model="message" @keyup.enter="sendMessage">
 
-            <button class="chat-send" @click="sendMessage"> btn sendMessage</button>
+            <button class="chat-send" @click="sendMessage">发送</button>
         </div>
     </div>
 </template>
@@ -106,20 +91,30 @@
             ...mapGetters(["chatWSServer", "userInfo",]),
         },
         created() {
-
             // 防止热加载调试建立多个ws连接
             this.wsConnecting = false
-            this.creatw3cSocket()
+            // this.creatw3cSocket()
 
+
+            this.createSocketIOClient()
         },
         beforeDestroy() {
-
+            // 重新显示tabbar
             let tabbar = document.getElementsByClassName("weui-tabbar")[0]
             tabbar.style.visibility = "visible"
 
-            this.ws.close(1000, "用户离开聊天室")
+            // 触发下线,服务器要自己设定断开与 client 的连接
+            let obj = {
+                action: "offline",
+                nickname: this.userInfo.nickname,
+                username: this.userInfo.username,
+                userId: this.userInfo.id,
+                timeStamp: Math.round(new Date().getTime() / 1000),
+            }
+            this.io.emit("offline", obj)
+
         },
-        mounted(){
+        mounted() {
             // 隐藏底部的 tabbar
             let tabbar = document.getElementsByClassName("weui-tabbar")[0]
             tabbar.style.visibility = "hidden"
@@ -128,9 +123,46 @@
         methods: {
             ...mapMutations(["setchatWSServerStatus",]),
             test() {
-                // close 发送 code,reason 是在后台的关闭事件接收,而非本地的 onclose 事件
-                this.ws.close(3333, "离开聊天室,关闭 websocket 连接")
+                // close 发送 code,reason 是在后台的关闭事件接收,而非本地的 onclose 事件(原生 WS)
+                // this.ws.close(3333, "离开聊天室,关闭 websocket 连接")
+                // this.io.close(1000, "用户离开聊天室")
+            },
+            createSocketIOClient() {
+                let _this = this
+                const io = require('socket.io-client');
+                this.io = io(process.env.CHAT_WS_SERVER)
 
+                // 连接
+                this.io.on('connect', (socket) => {
+                    // let token = socket.handshake.query.token;
+                    log("ws 已连接")
+                })
+                this.io.on('disconnect', (socket) => {
+                    log("ws 断开连接")
+                })
+
+                // 触发上线
+                let obj = {
+                    action: "online",
+                    nickname: this.userInfo.nickname,
+                    username: this.userInfo.username,
+                    userId: this.userInfo.id,
+                    timeStamp: Math.round(new Date().getTime() / 1000),
+                }
+                _this.io.emit("online", obj)
+
+
+                // 群聊
+                this.io.on('receiveMsg', (data) => {
+                    _this.addMsgToChatList(data)
+                    _this.scrollToChatBottom()
+                })
+                // 收到提醒
+                this.io.on('notice', (data) => {
+                    // 添加提醒
+                    _this.addNoticeToChatList(data.nickname, data.type)
+                    _this.scrollToChatBottom()
+                })
             },
             creatw3cSocket() {
                 if (!window.WebSocket) return
@@ -164,7 +196,7 @@
                             _this.wsConnecting = false
                         } else if (res.type === "message") {
                             // 把收到的消息放到列表
-                            _this.addToChatList(res)
+                            _this.addMsgToChatList(res)
 
                         }
 
@@ -216,11 +248,24 @@
                 }
             },
 
-            addToChatList(msg) {
-                // this.chatList.unshift(msg)
-                this.chatList.splice(0, 0, msg)
+            addMsgToChatList(msg) {
+                this.chatList.push(msg)
             },
+            addNoticeToChatList(data, type) {
+                let msg
+                if (type === "online") {
+                    msg = `<div class="online  msg"><strong>${data}</strong> 上线了</div>`
+                } else if (type === "offline") {
+                    msg = `<div class="online  msg"><strong>${data}</strong> 下线了</div>`
+                }
+                let chat = document.getElementsByClassName("rounded-messages")[0]
+
+                chat.append(this.parseDom(msg))
+            },
+
             sendMessage() {
+                if (this.message === "") return
+
                 let obj = {
                     action: "send",
                     nickname: this.userInfo.nickname,
@@ -229,19 +274,30 @@
                     timeStamp: Math.round(new Date().getTime() / 1000),
                     message: this.message,
                 }
-
-                let msg = JSON.stringify(obj)
-                this.ws.send(msg)
-
-                // 应该要接收到自己发的内容才添加,而不是直接加在聊天列表,否则可能出现没发成功但本地显示
-                // 注意要添加的是 obj 不是 string
-                // this.addToChatList(obj)
-                // this.ws.send(this.message)
+                this.io.emit('sendGroupMsg', obj);
+                // 清空输入框
+                this.message = ""
             },
             commonTime(timestamp) {
                 let unixTimestamp = new Date(timestamp)
                 return unixTimestamp.toLocaleString()
             },
+            scrollToChatBottom() {
+                let chat = document.getElementsByClassName("rounded-messages")[0]
+                // dom 更新再滚动,否则是滚动到原来的高度
+                this.$nextTick(() => {
+                    chat.scrollTop = chat.scrollHeight
+                })
+
+            },
+            parseDom(arg) {
+                // 用于把模版字符串的 dom 转成真正的 dom (只能有一个父元素)
+                var objE = document.createElement("div");
+
+                objE.innerHTML = arg;
+
+                return objE.childNodes[0];
+            }
 
             // methods
         },
@@ -250,272 +306,281 @@
                 if (curVal.length > this.maxChatSize) {
                     curVal.pop()
                 }
-            },
-        },
+            }
+            ,
+        }
+        ,
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
+<style lang="less">
     .clearfix {
         content: " ";
         display: block;
         clear: both;
     }
 
-    .chat-wrapper {
-        position: relative;
-        /*底部 tabbar 高度,加了之后 ff 正常,不加 chrome 正常*/
-        /*padding-bottom: 48px;*/
-
-        .chat-item {
-            /*display: flex;*/
-            /*flex-flow: column;*/
-            .left {
-                float: left;
-            }
-            .right {
-                float: right;
-                color: #fff;
-                background: #0188fb;
-            }
-            .head-wrapper {
-                padding: 14px 15px 10px;
-                color: #999999;
-                font-size: 13px;
-                position: relative;
-            }
-            .message-wrapper {
-                display: inline-block;
-                max-width: 100%;
-                margin: 0 20px 0 40px;
-                padding: 14px 15px 10px;
-                /*color: #999999;*/
-                border: 1px solid #ccc;
-                border-radius: 6px;
-                font-size: 16px;
-                position: relative;
-            }
-        }
-        /*消息框公共部分*/
-        .item-wrapper {
-            display: flex;
-            position: relative;
-            .avatar {
-                position: absolute;
-                img {
-                    width: 36px;
-                    height: 36px;
-                }
-            }
-            .right-wrapper {
-                flex: 1;
-                position: relative;
-                .nickname {
-                }
-            }
-        }
-        /*消息在左边的情况*/
-        .left-item-wrapper {
-            .avatar {
-                left: 0;
-                top: 0;
-            }
-            .right-wrapper {
-                .nickname {
-                    padding-left: 55px;
-                    font-size: 12px;
-                    color: #555;
-                }
-            }
-        }
-        /*消息在右边的情况*/
-        .right-item-wrapper {
-            .avatar {
-                right: 0;
-                bottom: 0;
-            }
-            .right-wrapper {
-                .nickname {
-                    display: none;
-                }
-            }
-        }
-
-        /*codepen 的气泡特效*/
-        .messages-width-small {
-            /*width: 300px;*/
-        }
-
-        .messages-width-medium {
-            /*width: 400px;*/
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .messages-width-large {
-            /*width: 500px;*/
-        }
-
-        .messages-width-full {
-            width: 100%;
-        }
-
-        /* Basic List Styling */
-        div.rounded-messages {
-            list-style: none;
-            display: inline-block;
-            overflow: hidden;
-            font-size: 16px;
-            padding: 10px;
-        }
-
-        /* Animation */
-        @keyframes message-reveal-animation {
-            from {
-                opacity: 0;
-                margin-top: 40px;
-            }
-            to {
-                opacity: 1;
-                margin-top: 10px;
-            }
-        }
-        div.rounded-messages.reveal-messages .msg {
-            /*visibility: hidden;*/
-        }
-
-        div.rounded-messages.msg-animation-superfast .msg.msg-visible,
-        div.rounded-messages.msg-animation-fast .msg.msg-visible,
-        div.rounded-messages.msg-animation-slow .msg.msg-visible,
-        div.rounded-messages.msg-animation-normal .msg.msg-visible,
-        div.rounded-messages .msg.msg-visible {
-            animation: message-reveal-animation;
-            animation-duration: 0.3s;
-            /* Default Animation Length */
-            animation-iteration-count: 1;
-            visibility: visible;
-        }
-
-        div.rounded-messages.msg-animation-superfast .msg.msg-visible {
-            animation-duration: 0.2s;
-            /* Super Fast Animation Length */
-        }
-
-        div.rounded-messages.msg-animation-slow .msg.msg-visible {
-            animation-duration: 0.5s;
-            /* Slow Animation Length */
-        }
-
-        /* Message Bubbles */
-        div.rounded-messages .msg {
-            position: relative;
-            clear: both;
-            display: block;
-            height: auto;
-            width: auto;
-            max-width: 60%;
-            word-wrap: break-word;
-            word-break: keep-all;
-            font-family: sans-serif;
-            text-align: left;
-            line-height: 1.5em;
-            margin: 5px 55px;
-            padding: 10px;
-            cursor: default;
-            border-radius: 15px;
-
-        }
-
-        /* Left Message Bubble */
-        div.rounded-messages .msg:not(.right-msg),
-        div.rounded-messages .msg.left-msg {
-            float: left;
-            color: #292929;
-            background: #E3E2DF;
-        }
-
-        div.rounded-messages .msg:not(.right-msg)::before,
-        div.rounded-messages .msg.left-msg::before {
-            /* Left Message Bubble Tail */
-            content: "";
-            position: absolute;
-            top: 5px;
-            left: -10px;
-            border-top: 15px solid #E3E2DF;
-            border-left: 15px solid transparent;
-        }
-
-        /* Right Message Bubble */
-        div.rounded-messages .msg.right-msg {
-            float: right;
-            color: #F8F8F8;
-            background: #27AE60;
-        }
-
-        div.rounded-messages .msg.right-msg::before {
-            /* Right Message Bubble Tail */
-            content: "";
-            position: absolute;
-            bottom: 5px;
-            right: -10px;
-            border-bottom: 15px solid #27AE60;
-            border-right: 15px solid transparent;
-        }
-
-        /* Bubble with image */
-        div.rounded-messages .msg img {
-            display: block;
-            max-width: 100%;
-            border-radius: 5px;
-            margin-bttom: 5px;
-        }
-
-        /* Bubble with no tail */
-        div.rounded-messages .msg.no-tail::before,
-        div.rounded-messages .msg.time::before {
-            content: "";
-            display: none;
-        }
-
-        /* Time Stamp */
-        div.rounded-messages .msg.time {
-            width: 100%;
-            max-width: 100%;
-            background: transparent;
-            margin: 0px;
-            font-size: 12px;
-            text-align: center;
-            color: #555555;
-        }
-
-        /*@media screen and (max-width: 500px) {*/
-        /*!* Fit the screen for all chats *!*/
-        /*div.rounded-messages,*/
-        /*.messages-width-large,*/
-        /*.messages-width-medium,*/
-        /*.messages-width-small {*/
-        /*width: 100%;*/
-        /*display: block;*/
-        /*}*/
-        /*}*/
-
-    }
-
-    .foot-wrapper{
-        height: 48px;
+    .chat-room {
         width: 100%;
+        height: 100%;
         display: flex;
-        position: absolute;
-        bottom: 0;
-        .chat-input{
-            flex: 70%;
+        flex-direction: column;
+
+        .chat-wrapper {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            /*底部 tabbar 高度,加了之后 ff 正常,不加 chrome 正常*/
+            /*padding-bottom: 48px;*/
+
+            /*消息框公共部分*/
+            .item-wrapper {
+                display: flex;
+                position: relative;
+                .avatar {
+                    position: absolute;
+                    img {
+                        width: 36px;
+                        height: 36px;
+                    }
+                }
+                .right-wrapper {
+                    width: 100%;
+                    position: relative;
+                    .nickname {
+                    }
+                }
+            }
+            /*消息在左边的情况*/
+            .left-item-wrapper {
+                .avatar {
+                    left: 0;
+                    top: 0;
+                }
+                .right-wrapper {
+                    .nickname {
+                        padding-left: 55px;
+                        font-size: 12px;
+                        color: #555;
+                    }
+                }
+            }
+            /*消息在右边的情况*/
+            .right-item-wrapper {
+                .avatar {
+                    right: 0;
+                    bottom: 0;
+                }
+                .right-wrapper {
+                    .nickname {
+                        display: none;
+                    }
+                }
+            }
+
+            /*codepen 的气泡特效*/
+            .messages-width-small {
+                /*width: 300px;*/
+            }
+
+            .messages-width-medium {
+                /*width: 400px;*/
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .messages-width-large {
+                /*width: 500px;*/
+            }
+
+            .messages-width-full {
+                width: 100%;
+            }
+
+            /* Basic List Styling */
+            div.rounded-messages {
+
+                width: 100%;
+                height: 100%;
+                /*overflow: auto;*/
+                overflow-x: hidden;
+                overflow-y: scroll;
+
+                list-style: none;
+                display: inline-block;
+                /*overflow: hidden;*/
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            /* Animation */
+            @keyframes message-reveal-animation {
+                from {
+                    opacity: 0;
+                    margin-bottom: 40px;
+                }
+                to {
+                    opacity: 1;
+                    margin-bottom: 10px;
+                }
+            }
+            div.rounded-messages.reveal-messages .msg {
+                /*visibility: hidden;*/
+            }
+
+            div.rounded-messages.msg-animation-superfast .msg.msg-visible,
+            div.rounded-messages.msg-animation-fast .msg.msg-visible,
+            div.rounded-messages.msg-animation-slow .msg.msg-visible,
+            div.rounded-messages.msg-animation-normal .msg.msg-visible,
+            div.rounded-messages .msg.msg-visible {
+                animation: message-reveal-animation;
+                animation-duration: 0.3s;
+                /* Default Animation Length */
+                animation-iteration-count: 1;
+                visibility: visible;
+            }
+
+            div.rounded-messages.msg-animation-superfast .msg.msg-visible {
+                animation-duration: 0.2s;
+                /* Super Fast Animation Length */
+            }
+
+            div.rounded-messages.msg-animation-slow .msg.msg-visible {
+                animation-duration: 0.5s;
+                /* Slow Animation Length */
+            }
+
+            /* Message Bubbles */
+            div.rounded-messages .msg {
+                position: relative;
+                clear: both;
+                display: block;
+                height: auto;
+                width: auto;
+                max-width: 60%;
+                word-wrap: break-word;
+                word-break: keep-all;
+                font-family: sans-serif;
+                text-align: left;
+                line-height: 1.5em;
+                margin: 5px 55px;
+                padding: 10px;
+                cursor: default;
+                border-radius: 15px;
+
+            }
+
+            /* Left Message Bubble */
+            div.rounded-messages .msg:not(.right-msg),
+            div.rounded-messages .msg.left-msg {
+                float: left;
+                color: #292929;
+                background: #E3E2DF;
+            }
+
+            div.rounded-messages .msg:not(.right-msg)::before,
+            div.rounded-messages .msg.left-msg::before {
+                /* Left Message Bubble Tail */
+                content: "";
+                position: absolute;
+                top: 5px;
+                left: -10px;
+                border-top: 15px solid #E3E2DF;
+                border-left: 15px solid transparent;
+            }
+
+            /* Right Message Bubble */
+            div.rounded-messages .msg.right-msg {
+                float: right;
+                color: #F8F8F8;
+                background: #27AE60;
+            }
+
+            div.rounded-messages .msg.right-msg::before {
+                /* Right Message Bubble Tail */
+                content: "";
+                position: absolute;
+                bottom: 5px;
+                right: -10px;
+                border-bottom: 15px solid #27AE60;
+                border-right: 15px solid transparent;
+            }
+
+            /* Bubble with image */
+            div.rounded-messages .msg img {
+                display: block;
+                max-width: 100%;
+                border-radius: 5px;
+                margin-bttom: 5px;
+            }
+
+            /* Bubble with no tail */
+            div.rounded-messages .msg.no-tail::before,
+            div.rounded-messages .msg.time::before,
+            div.rounded-messages .msg.online::before {
+                content: "";
+                display: none;
+            }
+
+            /* Time Stamp */
+            div.rounded-messages .msg.time,
+            div.rounded-messages .msg.online {
+                float: none;
+                width: 100%;
+                max-width: 100%;
+                background: transparent;
+                margin: 0px;
+                font-size: 12px;
+                text-align: center;
+                color: #555555;
+            }
+
+            /*@media screen and (max-width: 500px) {*/
+            /*!* Fit the screen for all chats *!*/
+            /*div.rounded-messages,*/
+            /*.messages-width-large,*/
+            /*.messages-width-medium,*/
+            /*.messages-width-small {*/
+            /*width: 100%;*/
+            /*display: block;*/
+            /*}*/
+            /*}*/
+
         }
-        .chat-send{
-            flex: 30%;
+
+        .foot-wrapper {
+            height: 48px;
+            width: 100%;
+            display: flex;
+            position: absolute;
+            bottom: 0;
+            box-sizing: border-box;
+
+            background: #f2f3f2;
+            padding: 5px;
+            .chat-input {
+                flex: 90%;
+                border: none;
+                background: transparent;
+                border-bottom: 1px solid #ccc;
+            }
+            .chat-input:focus {
+                /*border: none;*/
+                outline: none;
+                cursor: pointer;
+            }
+            .chat-send {
+                flex: 10%;
+                border: none;
+                background: none;
+                color: #0078d7;
+
+            }
         }
     }
-    .weui-tabbar {
-        visibility: hidden;
-    }
+
+
 </style>

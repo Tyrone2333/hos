@@ -2,7 +2,6 @@ export default {
     state: {
         pushWSServer: {},
         chatWSServer: {
-            wsUrl: "ws://localhost:8080/",
             connecting: false,
             status: false,
         }
