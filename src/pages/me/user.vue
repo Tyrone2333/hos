@@ -71,7 +71,7 @@
     import {Panel, Group, Radio, Swiper, SwiperItem, Tab, TabItem, Sticky} from 'vux'
     import {mapGetters} from 'vuex'
     import {getUserInfo} from "@/api/user"
-    import cellList from "../common/cellList"
+    import cellList from "../../components/cellList"
 
 
     export default {

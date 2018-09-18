@@ -29,7 +29,7 @@
     import {Panel, Group, Radio} from 'vux'
     import {LoadMore} from "vux"
 
-    import {getAritcleList,getAritcleById} from "@/api/article.js"
+    import {getAritcleList, getAritcleById} from "@/api/article.js"
 
     export default {
         components: {
@@ -70,8 +70,6 @@
                 if (isEmptyArr(this.articleList)) {
                     this.articleList = newList
                 } else {
-//                    log(newList)
-//                    log(articleList)
                     for (let i in newList) {
                         articleList.push(newList[i])
                     }
@@ -91,24 +89,23 @@
                 this.showFather = false
             },
             getAritcleList() {
-                let _this = this
 
-                getAritcleList(_this.page).then((response) =>{
+                getAritcleList(this.page).then((response) => {
                     let res = response.data;
                     if (res.errno === 0) {
-                        _this.resData = res
-                        _this.page++
+                        this.resData = res.data
+                        this.page++
                     } else if (res.errno === 2) {
                         let moreBtn = document.getElementById("get-more-article")
 
                         moreBtn.style.display = "none"
-                        _this.showLoading = true
-                        _this.showLoadingSymbol = false
-                        _this.loadMoreText = "没有更多了"
+                        this.showLoading = true
+                        this.showLoadingSymbol = false
+                        this.loadMoreText = "没有更多了"
                     }
                 }).catch(err => {
                     console.error(err)
-                    _this.$vux.toast.show({
+                    this.$vux.toast.show({
                         text: "无法获取服务器数据",
                         type: "warn",
                     })
@@ -118,31 +115,22 @@
 //                this.showLoading = true
                 this.getAritcleList()
             },
+            //  把后台传入的数据转化为 panel 组件需要的数据形式
             transformList(resData) {
-//                let _this = this
-//                 log(resData)
-                let arr = []
-                if (resData !== null) {
-                    for (let i = 0; i < resData.data.length; i++) {
-                        let articleList = {
-                            // "http://placeholder.qiniudn.com/60x60/3cc51f/ffffff",
-                            src: resData.data[i].banner_img,
-                            title: resData.data[i].title,
-                            // desc: resData.data[i].description,
-                            articleId: resData.data[i].id,
-//                            url : process.env.BASE_API + "/console/get_article.php?pageid=" + resData.data[i].id + "&n=" + Math.random(),
-//                            url: "/home",
-                            meta: {
-                                source: this.formatSource(resData.data[i].tags),
-                                date: this.formatMsgTime(resData.data[i].dateline * 1000),
-                                other: "" + resData.data[i].author
-                            }
+                return resData.map((item) => {
+                    return {
+                        src: item.banner_img,
+                        title: item.title,
+                        articleId: item.id,
+                        meta: {
+                            source: this.formatSource(item.tags),
+                            date: this.formatMsgTime(item.dateline * 1000),
+                            other: item.author
                         }
-                        arr.push(articleList)
                     }
-                }
-                return arr
+                })
             },
+            // 把时间格式化成 xx 小时前
             formatMsgTime(timespan) {
                 // 传入的是 new Date().getTime() 的毫秒数时间戳
                 var dateTime = new Date(timespan);
@@ -180,8 +168,9 @@
                 }
                 return timeSpanStr;
             },
+
+            // 用于列表的标签分割,最多显示3个
             formatSource(tags) {
-                // 用于列表的标签分割,最多显示3个
                 if (tags === "" || tags === null) {
                     return ""
                 }
@@ -200,10 +189,7 @@
             egg() {
                 window.location.href = "http://t.cn/RHrvjVI";
             },
-
-
         },
-        computed: {},
     }
 </script>
 

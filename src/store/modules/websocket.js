@@ -1,3 +1,7 @@
+/**
+ * 用于记录 websocket 状态
+ * 改成 socket.io 后就没用这个了
+ */
 export default {
     state: {
         pushWSServer: {},
@@ -6,9 +10,6 @@ export default {
             status: false,
         }
     },
-    // 由于分了模块，在组件里面不能直接用　...mapState 分发一个数组，要用
-    //              collectList: state => state.collect.collectList
-    // 所以使用getter
     getters: {
         chatWSServer: state => state.chatWSServer,
         pushWSServer: state => state.pushWSServer,

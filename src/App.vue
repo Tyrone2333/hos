@@ -11,42 +11,46 @@
             <!--<a slot="right">Feedback</a>-->
         </x-header>
 
-        <div >
+        <div>
             <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
         </div>
 
         <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="45px">
 
-            <!--切换标签-->
-            <router-view></router-view>
+            <!--<keep-alive>-->
+            <!--<router-view v-if="$route.meta.keepAlive"/>-->
+            <!--</keep-alive>-->
+            <!--<router-view v-if="!$route.meta.keepAlive"/>-->
+
+            <router-view/>
 
             <tabbar class="tabbar-footer" slot="bottom">
                 <tabbar-item link="/article">
                     <!--<x-icon slot="icon" type="ios-barcode-outline" size="30"></x-icon>-->
                     <!--<span  slot="icon" class="icon-user" icon-class="icon-user"></span>-->
-                    <img src="./common/PNG/file-text.png" slot="icon" alt="icon">
+                    <img src="./assets/PNG/file-text.png" slot="icon" alt="icon">
                     <span slot="label">首页</span>
                 </tabbar-item>
 
                 <!--图标点击切换-->
                 <!--<tabbar-item @on-item-click="toNews">-->
-                    <!--<img slot="icon-active" src="./assets/1.png">-->
-                    <!--<x-icon slot="icon" type="ios-ionic-outline" size="30"></x-icon>-->
-                    <!--<span slot="label">谈笑风生</span>-->
+                <!--<img slot="icon-active" src="./assets/1.png">-->
+                <!--<x-icon slot="icon" type="ios-ionic-outline" size="30"></x-icon>-->
+                <!--<span slot="label">谈笑风生</span>-->
                 <!--</tabbar-item>-->
 
                 <tabbar-item link="/mavon_editor_test">
-                    <img src="./common/PNG/quill.png" slot="icon" alt="icon">
+                    <img src="./assets/PNG/quill.png" slot="icon" alt="icon">
                     <span slot="label">写动态</span>
                 </tabbar-item>
 
                 <tabbar-item link="/collect">
-                    <img src="./common/PNG/star-empty.png" slot="icon" alt="icon">
+                    <img src="./assets/PNG/star-empty.png" slot="icon" alt="icon">
                     <span slot="label">收藏</span>
                 </tabbar-item>
 
                 <tabbar-item link="/me">
-                    <img src="./common/PNG/user.png" slot="icon" alt="icon">
+                    <img src="./assets/PNG/user.png" slot="icon" alt="icon">
                     <span slot="label">我的</span>
                 </tabbar-item>
             </tabbar>
@@ -59,7 +63,7 @@
 
     import {Tab, TabItem, Sticky} from 'vux'
     import {ViewBox} from 'vux'
-    import {Tabbar,Actionsheet, TabbarItem, XHeader, XImg} from 'vux'
+    import {Tabbar, Actionsheet, TabbarItem, XHeader, XImg} from 'vux'
 
     import {tokenLogin} from "./api/user";
 
@@ -73,7 +77,7 @@
             ViewBox,
             Tabbar,
             TabbarItem,
-            XHeader, XImg,Actionsheet
+            XHeader, XImg, Actionsheet
         },
         data() {
             return {
@@ -103,9 +107,7 @@
                 })
             },
             onClickMore() {
-
                 this.showMenus = true
-                log(true)
             },
             toNews() {
                 this.$router.push({name: 'news'})
@@ -119,11 +121,11 @@
             }
         },
 
-        mounted(){
+        mounted() {
 
             // 每次打开如果token没过期就会自动刷新,很久未访问就要重新登录
-            if(localStorage.token && localStorage.token !== "undefined"){
-                tokenLogin().then( (response) =>{
+            if (localStorage.token && localStorage.token !== "undefined") {
+                tokenLogin().then((response) => {
                     let res = response.data
                     // 登录失败
                     if (res.errno !== 0) {
@@ -143,9 +145,10 @@
         },
         watch: {
             $route(to, from) {
-                // TODO 这段代码写这里非常恶心,文章回退写的不好,有空必改
-                let _this = this
-                let scrBody = this.$refs.viewBox.getScrollBody()
+                /**
+                 *  TODO 这段代码写这里非常恶心,文章回退写的不好,有空必改
+                 *  关于前进刷新 后退缓存,各种方案都尝试失败,目前只有这种能用
+                 */
                 let scrTop = this.$refs.viewBox.getScrollTop()
 //                从列表到具体文章时保存之前的滚动距离
                 if (to.name === "read_article" && from.name === "article") {
@@ -155,14 +158,13 @@
 //                从文章退回列表跳转到之前的位置
                 if (to.name === "article" && from.name === "read_article") {
                     log("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
-                   // 都可以
+                    // 都可以
                     // setTimeout(() => {
                     //     this.scrollToBefore(this.states.scrollTop)
                     // }, 0)
-                    this.$nextTick(() =>{
+                    this.$nextTick(() => {
                         this.scrollToBefore(this.states.scrollTop)
                     })
-//                    this.$refs.viewBox.scrollTo(this.states.scrollTop)
                 }
             },
         },
@@ -195,7 +197,8 @@
     .weui-bar__item_on .weui-tabbar__label span {
         color: #0870e3;
     }
-    .weui-tabbar__icon{
+
+    .weui-tabbar__icon {
         width: 22px !important;
         height: 22px !important;
     }

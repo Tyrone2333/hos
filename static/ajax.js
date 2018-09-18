@@ -1,6 +1,3 @@
-/**
- * Created by enzo on 2017/11/13.
- */
 
 (function(window,undefined) {
     function ajax(options) {

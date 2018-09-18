@@ -1,4 +1,8 @@
 function log(message) {
+    if(arguments.length>1){
+        console.log(...arguments)
+        return
+    }
     const date = new Date()
     const time = `[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}]\t`
 

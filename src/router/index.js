@@ -3,23 +3,23 @@ import Router from 'vue-router'
 import {store} from '@/store/store.js'
 
 
-import news from '@/components/news/news.vue'
-import header from '@/components/header/header.vue'
-import me from '@/components/me/me.vue'
-import login from '@/components/me/login.vue'
-import article_edit from '@/components/console/article_edit.vue'
-import article_modify from '@/components/console/article_modify.vue'
-import article from '@/components/article/article_list.vue'
-import read_article from '@/components/article/read_article.vue'
-import collect from '@/components/collect/collect.vue'
-import feedback from '@/components/feedback/feedback.vue'
-import test from "@/components/test.vue"
-import user from "@/components/me/user.vue"
-import setting from "@/components/me/setting.vue"
-import chatRoom from "@/components/chatRoom/chatRoom.vue"
+import news from '@/pages/news/news.vue'
+import header from '@/pages/header/header.vue'
+import me from '@/pages/me/me.vue'
+import login from '@/pages/me/login.vue'
 
-import mavon_editor_test from '@/components/console/mavon_editor_test.vue'
-import about from '@/components/me/about.vue'
+import article_modify from '@/pages/console/article_modify.vue'
+import article from '@/pages/article/article_list.vue'
+import read_article from '@/pages/article/read_article.vue'
+import collect from '@/pages/collect/collect.vue'
+import feedback from '@/pages/feedback/feedback.vue'
+import test from "@/pages/test.vue"
+import user from "@/pages/me/user.vue"
+import setting from "@/pages/me/setting.vue"
+import chatRoom from "@/pages/chatRoom/chatRoom.vue"
+
+import mavon_editor_test from '@/pages/console/mavon_editor_test.vue'
+import about from '@/pages/me/about.vue'
 
 Vue.use(Router)
 
@@ -50,7 +50,12 @@ const router = new Router({
                     name: 'read_article',
                     component: read_article
                 },
-            ]
+            ],
+            meta: {
+                // 这里想用 keep-alive 缓存列表的位置,未果,可能是用了 view-box 的原因????
+                isUseCache: false,  // 前进刷新
+                keepAlive: true  // 通过此字段判断是否需要缓存当前组件
+            },
         },
 
         {
@@ -72,10 +77,6 @@ const router = new Router({
             path: '/login',
             name: 'login',
             component: login
-        }, {
-            path: '/article_edit',
-            name: 'article_edit',
-            component: article_edit
         },
         {
             path: '/mavon_editor_test',

@@ -149,7 +149,7 @@
                     userId: this.userInfo.id,
                     timeStamp: Math.round(new Date().getTime() / 1000),
                 }
-                _this.io.emit("online", obj)
+                this.io.emit("online", obj)
 
 
                 // 群聊

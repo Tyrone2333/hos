@@ -80,6 +80,9 @@
 
     import {public_article} from "../../api/article";
 
+    /**
+     *   也有用过 wangeditor,效果不理想,展示没合适的替代品,移动端的 md 编辑器体验都不好
+     */
     export default {
 
         data() {

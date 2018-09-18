@@ -67,10 +67,7 @@
 
     export default {
         components: {
-            XInput,
-            XButton,
-            Group,
-            Cell, AjaxPlugin, Loading, Divider,
+            XInput, XButton, Group, Cell, AjaxPlugin, Loading, Divider,
         },
         data() {
             return {

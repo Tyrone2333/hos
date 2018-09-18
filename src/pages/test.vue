@@ -14,6 +14,8 @@
             <p>websocket test:</p>
             <input type="text" v-model="username">
         </div>
+
+        <h2 @click="test">test</h2>
         <div class="transform-test">
             <div class="transform-test-item">
             </div>
@@ -36,7 +38,18 @@
                 username: "username",
             }
         },
+        computed:{
+            addUsername(){
+                if(this.username === ""){
+                    return false
+                }
+                return this.username + "addUsername"
+            }
+        },
         methods: {
+            test(){
+              log(this.addUsername)
+            },
             async submitBtnClick() {
                 let req = {
                     url: process.env.BASE_API + '/test',

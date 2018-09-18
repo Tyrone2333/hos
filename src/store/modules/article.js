@@ -1,5 +1,6 @@
-import {getAritcleList} from "@/api/article.js"
-
+/**
+ * 这里目前只放了文章的草稿
+ */
 export default {
     state: {
         // 草稿

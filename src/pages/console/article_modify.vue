@@ -37,7 +37,6 @@
 
 <script type="text/ecmascript-6">
     import {Toast,} from 'vux'
-
     import {mavonEditor} from 'mavon-editor'
     import 'mavon-editor/dist/css/index.css'
     import axios from 'axios'

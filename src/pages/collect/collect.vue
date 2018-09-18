@@ -8,7 +8,7 @@
 <script type="text/ecmascript-6">
     import {mapGetters, mapState} from 'vuex'
     import {getCollectList} from "@/api/collect.js"
-    import cellList from "../common/cellList"
+    import cellList from "../../components/cellList"
 
     export default {
         name: "collect",

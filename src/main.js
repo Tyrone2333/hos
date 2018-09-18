@@ -12,7 +12,8 @@ Vue.use(ToastPlugin)
 
 Vue.use(VueRouter)
 
-import "./common/style.css"
+// 引入 iconfont
+import "./assets/style.css"
 
 FastClick.attach(document.body)
 
