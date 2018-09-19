@@ -59,9 +59,9 @@ export const changeInformation = ({nickname, age, sex, email, address}) => {
     return _post(req);
 }
 // 获取用户信息
-export const getUserInfo = (id) => {
+export const getUserInfo = (username) => {
     let req = {
-        url: "/user/" + id,
+        url: "/user/" + username,
     }
     return _get(req)
 }

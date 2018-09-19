@@ -21,6 +21,7 @@ function log(message) {
     }
 }
 window.log = log;
+
 function isEmptyArr(value) {
     return (Array.isArray(value) && value.length === 0)
         || (Object.prototype.isPrototypeOf(value) && Object.keys(value).length === 0);
@@ -35,4 +36,6 @@ function isEmptyStr(str) {
         return false
     }
 }
+
+
 

@@ -34,75 +34,28 @@
         <!--分界线-->
         <div class="article-page-split-line"></div>
 
-        <!--发表评论-->
-        <div class="top-title">
-            <div class="left ">精彩评论</div>
-            <div class="right icon  icon-quill" @click="replyDialogShow()">写评论</div>
-        </div>
-
 
         <!--评论列表-->
-        <div class="comments" v-if="commentList.length ">
-            <div class="comment-wrapper" v-for="(val,key) in commentList">
-                <div class="avatar" @click="clickSomebody(val.from_id)">
-                    <img :src="val.avatar" alt="">
-                </div>
-                <div class="comment-right">
-                    <div class="nickname">{{val.from_nickname}}</div>
-                    <div class="content">
-                        <span  @click="clickSomebody(val.to_id)" class="at-someone">{{!val.is_for_author ?"@" +val.to_nickname + "\t" :"" }}</span>
-                        {{val.content}}
-                    </div>
-                    <div class="footer">
-                        <span class="left">{{key + 1}}楼 {{formatMsgTime(val.timestamp * 1000)}}</span>
-                        <span class="right icon icon-question_answer" @click="replyDialogShow(val)"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="comments no-comment" v-else>
-            暂无评论
-        </div>
+        <comment :commentList="commentList"
+                      @updateReply="updateReply"
+                      :authorId="resData.author_id"
+        ></comment>
         <!--<reply :needReply="needReply"></reply>-->
 
-        <div v-transfer-dom>
-            <x-dialog v-model="showReplyDialog"
-                      :hide-on-blur="true">
-
-                <div class="reply">
-                    <form>
-                        <textarea name="content" maxlength="10000" class="mll" id="reply_content"
-                                  v-model="commentContent"
-                                  :placeholder="replyPlaceholder"
-                                  style="overflow: hidden; word-wrap: break-word; resize: none; height: 112px;"></textarea>
-                    </form>
-
-                    <!--<span class="icon   icon-send" @click="reply"></span>-->
-                    <span class="weui-btn weui-btn_mini btn-none" @click="showReplyDialog=false">取消</span>
-                    <span class="weui-btn weui-btn_mini weui-btn_primary" @click="replySend">确认</span>
-                    <!--<x-button mini  type="primary">primary</x-button>-->
-                    <!--<x-button mini  type="primary" @click.native="showReplyDialog=false">取消</x-button>-->
-
-                </div>
-            </x-dialog>
-        </div>
     </div>
 </template>
 <script type="text/ecmascript-6">
 
     import {getAritcleList, getAritcleById, reply} from "../../api/article.js"
-
-    import {XDialog, XButton} from 'vux'
-    import {TransferDomDirective as TransferDom} from 'vux'
-
     import {collect} from "../../api/collect";
+
+    import comment from "../../components/comment"
+    import {mapGetters, } from 'vuex'
+
 
     export default {
         components: {
-            XDialog, XButton
-        },
-        directives: {
-            TransferDom
+            comment
         },
         data() {
             return {
@@ -112,18 +65,16 @@
                 collection: "  ☆ 收藏​",
                 tags: [],
                 commentList: [],    // 评论列表
-                commentReply: {},    // 要回复的评论信息
-                commentContent: "",  // 评论的内容
-                replyPlaceholder: "",
+
                 countDownTime: "",  // 打脸日倒计时
-                showReplyDialog: false,
             }
+        },
+        computed: {
+            ...mapGetters(["collectList"])
         },
         beforeMount() {
             this.fetchData()
             this.initcollectList()
-
-
         },
 
         methods: {
@@ -139,14 +90,20 @@
 //                log("articleId: " + _this.articleId)
                 getAritcleById(_this.articleId).then((response) => {
                     let res = response.data
-                    _this.resData = res.data[0]
-                    console.log("文章信息: %O", _this.resData)
-                    _this.getTagsList(_this.resData.tags)
-                    _this.commentList = res.reply
-
+                    if (res.errno === 0) {
+                        _this.resData = res.data[0]
+                        console.log("文章信息: %O", _this.resData)
+                        _this.getTagsList(_this.resData.tags)
+                        _this.commentList = res.reply
+                    } else if (res.errno === 2) {
+                        _this.$vux.toast.show({
+                            text: res.message,
+                            type: "warn",
+                        })
+                    }
 
                 }).catch(err => {
-                    // console.log(err)
+                    console.log(err)
                     _this.$vux.toast.show({
                         text: "无法获取服务器数据",
                         type: "warn",
@@ -154,9 +111,12 @@
                 })
 
             },
-            clickSomebody(userId){
-                this.$router.push({name: 'user', params: {id: userId}})
+            // 评论更新了,需要重新加载
+            updateReply() {
+                this.fetchData()
+                this.initcollectList()
             },
+
             toggleCollect() {
                 if (!this.$store.state.user.user.id) {
                     this.$vux.toast.show({
@@ -180,7 +140,7 @@
                 let collectAction = this.collected ? 1 : 0  // 1 是执行收藏,0 是取消收藏
                 let token = _this.$store.state.user.token
 
-                collect( articleId, collectAction).then((response) => {
+                collect(articleId, collectAction).then((response) => {
                     let res = response.data
                     if (res.errno === 0) {
                         _this.$vux.toast.show({
@@ -205,10 +165,13 @@
                     })
                 })
             },
+
+
             commonTime(timestamp) {
                 let unixTimestamp = new Date(timestamp * 1000)
                 return unixTimestamp.toLocaleString()
             },
+
             getTagsList(tagString) {
                 if (tagString === "" || tagString === null) {
                     // this.tags = []
@@ -217,117 +180,13 @@
                 this.tags = tagString.split(",")
             },
             initcollectList() {
-                if (!localStorage.getItem('collectList')) return
-                let list = JSON.parse(localStorage.getItem('collectList'))
-
-                for (let k in list) {
-                    if (this.articleId === list[k].article_id) {
+                for (let k in this.collectList) {
+                    if (this.articleId === this.collectList[k].article_id) {
                         this.collected = true
                         this.collection = this.collected ? "  ★ 已收藏​" : "  ☆ 收藏​"
                     }
                 }
             },
-            replyDialogShow(commentInfo) {
-                this.showReplyDialog = true
-                this.commentReply = commentInfo || {}
-
-
-                this.replyPlaceholder = this.commentReply.from_nickname ? "@" + this.commentReply.from_nickname : ""
-                // setTimeout(function () {
-                //     document.getElementById("reply_content").focus()
-                // }, 1)
-                this.$nextTick(() =>{
-                    document.getElementById("reply_content").focus()
-
-                })
-
-                /**
-                 * 有bug,放在最底部可以这样,如果reply组件底下还有东西就应该
-                 *
-                 * 现在换成x-dialog,不用滚动到底下
-                 *
-                 let offsetTop = document.querySelector('.reply').offsetTop
-                 setTimeout(() => {
-                    this.$parent.$parent.$parent.$refs.viewBox.scrollTo(offsetTop)
-                }, 0)
-                 *
-                 */
-            },
-            replySend() {
-                let _this = this
-                let url = window.location.href
-                _this.articleId = _this.$route.params.articleId || _this.getIdByURL(url)
-
-                let data = {
-                    // id,token,username,
-                    //  from_id, to_id, content, timestamp, article_id, from_nickname, to_nickname
-
-                    id: _this.$store.state.user.user.id,
-                    token: _this.$store.state.user.token,
-                    username: _this.$store.state.user.user.username,
-                    from_id: _this.$store.state.user.user.id,
-                    to_id:  _this.commentReply.from_id || _this.resData.author_id || 0,
-                    content: _this.commentContent,
-                    article_id: _this.articleId,
-                }
-                reply({...data}).then((response) => {
-                    let res = response.data
-                    log(res)
-                    if (res.errno === 0) {
-                        _this.commentContent = ""
-                        _this.showReplyDialog = false
-                        _this.$vux.toast.show({
-                            text: res.message,
-                            type: "success",
-                        })
-                    }
-                    _this.fetchData()
-                    _this.initcollectList()
-                }).catch(err => {
-                    console.error(err)
-                })
-
-            },
-            // 格式化时间为"xx小时前"
-            formatMsgTime(timespan) {
-                // 传入的是 new Date().getTime() 的毫秒数时间戳
-                let dateTime = new Date(timespan);
-
-                let year = dateTime.getFullYear();
-                let month = dateTime.getMonth() + 1;
-                let day = dateTime.getDate();
-                let hour = dateTime.getHours();
-                let minute = dateTime.getMinutes();
-                let second = dateTime.getSeconds();
-                let now = new Date();
-                // let now_new = Date.parse(now.toDateString());  //typescript转换写法
-                let now_new = new Date().getTime()
-
-                let milliseconds = 0;
-                let timeSpanStr;
-
-                milliseconds = now_new - timespan;
-
-                if (milliseconds <= 1000 * 60 * 1) {
-                    timeSpanStr = '刚刚';
-                }
-                else if (1000 * 60 * 1 < milliseconds && milliseconds <= 1000 * 60 * 60) {
-                    timeSpanStr = Math.round((milliseconds / (1000 * 60))) + '分钟前';
-                }
-                else if (1000 * 60 * 60 * 1 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24) {
-                    timeSpanStr = Math.round(milliseconds / (1000 * 60 * 60)) + '小时前';
-                }
-                else if (1000 * 60 * 60 * 24 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24 * 15) {
-                    timeSpanStr = Math.round(milliseconds / (1000 * 60 * 60 * 24)) + '天前';
-                }
-                else if (milliseconds > 1000 * 60 * 60 * 24 * 15 && year === now.getFullYear()) {
-                    timeSpanStr = month + '-' + day + ' ' + hour + ':' + minute;
-                } else {
-                    timeSpanStr = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
-                }
-                return timeSpanStr;
-            },
-
             // 倒计时
             getCountDown(timestamp) {
                 window.clearInterval(this.$store.state.clock)
@@ -352,7 +211,7 @@
 
 
         },
-        computed: {},
+
         watch: {
             /**
              * 同一个地址只变化id，页面不重载的问题 https://github.com/vuejs/vue-router/issues/296
@@ -389,61 +248,6 @@
             padding-left: 10px;
         }
 
-        .comments {
-            & :first-child .comment-right {
-                border: none !important;
-            }
-            .comment-wrapper {
-                display: flex;
-                .comment-right {
-                    flex: 4;
-                    flex-direction: column;
-                    border-top: 1px solid #e8e8e8;
-                    margin-right: 1em;
-                    & > div {
-                        margin: 5px 0;
-                    }
-                    .nickname {
-                        font-size: .8rem;
-                        line-height: 1.2rem;
-                        color: #303030;
-                    }
-                    .content {
-                        color: #606060;
-                        font-size: .9rem;
-                        line-height: 1.2rem;
-                        word-wrap: break-word;
-                        text-align: left;
-                        padding-top: .4rem;
-                        padding-bottom: .35rem;
-                        font-weight: 400;
-                    }
-                    .footer {
-                        color: silver;
-                        line-height: 1.05rem;
-                        font-size: .8rem;
-                        padding-bottom: .6rem;
-                        overflow: hidden;
-                        display: flex;
-                        justify-content: space-between;
-                    }
-                }
-                .avatar {
-                    flex: 1;
-                    img {
-                        margin: 10px;
-                        height: 50px;
-                        width: 50px;
-                    }
-                }
-
-            }
-
-            &.no-comment {
-                text-align: center;
-            }
-        }
-
         .icon {
             font-size: 18px;
             color: #000;
@@ -476,30 +280,17 @@
             width: 100%;
             margin: 10px 0;
         }
-        .at-someone{
+        .at-someone {
             color: #3194d0;
             text-decoration: none;
             word-break: break-all;
             cursor: pointer;
 
         }
-        a{
+        a {
             text-decoration: none;
         }
-        .top-title{
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 10px;
-            .left{
 
-            }
-            .right{
-                float: right;
-                color: #3194d0;
-                line-height: 22px;
-            }
-
-        }
     }
 
     .article-info {
@@ -512,18 +303,6 @@
         margin-right: 10px;
         margin-left: 10px;
         transition: all 1s;
-    }
-
-    // 评论css
-    .reply {
-        .btn-none {
-            border: none !important;
-            background: transparent !important;
-            color: black;
-            &.btn-none:after {
-                content: none;
-            }
-        }
     }
 
     .mll {

@@ -30,6 +30,7 @@
     import {LoadMore} from "vux"
 
     import {getAritcleList, getAritcleById} from "@/api/article.js"
+    import * as utils from "../../utils/common"
 
     export default {
         components: {
@@ -124,49 +125,11 @@
                         articleId: item.id,
                         meta: {
                             source: this.formatSource(item.tags),
-                            date: this.formatMsgTime(item.dateline * 1000),
+                            date: utils.formatMsgTime(item.dateline * 1000),
                             other: item.author
                         }
                     }
                 })
-            },
-            // 把时间格式化成 xx 小时前
-            formatMsgTime(timespan) {
-                // 传入的是 new Date().getTime() 的毫秒数时间戳
-                var dateTime = new Date(timespan);
-
-                var year = dateTime.getFullYear();
-                var month = dateTime.getMonth() + 1;
-                var day = dateTime.getDate();
-                var hour = dateTime.getHours();
-                var minute = dateTime.getMinutes();
-                var second = dateTime.getSeconds();
-                var now = new Date();
-                var now_new = new Date().getTime()
-
-                var milliseconds = 0;
-                var timeSpanStr;
-
-                milliseconds = now_new - timespan;
-
-                if (milliseconds <= 1000 * 60 * 1) {
-                    timeSpanStr = '刚刚';
-                }
-                else if (1000 * 60 * 1 < milliseconds && milliseconds <= 1000 * 60 * 60) {
-                    timeSpanStr = Math.round((milliseconds / (1000 * 60))) + '分钟前';
-                }
-                else if (1000 * 60 * 60 * 1 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24) {
-                    timeSpanStr = Math.round(milliseconds / (1000 * 60 * 60)) + '小时前';
-                }
-                else if (1000 * 60 * 60 * 24 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24 * 15) {
-                    timeSpanStr = Math.round(milliseconds / (1000 * 60 * 60 * 24)) + '天前';
-                }
-                else if (milliseconds > 1000 * 60 * 60 * 24 * 15 && year === now.getFullYear()) {
-                    timeSpanStr = month + '-' + day + ' ' + hour + ':' + minute;
-                } else {
-                    timeSpanStr = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
-                }
-                return timeSpanStr;
             },
 
             // 用于列表的标签分割,最多显示3个

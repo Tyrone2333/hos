@@ -29,10 +29,10 @@ export const public_article = ({id, token, username, title, author, author_id, d
     return _post(req);
 }
 
-export const reply = ({id, token, username,from_id, to_id, content, timestamp, article_id}) => {
+export const reply = ({from_id, to_id, content, timestamp, article_id}) => {
     let req = {
         data: {
-            id, token, username,
+
             from_id, to_id, content, timestamp, article_id
         },
         url: '/article/reply'

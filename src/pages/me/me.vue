@@ -39,7 +39,7 @@
                 <cell title="我的收藏" value="" is-link link="/collect">
                     <span class="cellIcon small-icon icon-bookmark" slot="icon"></span>
                 </cell>
-                <cell title="我的回复" value="" is-link link="/collect">
+                <cell title="消息中心" value="" is-link link="/collect">
                     <span class="cellIcon small-icon icon-notifications" slot="icon"></span>
                     <span>
                     <span class="vertical-middle">新提醒</span>

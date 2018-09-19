@@ -53,7 +53,7 @@ const router = new Router({
             ],
             meta: {
                 // 这里想用 keep-alive 缓存列表的位置,未果,可能是用了 view-box 的原因????
-                isUseCache: false,  // 前进刷新
+                isUseCache: false,  // false时才重新刷新获取数据
                 keepAlive: true  // 通过此字段判断是否需要缓存当前组件
             },
         },

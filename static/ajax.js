@@ -1,4 +1,5 @@
 
+// 不错的工具,但本项目没有使用
 (function(window,undefined) {
     function ajax(options) {
 

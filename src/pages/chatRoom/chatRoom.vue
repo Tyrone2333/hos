@@ -291,6 +291,7 @@
 
             },
             parseDom(arg) {
+
                 // 用于把模版字符串的 dom 转成真正的 dom (只能有一个父元素)
                 var objE = document.createElement("div");
 

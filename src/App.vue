@@ -100,17 +100,8 @@
             }
         },
         methods: {
-            spaceChange() {
-                this.showSpace = !this.showSpace
-                this.$nextTick(() => {
-                    this.$refs.sticky.bindSticky()
-                })
-            },
             onClickMore() {
                 this.showMenus = true
-            },
-            toNews() {
-                this.$router.push({name: 'news'})
             },
             scrollToBefore(s) {
                 this.$refs.viewBox.scrollTo(s)
@@ -147,15 +138,16 @@
             $route(to, from) {
                 /**
                  *  TODO 这段代码写这里非常恶心,文章回退写的不好,有空必改
+                 *
                  *  关于前进刷新 后退缓存,各种方案都尝试失败,目前只有这种能用
                  */
                 let scrTop = this.$refs.viewBox.getScrollTop()
-//                从列表到具体文章时保存之前的滚动距离
+                // 从列表到具体文章时保存之前的滚动距离
                 if (to.name === "read_article" && from.name === "article") {
                     log("从列表到具体文章" + scrTop)
                     this.states.scrollTop = scrTop
                 }
-//                从文章退回列表跳转到之前的位置
+                // 从文章退回列表跳转到之前的位置
                 if (to.name === "article" && from.name === "read_article") {
                     log("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
                     // 都可以
@@ -167,6 +159,7 @@
                     })
                 }
             },
+
         },
     }
 </script>

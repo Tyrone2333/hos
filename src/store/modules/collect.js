@@ -12,8 +12,8 @@ export default {
 
     mutations: {
         setcollectList(state, payload) {
-            state.collectList = payload
-            localStorage.setItem("collectList", JSON.stringify(payload))
+            state.collectList = payload == undefined ? [] : payload
+            localStorage.setItem("collectList", JSON.stringify(state.collectList))
             log("在vuex,localStorage保存收藏列表")
         },
     },

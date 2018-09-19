@@ -46,11 +46,11 @@
                             <div class="text">
                                 <div class="title">
                                     {{item.from_nickname}}
-                                    在文章 {{item.title}}
-                                    评论了 {{item.to_nickname}}
+                                    在文章 <span style="color: #0f88eb">{{item.title}}</span>
+                                    评论了 <strong>{{item.to_nickname}}</strong>
                                 </div>
-                                <div class="content">
-                                    {{item.comment_content}}
+                                <div class="content" v-html="item.comment_content">
+                                    <!--{{item.comment_content}}-->
                                 </div>
                                 <div class="info">
                                     <span class="dateline">{{ commonTime(item.timestamp)}}</span>
@@ -134,16 +134,20 @@
                 this.userId = this.$route.params.id || this.getIdByURL(window.location.href)
                 getUserInfo(this.userId).then((response) => {
                     let res = response.data
-                    this.userInfo = res.data.userInfo
-                    this.userArticle = res.data.userArticle
-                    this.userCollection = res.data.userCollection
-                    this.userReply = res.data.userReply
-                    this.$nextTick().then(function () {
-                        // DOM 更新了
-                        log(" this.nextTick().then(function () {")
+                    if(res.errno === 0){
+                        this.userInfo = res.data.userInfo
+                        this.userArticle = res.data.userArticle
+                        this.userCollection = res.data.userCollection
+                        this.userReply = res.data.userReply
 
-                    })
-                    console.log("用户信息: %O", res)
+                        console.log("用户信息: %O", res)
+                    } else {
+                        this.$vux.toast.show({
+                            text: res.message,
+                            type: "warn",
+                        })
+                    }
+
 
                 }).catch(err => {
                     // console.log(err)
