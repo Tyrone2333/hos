@@ -38,4 +38,9 @@ export function formatMsgTime(timespan) {
     return timeSpanStr;
 }
 
+export function commonTime(timestamp) {
+    let unixTimestamp = new Date(timestamp * 1000)
+    return unixTimestamp.toLocaleString()
+}
+
 

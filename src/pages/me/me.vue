@@ -2,20 +2,11 @@
     <div class="me">
 
         <!--用户信息-->
-        <div class="user-info">
-            <div class="avatar">
-                <router-link :to="/user/+userInfo.id">
-                    <!--<img class="logo" src="../../assets/vux_logo.png">-->
-                    <img :src="userInfo.avatar">
-                </router-link>
-            </div>
-            <div class="text">
-                <div class="nickname">
-                    {{userInfo.nickname}} <br>
-                </div>
-                <div class="home-page-edit">User : {{userInfo.username}}</div>
-            </div>
-        </div>
+        <profile-intro :userInfo="userInfo"
+                       avatar-shape="round"
+                       avatarBehavior="user"
+                       :showUsername="true"
+        ></profile-intro>
 
         <group title="">
             <cell title="我的主页" value="" is-link :link="/user/+userInfo.id">
@@ -72,11 +63,12 @@
     import {Group, Cell, CellBox, XButton, Badge} from 'vux'
     import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
+    import profileIntro from "../../components/profileIntro"
 
 
     export default {
         components: {
-            Group, Cell, CellBox, XButton, Badge
+            Group, Cell, CellBox, XButton, Badge,profileIntro
         },
         data() {
             return {
@@ -110,7 +102,7 @@
     }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
     .me {
         .small-icon {
             /*height: 16px;*/
@@ -119,31 +111,6 @@
         }
     }
 
-    .user-info {
-        display: flex;
-        padding: 5px 15px;
-        .text {
-            flex-direction: column;
-            margin-left: 20px;
-            color: #4d555d;
-            .nickname {
-                font-size: 1.2em;
-            }
-            .home-page-edit {
-                font-size: 0.9em;
-                color: #ccc;
-            }
-        }
-        .avatar {
-            /*padding-top: 10px;*/
-            text-align: center;
-            img {
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-            }
-        }
-    }
 
     .slide {
         padding: 0 20px;

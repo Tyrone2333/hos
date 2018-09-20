@@ -1,19 +1,14 @@
 ﻿<template>
     <div class="setting">
-        <div class="user-info">
-            <div class="avatar">
-                <!--头像上传,透明度设为0隐藏-->
-                <input id="uploadInput" type="file"
-                       accept="image/gif,image/jpeg,image/jpg,image/png" >
-                <img :src="userInfo.avatar">
-            </div>
-            <div class="text">
-                <div class="nickname">
-                    {{userInfo.username}} <br>
-                </div>
-                <div class="home-page-edit">第 {{userInfo.id}} 号用户,加入于{{commonTime(userInfo.register_time)}}</div>
-            </div>
-        </div>
+
+        <!--头部的用户信息-->
+        <!--驼峰和短横线分隔其实都可以使用-->
+        <profile-intro :userInfo="userInfo"
+                       avatar-shape="squircle"
+                       avatarBehavior="uploadAvatar"
+                       :showUsername="false"
+        ></profile-intro>
+
 
         <div class="information">
             <group title="基本信息">
@@ -68,6 +63,7 @@
     } from 'vux'
     import {mapGetters} from 'vuex'
     import {changeInformation, changePwd} from "@/api/user"
+    import profileIntro from "../../components/profileIntro"
 
     export default {
         name: "setting",
@@ -84,6 +80,7 @@
             XSwitch,
             Checker,
             CheckerItem,
+             profileIntro
         },
         data() {
             return {
@@ -103,57 +100,12 @@
         mounted() {
             // 复制一下 userInfo,不需要深拷贝
             this.createInformationDraft()
-            // 头像上传
-            this.uploadInput = document.getElementById("uploadInput")
-            this.uploadInput.addEventListener('change', this.uploadAvatar);
 
         },
 
         methods: {
-            commonTime(timestamp) {
-                let unixTimestamp = new Date(timestamp * 1000)
-                return unixTimestamp.toLocaleString()
-            },
 
-            uploadAvatar() {
 
-                // 就传一个
-                let curFiles = this.uploadInput.files[0]
-                log(curFiles)
-                // import axios from 'axios'
-                const axios = require("axios")
-
-                let formData = new FormData()
-                formData.append("username", this.userInfo.username)
-                // 用 type 区分文章配图,头像,以及后续的其他图片
-                formData.append("type", "avatar")
-                formData.append("file", curFiles)
-
-                axios({
-                    // url: process.env.BASE_API + "/console/upload_file_test.php?n=" + Math.random(),
-                    // url: "http://127.0.0.1:80" + "/console/upload_file_test.php?n=" + Math.random(),
-                    url: process.env.BASE_API + "/upload/avatar",
-                    method: 'post',
-                    data: formData,
-                    headers: {'Content-Type': 'multipart/form-data', 'Authorization': this.$store.state.user.token},
-                }).then((response) => {
-                    let res = response.data
-                    if(res.errno === 0){
-                        this.$store.commit("changeAvatar",res.avatarUrl)
-                        this.$vux.toast.show({
-                            text: res.message,
-                            type: "success",
-                        })
-                    } else {
-                        this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                    }
-                    console.log("修改头像:",res)
-                })
-                
-            },
             // 创建符合 vux 组件要求的 用户信息数据
             createInformationDraft() {
                 this.informationDraft = JSON.parse(JSON.stringify(this.userInfo))
@@ -232,42 +184,6 @@
 
 <style lang="less">
     .setting {
-        .user-info {
-            display: flex;
-            padding: 5px 15px;
-            .text {
-                flex-direction: column;
-                margin-left: 20px;
-                color: #4d555d;
-                .nickname {
-                    font-size: 1.2em;
-                }
-                .home-page-edit {
-                    font-size: 0.9em;
-                    color: #ccc;
-                }
-            }
-            .avatar {
-                /*padding-top: 10px;*/
-                position: relative;
-                text-align: center;
-                img {
-                    width: 60px;
-                    height: 60px;
-                    border-radius: 20%;
-                }
-            }
-        }
-        #uploadInput {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            /*font-size: 100px;*/
-            right: 0;
-            top: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
 
     }
 

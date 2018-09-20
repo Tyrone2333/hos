@@ -80,7 +80,7 @@
                     return [];
                 }
             },
-            // 必须传入所在文章的作者id,否则评论不能用
+            // 必须传入所在文章的作者id,否则评论不能用,还用于显示评论是否来自作者
             authorId: {
                 type: Number,
                 required: true,

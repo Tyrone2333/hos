@@ -1,19 +1,12 @@
 <template>
     <div class="user">
-        <div class="user-info">
-            <div class="avatar">
-                <router-link to="/me">
 
-                    <img :src="userInfo.avatar">
-                </router-link>
-            </div>
-            <div class="text">
-                <div class="nickname">
-                    {{userInfo.nickname}} <br>
-                </div>
-                <div class="home-page-edit">第 {{userInfo.id}} 号用户,加入于{{commonTime(userInfo.register_time)}}</div>
-            </div>
-        </div>
+
+        <profile-intro :userInfo="userInfo"
+                       avatar-shape="squircle"
+                       avatarBehavior="homePage"
+                       :showUsername="false"
+        ></profile-intro>
 
         <div class="user-article ">
             <sticky scroll-box="vux_view_box_body" :offset="46" :check-sticky-support="false">
@@ -72,12 +65,13 @@
     import {mapGetters} from 'vuex'
     import {getUserInfo} from "@/api/user"
     import cellList from "../../components/cellList"
+    import profileIntro from "../../components/profileIntro"
 
 
     export default {
         name: "user",
         components: {
-            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky, cellList
+            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky, cellList,profileIntro
         },
         data() {
             return {
@@ -173,31 +167,6 @@
 
 <style lang="less">
     .user {
-        .user-info {
-            display: flex;
-            padding: 5px 15px;
-            .text {
-                flex-direction: column;
-                margin-left: 20px;
-                color: #4d555d;
-                .nickname {
-                    font-size: 1.2em;
-                }
-                .home-page-edit {
-                    font-size: 0.9em;
-                    color: #ccc;
-                }
-            }
-            .avatar {
-                /*padding-top: 10px;*/
-                text-align: center;
-                img {
-                    width: 60px;
-                    height: 60px;
-                    border-radius: 20%;
-                }
-            }
-        }
 
         .user-article {
             .user-article-title {
