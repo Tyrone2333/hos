@@ -37,8 +37,8 @@
 
         <!--评论列表-->
         <comment :commentList="commentList"
-                      @updateReply="updateReply"
-                      :authorId="resData.author_id"
+                 @updateReply="updateReply"
+                 :authorId="resData.author_id"
         ></comment>
         <!--<reply :needReply="needReply"></reply>-->
 
@@ -50,7 +50,7 @@
     import {collect} from "../../api/collect";
 
     import comment from "../../components/comment"
-    import {mapGetters, } from 'vuex'
+    import {mapGetters,} from 'vuex'
 
 
     export default {
@@ -84,30 +84,23 @@
                 return url.match(regExp)[3]
             },
             fetchData() {
-                let _this = this
-                let url = window.location.href
-                _this.articleId = _this.$route.params.articleId || _this.getIdByURL(url)
-//                log("articleId: " + _this.articleId)
-                getAritcleById(_this.articleId).then((response) => {
-                    let res = response.data
-                    if (res.errno === 0) {
-                        _this.resData = res.data[0]
-                        console.log("文章信息: %O", _this.resData)
-                        _this.getTagsList(_this.resData.tags)
-                        _this.commentList = res.reply
-                    } else if (res.errno === 2) {
-                        _this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                    }
 
-                }).catch(err => {
-                    console.log(err)
-                    _this.$vux.toast.show({
-                        text: "无法获取服务器数据",
-                        type: "warn",
-                    })
+                let url = window.location.href
+                this.articleId = this.$route.params.articleId || this.getIdByURL(url)
+//                log("articleId: " + this.articleId)
+                getAritcleById(this.articleId).then((res) => {
+
+                    this.resData = res.data[0]
+                    console.log("文章信息: %O", this.resData)
+                    this.getTagsList(this.resData.tags)
+                    this.commentList = res.reply
+
+                }).catch(error => {
+                    console.error(error.message)
+                    // this.$vux.toast.show({
+                    //     text: "无法获取服务器数据",
+                    //     type: "warn",
+                    // })
                 })
 
             },
@@ -132,38 +125,23 @@
                 this.commitCollect()
             },
             commitCollect() {
-
-                let _this = this
-                let userId = _this.$store.state.user.user.id
-                let username = _this.$store.state.user.user.username
                 let articleId = this.articleId
                 let collectAction = this.collected ? 1 : 0  // 1 是执行收藏,0 是取消收藏
-                let token = _this.$store.state.user.token
 
-                collect(articleId, collectAction).then((response) => {
-                    let res = response.data
-                    if (res.errno === 0) {
-                        _this.$vux.toast.show({
+                collect(articleId, collectAction)
+                    .then((res) => {
+                        this.$vux.toast.show({
                             text: res.message,
                             type: "success",
                         })
-                    } else {
-                        _this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                    }
-                    // 刷新收藏列表
-                    let list = response.data.data;
-                    _this.$store.commit("setcollectList", list)
+                        // 刷新收藏列表
+                        let list = res.data;
+                        this.$store.commit("setcollectList", list)
 
-                }).catch(err => {
-                    // console.log(err)
-                    _this.$vux.toast.show({
-                        text: "无法获取服务器数据",
-                        type: "warn",
                     })
-                })
+                    .catch(err => {
+                        console.error(err)
+                    })
             },
 
 

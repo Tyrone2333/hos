@@ -45,6 +45,9 @@ axios.interceptors.response.use(
     response => {
         // 如请求正确,则将 loading 关闭
         Vue.$vux.loading.hide()
+        if (response.data.errno === 0) {
+            return response
+        }
 
         // 统一管理error的错误
         if (response.data.errno === 401) {
@@ -66,12 +69,20 @@ axios.interceptors.response.use(
                 text: response.data.message || "出错了",
                 type: "warn",
             })
+        } else {
+            Vue.$vux.toast.show({
+                text: response.data.message || "返回了不正确的 errno: " + response.data.errno,
+                type: "warn",
+            })
         }
 
 
+        // 没有 return , response 会传下去 undefined
         return response
     },
     error => {
+
+        // 统一管理非 200 的状态,组件里就只需关心正确的请求
 
         // 弹窗显示后台404 500 错误
         if (error.response) {
@@ -140,16 +151,55 @@ axios.interceptors.response.use(
 
         }
 
+        Vue.$vux.toast.show({
+            text: `出错啦, ${error.message}`,
+            type: "warn",
+        })
+        // 不给 reject 就会跑到 then 里面
+        // 在组件的 catch 只用  console.error 定位一下错误位置即可,
+        // 错误提示的弹窗都在这里统一处理了
         return Promise.reject(error)
     },
 )
 
 // get
 export const _get = (req) => {
-    return axios.get(req.url, {params: req.data})
+    // TODO  return new Promise 只 resolve res.status 为 200 的内容,其他统统 reject
+
+    return new Promise((resolve, reject) => {
+        axios.get(req.url, {params: req.data}).then(response => {
+            if (response !== undefined && response.data.errno === 0) {
+                // response.data 才是服务器返回的东西,其他都是 axios 加的
+                resolve(response.data)
+            } else {
+                console.log("GET 请求失败了:")
+                reject(response)
+            }
+        }).catch(error => {
+            console.log("GET 请求发生错误:")
+            reject(error)
+        })
+    })
+    // return axios.get(req.url, {params: req.data})
 }
 
 // post
 export const _post = (req) => {
-    return axios({method: 'post', url: req.url, data: req.data})
+
+    return new Promise((resolve, reject) => {
+        axios({method: 'post', url: req.url, data: req.data}).then(response => {
+            if (response !== undefined && response.data.errno === 0) {
+                // response.data 才是服务器返回的东西,其他都是 axios 加的
+                resolve(response.data)
+            } else {
+                console.log("POST 请求失败了:")
+                reject(response)
+            }
+        }).catch(error => {
+            console.log("POST 请求发生错误:")
+            reject(error)
+        })
+    })
+
+    // return axios({method: 'post', url: req.url, data: req.data})
 }

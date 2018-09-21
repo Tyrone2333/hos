@@ -91,8 +91,7 @@
             },
             getAritcleList() {
 
-                getAritcleList(this.page).then((response) => {
-                    let res = response.data;
+                getAritcleList(this.page).then((res) => {
                     if (res.errno === 0) {
                         this.resData = res.data
                         this.page++
@@ -106,10 +105,6 @@
                     }
                 }).catch(err => {
                     console.error(err)
-                    this.$vux.toast.show({
-                        text: "无法获取服务器数据",
-                        type: "warn",
-                    })
                 })
             },
             getMoreArticle() {

@@ -71,7 +71,7 @@
     export default {
         name: "user",
         components: {
-            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky, cellList,profileIntro
+            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky, cellList, profileIntro
         },
         data() {
             return {
@@ -126,29 +126,16 @@
             },
             fetchData() {
                 this.userId = this.$route.params.id || this.getIdByURL(window.location.href)
-                getUserInfo(this.userId).then((response) => {
-                    let res = response.data
-                    if(res.errno === 0){
-                        this.userInfo = res.data.userInfo
-                        this.userArticle = res.data.userArticle
-                        this.userCollection = res.data.userCollection
-                        this.userReply = res.data.userReply
+                getUserInfo(this.userId).then((res) => {
+                    this.userInfo = res.data.userInfo
+                    this.userArticle = res.data.userArticle
+                    this.userCollection = res.data.userCollection
+                    this.userReply = res.data.userReply
 
-                        console.log("用户信息: %O", res)
-                    } else {
-                        this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                    }
-
+                    console.log("用户信息: %O", res)
 
                 }).catch(err => {
-                    // console.log(err)
-                    this.$vux.toast.show({
-                        text: "无法获取服务器数据",
-                        type: "warn",
-                    })
+                    console.error(err)
                 })
 
             },

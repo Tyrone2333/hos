@@ -1,12 +1,11 @@
 import {_get, _post} from "@/api"
 
-export const  getCollectList = (id,username,token) => {
+export const  getCollectList = (id) => {
     let req = {
         url: "/collection",
         data:{
             id,// 用户的id
-            username,
-            token,
+
         },
     }
 

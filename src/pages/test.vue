@@ -77,8 +77,8 @@
                             content: item.content,
                             article_id: 1224,
                         }
-                        await reply({...data}).then((response) => {
-                            let res = response.data
+                        await reply({...data}).then((res) => {
+
                             log(res)
                         }).catch(err => {
                             console.error(err)
@@ -163,8 +163,8 @@
                     }
                 })
                 tt.forEach(async item => {
-                    await public_article(item).then((response) => {
-                        let res = response.data
+                    await public_article(item).then((res) => {
+
                         log(res.article_id + " : " + res.message)
                     }).catch(err => {
                         console.log(err)

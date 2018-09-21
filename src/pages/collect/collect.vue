@@ -20,22 +20,19 @@
             }
         },
         computed: {
-            ...mapGetters(["collectList"])
+            ...mapGetters(["collectList", "userInfo"])
         },
-        components:{cellList},
-        methods: {
-
-        },
+        components: {cellList},
+        methods: {},
         mounted() {
-            let _this = this
-            getCollectList(_this.$store.state.user.user.id, _this.$store.state.user.user.username, _this.$store.state.user.token)
-                .then((response) => {
-                    if (response.data.errno === 0) {
-                        let list = response.data.data;
-                        _this.$store.commit("setcollectList", list)
-                    } else {
-                        _this.$store.commit("setcollectList", undefined)
-                    }
+
+            getCollectList(this.userInfo.id,)
+                .then((res) => {
+                    let list = res.data;
+                    this.$store.commit("setcollectList", list)
+                })
+                .catch(err => {
+                    console.error(err)
                 })
         },
         watch: {},

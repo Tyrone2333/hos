@@ -62,7 +62,7 @@
     import * as utils from "../utils/common"
     import {TransferDomDirective as TransferDom} from 'vux'
     import {XDialog, XButton} from 'vux'
-    import {getAritcleList, getAritcleById, reply} from "../api/article.js"
+    import {reply} from "../api/article.js"
 
     export default {
         name: "commentList",
@@ -131,28 +131,24 @@
                  */
             },
             replySend() {
-                let _this = this
                 let url = window.location.href
-                _this.articleId = _this.$route.params.articleId || _this.getIdByURL(url)
+                this.articleId = this.$route.params.articleId || this.getIdByURL(url)
 
                 let data = {
 
-                    from_id: _this.$store.state.user.user.id,
-                    to_id: _this.commentReply.from_id || _this.authorId || 0,
-                    content: _this.commentContent,
-                    article_id: _this.articleId,
+                    from_id: this.$store.state.user.user.id,
+                    to_id: this.commentReply.from_id || this.authorId || 0,
+                    content: this.commentContent,
+                    article_id: this.articleId,
                 }
-                reply({...data}).then((response) => {
-                    let res = response.data
-                    log(res)
-                    if (res.errno === 0) {
-                        _this.commentContent = ""
-                        _this.showReplyDialog = false
-                        _this.$vux.toast.show({
-                            text: res.message,
-                            type: "success",
-                        })
-                    }
+                reply({...data}).then((res) => {
+
+                    this.commentContent = ""
+                    this.showReplyDialog = false
+                    this.$vux.toast.show({
+                        text: res.message,
+                        type: "success",
+                    })
                     // 触发评论更新
                     this.$emit("updateReply", res.data)
                 }).catch(err => {

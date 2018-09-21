@@ -178,17 +178,17 @@
                 this.fetchData()
             },
             contentCheck() {
-                let _this = this
-                if (isEmptyStr(_this.title)) {
-                    _this.toastWarn("标题不能为空")
+
+                if (isEmptyStr(this.title)) {
+                    this.toastWarn("标题不能为空")
                     return true
                 }
-                if (isEmptyStr(_this.description)) {
-                    _this.toastWarn("描述不可为空")
+                if (isEmptyStr(this.description)) {
+                    this.toastWarn("描述不可为空")
                     return true
                 }
-                if (isEmptyStr(_this.editorMDValue)) {
-                    _this.toastWarn("内容不可为空")
+                if (isEmptyStr(this.editorMDValue)) {
+                    this.toastWarn("内容不可为空")
                     return true
                 }
             },

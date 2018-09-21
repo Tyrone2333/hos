@@ -117,36 +117,36 @@
 
             },
             uploadArticle() {
-                let _this = this
-                if (_this.contentCheck()) {
+          
+                if (this.contentCheck()) {
                     return
                 }
 
                 let data = {
                     // id,token,username,
                     // title, author,author_id, description, content, md,banner_img,fuck_date,tags,
-                    id: _this.$store.state.user.user.id,
-                    token: _this.$store.state.user.token,
-                    username: _this.$store.state.user.user.username,
+                    id: this.$store.state.user.user.id,
+                    token: this.$store.state.user.token,
+                    username: this.$store.state.user.user.username,
 
-                    content: _this.draft.editorHtmlValue,
-                    description: _this.draft.description,
-                    title: _this.draft.title,
-                    author: _this.$store.state.user.user.nickname,
-                    author_id: _this.$store.state.user.user.id,
-                    md: _this.draft.editorMDValue,
-                    banner_img: _this.draft.banner_img,
-                    fuck_date: _this.draft.fuckDate,
-                    tags: _this.draft.tags || _this.draft.joinTopicList.join(",")
+                    content: this.draft.editorHtmlValue,
+                    description: this.draft.description,
+                    title: this.draft.title,
+                    author: this.$store.state.user.user.nickname,
+                    author_id: this.$store.state.user.user.id,
+                    md: this.draft.editorMDValue,
+                    banner_img: this.draft.banner_img,
+                    fuck_date: this.draft.fuckDate,
+                    tags: this.draft.tags || this.draft.joinTopicList.join(",")
                 }
-                // _this.contentCheck()
+                // this.contentCheck()
 
-                public_article({...data}).then((response) => {
-                    let res = response.data
+                public_article({...data}).then((res) => {
+                    log(res)
                     if (res.errno === 0) {
-                        _this.toastSuccess(res.message)
+                        this.toastSuccess(res.message)
                     } else {
-                        _this.toastWarn(res.message)
+                        this.toastWarn(res.message)
                     }
                 }).catch(err => {
                     console.error(err)
@@ -162,7 +162,7 @@
                 this.draft.editorMDValue = value
             },
             $imgAdd(pos, $file) {
-                let _this = this
+
                 console.log('$imgAdd:', pos, $file)
                 this.img_file[pos] = $file
 
@@ -172,7 +172,7 @@
                  *  github 相关 issue: https://github.com/expressjs/multer/issues/146
                  */
                 let formData = new FormData()
-                formData.append("author", _this.$store.state.user.user.username)
+                formData.append("author", this.$store.state.user.user.username)
                 // 用 type 区分文章配图,头像,以及后续的其他图片
                 formData.append("type", "article")
                 formData.append("file", $file)
@@ -183,12 +183,12 @@
                     url: process.env.BASE_API + "/upload/article_img",
                     method: 'post',
                     data: formData,
-                    headers: {'Content-Type': 'multipart/form-data', 'token': _this.$store.state.user.token},
+                    headers: {'Content-Type': 'multipart/form-data', 'token': this.$store.state.user.token},
                 }).then((res) => {
-                    _this.resData = res.data
-                    _this.$refs["mavon-editor"].$imgUpdateByUrl(pos, res.data.data[0])
-                    _this.$refs["mavon-editor"].$img2Url(pos, res.data.data[0])
-                    _this.draft.banner_img = res.data.data[0]
+                    this.resData = res.data
+                    this.$refs["mavon-editor"].$imgUpdateByUrl(pos, res.data.data[0])
+                    this.$refs["mavon-editor"].$img2Url(pos, res.data.data[0])
+                    this.draft.banner_img = res.data.data[0]
                     console.log(res.data)
                 })
 //                console.log('this.img_file',this.img_file)
@@ -208,19 +208,19 @@
                 this.showToast = true
             },
             contentCheck() {
-                let _this = this
+
                 this.draft.tags = this.draft.joinTopicList.join(",")
 
-                if (isEmptyStr(_this.draft.title)) {
-                    _this.toastWarn("标题不能为空")
+                if (isEmptyStr(this.draft.title)) {
+                    this.toastWarn("标题不能为空")
                     return true
                 }
-                if (isEmptyStr(_this.draft.editorMDValue)) {
-                    _this.toastWarn("内容不可为空")
+                if (isEmptyStr(this.draft.editorMDValue)) {
+                    this.toastWarn("内容不可为空")
                     return true
                 }
                 if (this.draft.tags === "") {
-                    _this.toastWarn("至少加入一个话题")
+                    this.toastWarn("至少加入一个话题")
                     return true
                 }
             },

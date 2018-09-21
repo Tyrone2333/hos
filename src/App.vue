@@ -116,8 +116,8 @@
 
             // 每次打开如果token没过期就会自动刷新,很久未访问就要重新登录
             if (localStorage.token && localStorage.token !== "undefined") {
-                tokenLogin().then((response) => {
-                    let res = response.data
+                tokenLogin().then((res) => {
+
                     // 登录失败
                     if (res.errno !== 0) {
                         this.$vux.toast.show({

@@ -128,73 +128,47 @@
                 this.inLogin = !this.inLogin
             },
 
-//            AjaxPlugin、axios 在移动端兼容性都不好，不使用
-            submitForm() {
-                let username = this.username
-                let tel = this.tel
-                let email = this.email
-                let password = this.password
-                let _this = this
-
-                this.submitBtnLodingState = true
-//                this.submitBtnDisabled = true
-
-
-                let fromData = [
-                    ["username", username],
-                    ["password", password],
-                ]
-                let params = new URLSearchParams(fromData);
-
-                /**
-                 * AjaxPlugin 在UC和夸克都无法提交表单
-                 *
-                 * */
-//                AjaxPlugin.$http.post(process.env.BASE_API + "/phpstorm_test/phpstorm_test/hos_api.php", params)
-//                    .then((response) => {
-//                    _this.resData = response.data
-//                        console.log(this.resData)
-//                    })
-
-                /**
-                 * axios 在UC和夸克都无法提交表单
-                 * @type {[*]}
-                 */
-//                let fromData = [
-//                    ["username",username],
-//                    ["password",password],
-//                ]
-//                let params = new URLSearchParams(fromData);
-//                let _this = this
-//                this.axios.post(process.env.BASE_API + "/phpstorm_test/phpstorm_test/hos_api.php', params)
-//                    .then(function (response) {
-//                        _this.resData = response.data
-//                        console.log(_this.resData);
-//                    })
-//                    .catch(function (response) {
-//                        _this.resData = response.data
-////                        console.warn(response);
-//                        if (response instanceof Error) {
-//                            // Something happened in setting up the request that triggered an Error
-//                            console.warn('Error', response);
-//                        }
-//                    });
-            },
+//            AjaxPlugin 在移动端兼容性都不好，不使用
+//             submitForm() {
+//                 let username = this.username
+//                 let tel = this.tel
+//                 let email = this.email
+//                 let password = this.password
+//
+//                 this.submitBtnLodingState = true
+// //                this.submitBtnDisabled = true
+//
+//
+//                 let fromData = [
+//                     ["username", username],
+//                     ["password", password],
+//                 ]
+//                 let params = new URLSearchParams(fromData);
+//
+//                 /**
+//                  * AjaxPlugin 在UC和夸克都无法提交表单
+//                  *
+//                  * */
+// //                AjaxPlugin.$http.post(process.env.BASE_API + "/phpstorm_test/phpstorm_test/hos_api.php", params)
+// //                    .then((response) => {
+// //                    _this.resData = response.data
+// //                        console.log(this.resData)
+// //                    })
+//             },
 
 //            登录按钮事件
             loginBtnClick() {
                 let username = this.username
                 let password = this.password
-                let _this = this
 
-                login(username, password).then((response) => {
-                    let res = response.data
-                    _this.resData = res
+                login(username, password).then((res) => {
+
+                    this.resData = res
                     console.log(res);
 
                     // 登录失败
                     if (res.errno === 1) {
-                        _this.$vux.toast.show({
+                        this.$vux.toast.show({
                             text: res.message,
                             type: "warn",
                         })
@@ -202,26 +176,26 @@
                     }
 
                     // 登录成功,保存必要信息进localStorage
-                    _this.$store.commit("setUserInfo", res.userinfo)
-                    _this.$store.commit("setToken", res.token)
+                    this.$store.commit("setUserInfo", res.userinfo)
+                    this.$store.commit("setToken", res.token)
 
                     // 登录成功 路由跳转并显示 Toast
-                    let redirect = _this.$router.currentRoute.query.redirect
+                    let redirect = this.$router.currentRoute.query.redirect
                     if (redirect) {
-                        _this.$vux.toast.show({
+                        this.$vux.toast.show({
                             text: "登录成功,2秒后转入之前页面",
                             type: "success",
                         })
                         setTimeout(() => {
-                            _this.$router.push({path: redirect})
+                            this.$router.push({path: redirect})
                         }, 2000)
                     } else {
-                        _this.$vux.toast.show({
+                        this.$vux.toast.show({
                             text: res.message,
                             type: "success",
                         })
                         setTimeout(() => {
-                            _this.$router.push({path: "/me"})
+                            this.$router.push({path: "/me"})
                         }, 2000)
                     }
                 }).catch(err => {
@@ -236,9 +210,9 @@
                 let password = this.password
                 let password2 = this.password2
                 let nickname = this.nickname
-                let _this = this
+
                 if (isEmptyStr(password) || password2 !== password) {
-                    _this.$vux.toast.show({
+                    this.$vux.toast.show({
                         text: "请检查密码",
                         type: "warn",
                     })
@@ -250,13 +224,13 @@
                     "pwd": password,
                     "nickname": nickname,
                 }
-                register(data).then((response) => {
-                    let res = response.data
-                    _this.resData = res
-                    console.warn(_this.resData);
+                register(data).then((res) => {
+
+                    this.resData = res
+                    console.warn(this.resData);
                     // 注册失败
                     if (res.errno === -1) {
-                        _this.$vux.toast.show({
+                        this.$vux.toast.show({
                             text: res.message,
                             type: "warn",
                         })
@@ -265,19 +239,19 @@
                     }
                     // 注册成功
                     // 显示 Toast
-                    _this.$vux.toast.show({
+                    this.$vux.toast.show({
                         text: res.message,
                         type: "success",
                     })
                     // 跳转到登录页,并放置注册的用户名
                     setTimeout(() => {
-                        _this.inLogin = true
-                        _this.username = username
-                        _this.password = ""
+                        this.inLogin = true
+                        this.username = username
+                        this.password = ""
                     }, 1500)
                 }).catch(err => {
                     console.log(err)
-                    _this.$vux.toast.show({
+                    this.$vux.toast.show({
                         text: "error",
                         type: "warn",
                     })

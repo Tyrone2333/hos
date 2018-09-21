@@ -4,8 +4,8 @@
         <!--以用户信息为类名-->
         <div class="user-info">
             <div class="avatar" @click="avatarClick">
-                <upload-avatar :username="userInfo.username"
-                               :startup="avatarBehavior==='uploadAvatar'"></upload-avatar>
+                <upload-avatar v-if="avatarBehavior === 'uploadAvatar'" :username="userInfo.username"
+                               ></upload-avatar>
                 <img :class="avatarShape" :src="userInfo.avatar">
             </div>
             <div class="text">
@@ -65,7 +65,7 @@
         },
         mounted() {
             if (this.avatarBehavior === "uploadAvatar") {
-                log(33)
+               console.log("当前点击头像可上传文件")
             }
         },
         methods: {

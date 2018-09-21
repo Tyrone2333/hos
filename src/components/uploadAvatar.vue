@@ -17,21 +17,13 @@
                 type: String,
                 required: true,
             },
-            //  由于这个组件现在只被 profileIntro.vue 用到,他有定义好几个点击的行为,
-            //  不得不用这个 startup 把上传给隐藏
-            startup:{
-                type: Boolean,
-                default:true
-            }
+
         },
         mounted() {
             this.uploadInput = document.getElementById("uploadInput")
-            if(this.startup){
-                // 头像上传
+
                 this.uploadInput.addEventListener('change', this.uploadAvatar);
-            } else {
-                this.uploadInput.style.display = "none"
-            }
+
 
         },
         methods: {

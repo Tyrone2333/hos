@@ -12,7 +12,7 @@
 
         <div class="information">
             <group title="基本信息">
-                <x-input title="用户名" name="name" v-model="informationDraft.nickname" placeholder="请输入姓名"></x-input>
+                <x-input title="用户名" name="name" v-model="informationDraft.nickname" placeholder="请输入用户名"></x-input>
 
                 <x-input title="邮箱" name="email" placeholder="请输入邮箱地址" is-type="email"
                          v-model="informationDraft.email"></x-input>
@@ -80,7 +80,7 @@
             XSwitch,
             Checker,
             CheckerItem,
-             profileIntro
+            profileIntro
         },
         data() {
             return {
@@ -135,31 +135,29 @@
                     email: this.informationDraft.email,
                     address: this.informationDraft.address.join(","),
                 }
-                changeInformation({...data}).then((response) => {
-                    let res = response.data
-                    if (res.errno === 0) {
+                changeInformation({...data})
+                    .then((res) => {
+
                         this.$vux.toast.show({
                             text: res.message,
                             type: "success",
                         })
                         // 更新用户信息
                         this.$store.commit("setUserInfo", res.userinfo)
-                    } else {
-                        this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                    }
-                })
+
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    })
 
 
             },
             // 修改密码
             changePwd() {
 
-                changePwd(this.oldPwd, this.newPwd).then((response) => {
-                    let res = response.data
-                    if (res.errno === 0) {
+                changePwd(this.oldPwd, this.newPwd)
+                    .then((res) => {
+
                         this.$vux.toast.show({
                             text: "修改成功,请重新登录",
                             type: "success",
@@ -168,13 +166,10 @@
                             this.$router.push({path: "/login"})
                         }, 2000)
                         this.$store.dispatch("_signOut")
-                    } else {
-                        this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                    }
-                })
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    })
 
             }
         },
