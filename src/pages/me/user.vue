@@ -62,23 +62,25 @@
 
 <script type="text/ecmascript-6">
     import {Panel, Group, Radio, Swiper, SwiperItem, Tab, TabItem, Sticky} from 'vux'
-    import {mapGetters} from 'vuex'
+
     import {getUserInfo} from "@/api/user"
     import cellList from "../../components/cellList"
     import profileIntro from "../../components/profileIntro"
+    import timeTransMixins from "../../utils/timeTransMixin"
 
 
     export default {
         name: "user",
+        mixins: [timeTransMixins],
         components: {
             Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky, cellList, profileIntro
         },
         data() {
             return {
                 userId: "",
-                userInfo: {},
-                userArticle: [],
-                userCollection: [],
+                userInfo: {},   // 用户信息
+                userArticle: [],    // 用户文章
+                userCollection: [], // 用户收藏
                 userReply: {},
                 swiperList: ['文章', '收藏', '回复',],
                 selected: '文章',
@@ -138,10 +140,6 @@
                     console.error(err)
                 })
 
-            },
-            commonTime(timestamp) {
-                let unixTimestamp = new Date(timestamp * 1000)
-                return unixTimestamp.toLocaleString()
             },
             readMore(id) {
                 this.$router.push({name: 'read_article', params: {articleId: id}})

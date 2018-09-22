@@ -6,23 +6,28 @@
 
         <div class="father-router" v-show="showFather">
 
-            <div>
+
+            <!-- 简单场景 -->
+            <Scroll
+                    ref="scroll"
+                    :autoUpdate="true"
+                    @pullingDown="loadRefresh"
+                    @pullingUp="loadMore"
+            >
+
+                <!-- 滚动的内容 -->
                 <panel :header="'这不是彩蛋'" :list="articleList" :type="type"
                        @on-click-item="readArticle"
                        @on-click-header="egg">
                 </panel>
-            </div>
-            <div id="get-more-article" class="get-more-article" @click="getMoreArticle">
-                查看更多
-            </div>
 
-            <load-more v-if="showLoading" :show-loading="showLoadingSymbol" :tip="loadMoreText"
-                       background-color="#fbf9fe"></load-more>
+            </Scroll>
 
         </div>
 
-
     </div>
+
+
 </template>
 
 <script>
@@ -31,12 +36,13 @@
 
     import {getAritcleList, getAritcleById} from "@/api/article.js"
     import * as utils from "../../utils/common"
+    import Scroll from 'vue-slim-better-scroll'
 
     export default {
         components: {
             Panel,
             Group,
-            Radio, LoadMore
+            Radio, LoadMore, Scroll
         },
         data() {
             return {
@@ -47,20 +53,33 @@
 
                 page: 1, // 文章的页数
                 articleId: 0,
-                showLoading: false,
-                showLoadingSymbol: true,
-                loadMoreText: "正在加载",
+
+                loadingFooter: true,
+                loadingFooterSymbol: true,
+                loadingFooterText: "正在加载",
 
             }
         },
         beforeMount() {
-            // this.showLoading = true
-            // this.showLoadingSymbol = true
-            this.getAritcleList()
+            // this.loadingFooter = true
+            // this.loadingFooterSymbol = true
+            this.getAritcleList(1)
             // 判断是否是在文章页，因为如果直接输入页面的URL是不会触发路由的改变
             if (this.isInArticle()) {
                 this.showFather = false
             }
+        },
+        mounted() {
+            this.$nextTick(() => {
+                // Scroll 组件,自己设置定高
+                let vs = document.querySelector(".vue-slim-better-scroll")
+
+                // 可以在这里动态获取 viewBox 高度,赋给 vs
+                let viewBoxHeight = document.querySelector("#vux_view_box_body").offsetHeight - 45 * 2
+
+                vs.style.height = viewBoxHeight + "px"
+
+            })
         },
         watch: {
             resData(curVal, oldVal) {
@@ -83,33 +102,68 @@
             },
         },
         methods: {
+            loadRefresh() {
+                // 下拉重新刷新数据
+                this.refreshAritcleList().then(() => {
+                    log("已重新刷新数据")
+                }).catch(err => {
+                    console.error(err)
+                })
+            },
+            loadMore() {
+                this.getMoreArticle().then((res) => {
+                    log("已加载更多")
+                }).catch(err => {
+                    console.error(err)
+                })
+
+            },
             readArticle(item) {
                 this.articleId = item.articleId
 //                在 this.$router.push() 方法中path不能和params一起使用，否则params将无效。需要用name来指定页面
                 this.$router.push({name: 'read_article', params: {articleId: this.articleId}})
                 this.showFather = false
             },
-            getAritcleList() {
+            async getAritcleList(page) {
 
-                getAritcleList(this.page).then((res) => {
-                    if (res.errno === 0) {
+                await getAritcleList(page).then((res) => {
+                    if (res.data.length > 0) {
                         this.resData = res.data
                         this.page++
-                    } else if (res.errno === 2) {
+                    } else {
                         let moreBtn = document.getElementById("get-more-article")
-
                         moreBtn.style.display = "none"
-                        this.showLoading = true
-                        this.showLoadingSymbol = false
-                        this.loadMoreText = "没有更多了"
+                        this.loadingFooter = true
+                        this.loadingFooterSymbol = false
+                        this.loadingFooterText = "没有更多了"
                     }
                 }).catch(err => {
                     console.error(err)
                 })
             },
-            getMoreArticle() {
-//                this.showLoading = true
-                this.getAritcleList()
+            async getMoreArticle() {
+                // this.loadingFooter = true
+                await this.getAritcleList(this.page)
+            },
+            refreshAritcleList() {
+                return new Promise((resolve, reject) => {
+                    getAritcleList(1).then((res) => {
+                        if (res.data.length > 0) {
+                            this.articleList = this.transformList(res.data)
+                        } else {
+                            let moreBtn = document.getElementById("get-more-article")
+                            moreBtn.style.display = "none"
+                            this.loadingFooter = true
+                            this.loadingFooterSymbol = false
+                            this.loadingFooterText = "没有更多了"
+                        }
+                        resolve()
+                    }).catch(err => {
+                        console.error(err)
+                        reject(err)
+                    })
+                })
+
             },
             //  把后台传入的数据转化为 panel 组件需要的数据形式
             transformList(resData) {
@@ -151,7 +205,7 @@
     }
 </script>
 
-<style>
+<style lang="less">
     .article-list .weui-media-box__title {
         white-space: normal;
     }
@@ -162,13 +216,7 @@
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     }
 
-    .weui-media-box__info__meta_extra {
-        /*padding-left: 9em !important;*/
-        /*border-left: none !important;*/
-    }
-
     .tag {
-        /*background-color: #ececec;*/
         line-height: 12px;
         padding: 4px 4px 4px 4px;
         -moz-border-radius: 2px;

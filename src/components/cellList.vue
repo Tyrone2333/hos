@@ -19,9 +19,12 @@
 
 <script type="text/ecmascript-6">
 
+    import timeTransMixins from "../utils/timeTransMixin"
+
     // 一个组件,用于收藏列表,和用户主页相关内容
     export default {
         name: "cellList",
+        mixins: [timeTransMixins],
         data() {
             return {}
         },
@@ -33,9 +36,7 @@
                 }
             },
         },
-        computed: {},
         methods: {
-
             readMore(id) {
                 this.$router.push({name: 'read_article', params: {articleId: id}})
             },
@@ -44,14 +45,9 @@
                 log("this.collectList:" + this.collectList)
                 log(this.user_id)
             },
-            commonTime(timestamp) {
-                let unixTimestamp = new Date(timestamp * 1000)
-                return unixTimestamp.toLocaleString()
-            },
         },
         mounted() {
         },
-        watch: {},
     }
 </script>
 

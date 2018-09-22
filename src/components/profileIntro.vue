@@ -21,11 +21,12 @@
 
 <script>
 
-    import {commonTime} from "../utils/common"
+    import timeTransMixins from "../utils/timeTransMixin"
     import uploadAvatar from "./uploadAvatar"
 
     export default {
         name: "profileIntro",
+        mixins: [timeTransMixins],
         components: {
             uploadAvatar,
         },
@@ -78,10 +79,7 @@
 
                 this.$emit("avatarClick")
             },
-            // 引过来不能在 template 直接用,还必须得脱裤子放个屁
-            commonTime(time) {
-                return commonTime(time)
-            },
+
 
         }
     }

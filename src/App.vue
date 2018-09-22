@@ -15,14 +15,18 @@
             <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
         </div>
 
-        <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="45px">
+        <view-box ref="viewBox"  body-padding-top="46px" body-padding-bottom="45px">
 
             <!--<keep-alive>-->
             <!--<router-view v-if="$route.meta.keepAlive"/>-->
             <!--</keep-alive>-->
             <!--<router-view v-if="!$route.meta.keepAlive"/>-->
 
-            <router-view/>
+            <div  class="bs-scroll-wrapper">
+                <router-view/>
+
+            </div>
+
 
             <tabbar class="tabbar-footer" slot="bottom">
                 <tabbar-item link="/article">
@@ -34,7 +38,7 @@
 
                 <!--图标点击切换-->
                 <!--<tabbar-item @on-item-click="toNews">-->
-                <!--<img slot="icon-active" src="./assets/1.png">-->
+                <!--<img slot="icon-active" src="./assets/example.png">-->
                 <!--<x-icon slot="icon" type="ios-ionic-outline" size="30"></x-icon>-->
                 <!--<span slot="label">谈笑风生</span>-->
                 <!--</tabbar-item>-->
@@ -64,6 +68,7 @@
     import {Tab, TabItem, Sticky} from 'vux'
     import {ViewBox} from 'vux'
     import {Tabbar, Actionsheet, TabbarItem, XHeader, XImg} from 'vux'
+    import BScroll from 'better-scroll'
 
     import {tokenLogin} from "./api/user";
 
@@ -113,7 +118,30 @@
         },
 
         mounted() {
-
+            // let options = {
+            //     pullDownRefresh: {
+            //         threshold: 50, // 当下拉到超过顶部 50px 时，触发 pullingDown 事件
+            //         stop: 20 // 刷新数据的过程中，回弹停留在距离顶部还有 20px 的位置
+            //     },
+            //
+            // }
+            // this.$nextTick(() => {
+            //
+            //     let bs = document.querySelector(".bs-scroll-wrapper")
+            //     let bsw = this.$refs.viewBox
+            //     this.scroll = new BScroll(bs, options)
+            //     this.scroll.on('pullingDown', () => {
+            //         // 刷新数据的过程中，回弹停留在距离顶部还有20px的位置
+            //         // RefreshData()
+            //         //     .then((newData) => {
+            //         //         this.data = newData
+            //         //         // 在刷新数据完成之后，调用 finishPullDown 方法，回弹到顶部
+            //         //         this.scroll.finishPullDown()
+            //         //     })
+            //         log("this.scroll.finishPullDown()")
+            //         this.scroll.finishPullDown()
+            //     })
+            // })
             // 每次打开如果token没过期就会自动刷新,很久未访问就要重新登录
             if (localStorage.token && localStorage.token !== "undefined") {
                 tokenLogin().then((res) => {
@@ -178,6 +206,12 @@
     }
 
     #app {
+        height: 100%;
+    }
+
+    /*better-scroll 的容器*/
+    .bs-scroll-wrapper{
+        box-sizing: border-box;
         height: 100%;
     }
 

@@ -66,6 +66,7 @@
 
 <script>
     import {mapGetters, mapMutations} from "vuex"
+    import timeTransMixins from "../../utils/timeTransMixin"
 
     /**
      *   进入组件触发 beforeCreate, created, mounted
@@ -75,6 +76,8 @@
      */
     export default {
         name: "chatRoom",
+        mixins: [timeTransMixins],
+
         data() {
             return {
                 message: "ws chat room message",
@@ -277,10 +280,6 @@
                 this.io.emit('sendGroupMsg', obj);
                 // 清空输入框
                 this.message = ""
-            },
-            commonTime(timestamp) {
-                let unixTimestamp = new Date(timestamp)
-                return unixTimestamp.toLocaleString()
             },
             scrollToChatBottom() {
                 let chat = document.getElementsByClassName("rounded-messages")[0]

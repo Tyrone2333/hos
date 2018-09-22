@@ -48,6 +48,7 @@
 
     import {getAritcleList, getAritcleById, reply} from "../../api/article.js"
     import {collect} from "../../api/collect";
+    import timeTransMixins from "../../utils/timeTransMixin"
 
     import comment from "../../components/comment"
     import {mapGetters,} from 'vuex'
@@ -57,6 +58,7 @@
         components: {
             comment
         },
+        mixins: [timeTransMixins],
         data() {
             return {
                 resData: null,
@@ -142,12 +144,6 @@
                     .catch(err => {
                         console.error(err)
                     })
-            },
-
-
-            commonTime(timestamp) {
-                let unixTimestamp = new Date(timestamp * 1000)
-                return unixTimestamp.toLocaleString()
             },
 
             getTagsList(tagString) {
