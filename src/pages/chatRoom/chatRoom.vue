@@ -31,6 +31,7 @@
                 <div class="right-msg msg">LOL</div>
                 <div class="time  msg"><strong>Yesterday</strong> 3:44pm</div>
                 <div class="msg">Heck, yea! FOOTBALL!</div>
+                <!--演示消息 END-->
 
                 <div class="clearfix"></div>
 
@@ -139,21 +140,19 @@
                 this.io.on('connect', (socket) => {
                     // let token = socket.handshake.query.token;
                     log("ws 已连接")
+                    // ws 连接后就触发上线
+                    let obj = {
+                        action: "online",
+                        nickname: this.userInfo.nickname,
+                        username: this.userInfo.username,
+                        userId: this.userInfo.id,
+                        timeStamp: Math.round(new Date().getTime() / 1000),
+                    }
+                    this.io.emit("online", obj)
                 })
                 this.io.on('disconnect', (socket) => {
                     log("ws 断开连接")
                 })
-
-                // 触发上线
-                let obj = {
-                    action: "online",
-                    nickname: this.userInfo.nickname,
-                    username: this.userInfo.username,
-                    userId: this.userInfo.id,
-                    timeStamp: Math.round(new Date().getTime() / 1000),
-                }
-                this.io.emit("online", obj)
-
 
                 // 群聊
                 this.io.on('receiveMsg', (data) => {
@@ -163,10 +162,58 @@
                 // 收到提醒
                 this.io.on('notice', (data) => {
                     // 添加提醒
-                    _this.addNoticeToChatList(data.nickname, data.type)
+                    _this.addNoticeToChatList(data, data.type)
                     _this.scrollToChatBottom()
                 })
             },
+            addMsgToChatList(msg) {
+                this.chatList.push(msg)
+            },
+            addNoticeToChatList(data, type) {
+                let msg
+                if (type === "online") {
+                    msg = `<div class="online  msg"><strong>${data.nickname}</strong> 上线了,现在有<strong>${data.userNum}</strong>人</div>`
+                } else if (type === "offline") {
+                    msg = `<div class="online  msg"><strong>${data.nickname}</strong> 下线了,现在有<strong>${data.userNum}</strong>人</div>`
+                }
+                let chat = document.getElementsByClassName("rounded-messages")[0]
+
+                chat.append(this.parseDom(msg))
+            },
+
+            sendMessage() {
+                if (this.message === "") return
+
+                let obj = {
+                    action: "send",
+                    nickname: this.userInfo.nickname,
+                    username: this.userInfo.username,
+                    avatar: this.userInfo.avatar,
+                    timeStamp: Math.round(new Date().getTime() / 1000),
+                    message: this.message,
+                }
+                this.io.emit('sendGroupMsg', obj);
+                // 清空输入框
+                this.message = ""
+            },
+            scrollToChatBottom() {
+                let chat = document.getElementsByClassName("rounded-messages")[0]
+                // dom 更新再滚动,否则是滚动到原来的高度
+                this.$nextTick(() => {
+                    chat.scrollTop = chat.scrollHeight
+                })
+
+            },
+            parseDom(arg) {
+                // 用于把模版字符串的 dom 转成真正的 dom (只能有一个父元素)
+                var objE = document.createElement("div");
+
+                objE.innerHTML = arg;
+
+                return objE.childNodes[0];
+            },
+
+            // 用原生的 API 创建 socket
             creatw3cSocket() {
                 if (!window.WebSocket) return
                 if (this.wsConnecting) return
@@ -251,55 +298,6 @@
                 }
             },
 
-            addMsgToChatList(msg) {
-                this.chatList.push(msg)
-            },
-            addNoticeToChatList(data, type) {
-                let msg
-                if (type === "online") {
-                    msg = `<div class="online  msg"><strong>${data}</strong> 上线了</div>`
-                } else if (type === "offline") {
-                    msg = `<div class="online  msg"><strong>${data}</strong> 下线了</div>`
-                }
-                let chat = document.getElementsByClassName("rounded-messages")[0]
-
-                chat.append(this.parseDom(msg))
-            },
-
-            sendMessage() {
-                if (this.message === "") return
-
-                let obj = {
-                    action: "send",
-                    nickname: this.userInfo.nickname,
-                    username: this.userInfo.username,
-                    avatar: this.userInfo.avatar,
-                    timeStamp: Math.round(new Date().getTime() / 1000),
-                    message: this.message,
-                }
-                this.io.emit('sendGroupMsg', obj);
-                // 清空输入框
-                this.message = ""
-            },
-            scrollToChatBottom() {
-                let chat = document.getElementsByClassName("rounded-messages")[0]
-                // dom 更新再滚动,否则是滚动到原来的高度
-                this.$nextTick(() => {
-                    chat.scrollTop = chat.scrollHeight
-                })
-
-            },
-            parseDom(arg) {
-
-                // 用于把模版字符串的 dom 转成真正的 dom (只能有一个父元素)
-                var objE = document.createElement("div");
-
-                objE.innerHTML = arg;
-
-                return objE.childNodes[0];
-            }
-
-            // methods
         },
         watch: {
             chatList(curVal, oldVal) {

@@ -4,10 +4,8 @@ import {store} from '@/store/store.js'
 
 
 import news from '@/pages/news/news.vue'
-import header from '@/pages/header/header.vue'
 import me from '@/pages/me/me.vue'
 import login from '@/pages/me/login.vue'
-
 import article_modify from '@/pages/console/article_modify.vue'
 import article from '@/pages/article/article_list.vue'
 import read_article from '@/pages/article/read_article.vue'
@@ -17,7 +15,6 @@ import test from "@/pages/test.vue"
 import user from "@/pages/me/user.vue"
 import setting from "@/pages/me/setting.vue"
 import chatRoom from "@/pages/chatRoom/chatRoom.vue"
-
 import mavon_editor_test from '@/pages/console/mavon_editor_test.vue'
 import about from '@/pages/me/about.vue'
 
@@ -31,14 +28,8 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            // component: article,
             redirect: '/article'
         },
-        // {
-        //     path: '/Hello',
-        //     name: 'Hello',
-        //     component: Hello
-        // },
 
         {
             path: '/article',
@@ -59,11 +50,8 @@ const router = new Router({
             path: '/news',
             name: 'news',
             component: news
-        }, {
-            path: '/header',
-            name: 'header',
-            component: header
-        }, {
+        },
+        {
             path: '/me',
             name: 'me',
             meta: {

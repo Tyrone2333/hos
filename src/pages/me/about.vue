@@ -1,7 +1,7 @@
 <template>
     <div class="about">
-
-        ShadowsocksR已停止更新，这里是备份，顺便修改了一下SSR C#版供大家使用，请前往https://github.com/Azure99/ShadowSocksRCsM
+        <pre>
+                 ShadowsocksR已停止更新，这里是备份，顺便修改了一下SSR C#版供大家使用，请前往https://github.com/Azure99/ShadowSocksRCsM
 
 
         ShadowsocksR介绍
@@ -32,6 +32,7 @@
 
         用过之后，记得和别人说，SSR就是个垃圾，作为非洲人根本不知道什么是SSR
 
+        </pre>
     </div>
 </template>
 

@@ -5,7 +5,6 @@
         <x-header style="width:100%;position:absolute;left:0;top:0;z-index:100;"
                   :title="title"
                   :right-options="{showMore: true}"
-
                   @on-click-more="onClickMore"
                   @on-click-title="onClickTitle">
             <!--<a slot="right">Feedback</a>-->
@@ -28,8 +27,6 @@
 
             <tabbar class="tabbar-footer" slot="bottom">
                 <tabbar-item link="/article">
-                    <!--<x-icon slot="icon" type="ios-barcode-outline" size="30"></x-icon>-->
-                    <!--<span  slot="icon" class="icon-user" icon-class="icon-user"></span>-->
                     <img src="./assets/PNG/file-text.png" slot="icon" alt="icon">
                     <span slot="label">首页</span>
                 </tabbar-item>
@@ -112,7 +109,7 @@
             onClickTitle() {
                 log(this.$refs)
                 this.$refs.viewBox.scrollTo(0)
-            }
+            },
         },
 
         mounted() {
@@ -135,10 +132,48 @@
                     console.log("已刷新token和用户信息")
                 })
             }
-
         },
         watch: {
             // $route(to, from) {
+
+            /**
+             * 这一段可以用来判断 tabbar-item 的高亮,不过现在觉得没这个必要去弄
+             *
+             *   let arr = [
+             ["article", "read"],
+             ["me", "setting", [
+             "edit","about",[
+             "sb"
+             ]
+             ]]
+             ]
+
+             function findOffset(arr, val, position) {
+                    let res = '';
+
+                    function _find(arr, val, position) {
+                        let temp = '';
+                        arr.forEach((item, index) => {
+                            temp = position ? position + ',' + index : index;
+                            if (item === val) {
+                                res = temp;
+                                // return;
+                            } else if (item instanceof Array) {
+                                temp = _find(item, val, temp);
+                            }
+                        })
+                    }
+
+                    _find(arr, val, position);
+                    return res;
+                }
+             console.log(
+             findOffset(arr, "sb")
+             )
+             *
+             */
+
+
             //     /**
             //      *  旧版文章回退写的不好,现在已经用 keep-alive 替换
             //      */
@@ -160,12 +195,12 @@
             //         })
             //     }
             // },
-
         },
     }
 </script>
 
 <style lang="less">
+
     @import '~vux/src/styles/reset.less';
 
     body {

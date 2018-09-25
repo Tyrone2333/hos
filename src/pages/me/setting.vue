@@ -19,15 +19,10 @@
 
                 <x-switch :title="informationDraft.sex ? '男' : '女' " v-model="informationDraft.sex"></x-switch>
 
-                <!--<x-number title="你的年龄" v-model="informationDraft.age"></x-number>-->
-
-                <!--TODO 还不会跳到相同的选项-->
-                <popup-picker :popup-title="('please select')"
-                              title="你的年龄"
-                              :data="list1"
+                <popup-picker title="你的年龄"
+                              :data="ageList"
                               v-model="informationDraft.age"
-                              @on-change="onChangeAge"
-                              :placeholder="('please select')"
+                              placeholder="请选择年龄"
                 ></popup-picker>
 
                 <x-address title="你的地址"
@@ -110,9 +105,10 @@
         computed: {
             ...mapGetters(["userInfo"]),
 
-            list1: function () {
+            // 年龄列表,10 - 60岁
+            ageList: function () {
                 let t = [[]]
-                for (let i = 10; i<60;i++){
+                for (let i = 10; i < 60; i++) {
                     t[0].push(i)
                 }
                 return t
@@ -126,10 +122,6 @@
 
         methods: {
 
-            onChangeAge(val){
-                log(val)
-                log("this.informationDraft.age:",this.informationDraft.age)
-            },
 
             // 创建符合 vux 组件要求的 用户信息数据
             createInformationDraft() {
@@ -139,12 +131,12 @@
                 } else {
                     this.informationDraft.address = this.informationDraft.address.split(",")
                 }
+                // 年龄组件 popup-picker 需要字符串,不能用数字
                 if (this.informationDraft.age == null) {
                     this.informationDraft.age = []
-                }else {
-                    this.informationDraft.age = [this.informationDraft.age]
+                } else {
+                    this.informationDraft.age = [this.informationDraft.age.toString()]
                 }
-                log("!!!!!!!!!!!",this.informationDraft.age)
 
                 // 男的时候为真,女为假
                 this.informationDraft.sex = this.informationDraft.sex !== 0;
