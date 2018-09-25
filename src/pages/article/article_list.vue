@@ -1,29 +1,23 @@
 <template>
     <div class="article-list">
 
-        <!--用子路由，盖住父路由页面，返回时刷新滚动条啥的都不用判断了 ：)-->
-        <router-view></router-view>
+        <!-- 简单场景 -->
+        <Scroll
+                ref="scroll"
+                :autoUpdate="true"
+                @pullingDown="loadRefresh"
+                @pullingUp="loadMore"
+                :startY="-44"
+                @scroll="onScroll"
+        >
 
-        <div class="father-router" v-show="showFather">
+            <!-- 滚动的内容 -->
+            <panel :header="'这不是彩蛋'" :list="articleList" :type="type"
+                   @on-click-item="readArticle"
+                   @on-click-header="egg">
+            </panel>
 
-
-            <!-- 简单场景 -->
-            <Scroll
-                    ref="scroll"
-                    :autoUpdate="true"
-                    @pullingDown="loadRefresh"
-                    @pullingUp="loadMore"
-            >
-
-                <!-- 滚动的内容 -->
-                <panel :header="'这不是彩蛋'" :list="articleList" :type="type"
-                       @on-click-item="readArticle"
-                       @on-click-header="egg">
-                </panel>
-
-            </Scroll>
-
-        </div>
+        </Scroll>
 
     </div>
 
@@ -61,26 +55,9 @@
             }
         },
         beforeMount() {
-            // this.loadingFooter = true
-            // this.loadingFooterSymbol = true
             this.getAritcleList(1)
-            // 判断是否是在文章页，因为如果直接输入页面的URL是不会触发路由的改变
-            if (this.isInArticle()) {
-                this.showFather = false
-            }
         },
-        mounted() {
-            this.$nextTick(() => {
-                // Scroll 组件,自己设置定高
-                let vs = document.querySelector(".vue-slim-better-scroll")
 
-                // 可以在这里动态获取 viewBox 高度,赋给 vs
-                let viewBoxHeight = document.querySelector("#vux_view_box_body").offsetHeight - 45 * 2
-
-                vs.style.height = viewBoxHeight + "px"
-
-            })
-        },
         watch: {
             resData(curVal, oldVal) {
                 let articleList = this.articleList
@@ -95,13 +72,19 @@
                     }
                 }
             },
-            $route(to, from) {
-                if (to.name === "article" && from.name === "read_article") {
-                    this.showFather = true
-                }
-            },
         },
         methods: {
+            test(pos) {
+
+                log(pos)
+
+                log("滚动 Y: ", this.$refs.scroll)
+                this.$refs.scroll.scrollTo(0, -350, 0)
+
+            },
+            onScroll(pos) {
+                log(pos)
+            },
             loadRefresh() {
                 // 下拉重新刷新数据
                 this.refreshAritcleList().then(() => {
@@ -109,6 +92,7 @@
                 }).catch(err => {
                     console.error(err)
                 })
+
             },
             loadMore() {
                 this.getMoreArticle().then((res) => {
@@ -119,10 +103,12 @@
 
             },
             readArticle(item) {
-                this.articleId = item.articleId
-//                在 this.$router.push() 方法中path不能和params一起使用，否则params将无效。需要用name来指定页面
-                this.$router.push({name: 'read_article', params: {articleId: this.articleId}})
-                this.showFather = false
+                // 在 this.$router.push() 方法中path不能和params一起使用，否则params将无效。需要用name来指定页面
+                this.$router.push({name: 'read_article', params: {articleId: item.articleId}})
+
+                // 神奇??? 用了这个 this.articleId 从文章页回来竟然会不能滑动?? 还不能缓存原来的滚动距离??
+                // this.articleId = item.articleId
+                // this.$router.push({name: 'read_article', params: {articleId: this.articleId}})
             },
             async getAritcleList(page) {
 
@@ -206,8 +192,13 @@
 </script>
 
 <style lang="less">
-    .article-list .weui-media-box__title {
-        white-space: normal;
+    .article-list {
+        width: 100%;
+        height: 100%;
+
+        .weui-media-box__title {
+            white-space: normal;
+        }
     }
 
     .get-more-article {

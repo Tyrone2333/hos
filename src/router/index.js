@@ -44,20 +44,17 @@ const router = new Router({
             path: '/article',
             name: 'article',
             component: article,
-            children: [
-                {
-                    path: 'read_article/:articleId',
-                    name: 'read_article',
-                    component: read_article
-                },
-            ],
             meta: {
                 // 这里想用 keep-alive 缓存列表的位置,未果,可能是用了 view-box 的原因????
                 isUseCache: false,  // false时才重新刷新获取数据
                 keepAlive: true  // 通过此字段判断是否需要缓存当前组件
             },
         },
-
+        {
+            path: '/read_article/:articleId',
+            name: 'read_article',
+            component: read_article,
+        },
         {
             path: '/news',
             name: 'news',

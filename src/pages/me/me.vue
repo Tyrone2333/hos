@@ -72,9 +72,7 @@
         },
         data() {
             return {
-                msg: 'Hello World!',
                 showContent: true,
-                localCount: "localCount",
                 avatar: localStorage.avatar ? localStorage.avatar : "https://pic4.zhimg.com/354a338c01699ca3bf7556bcd8e4e9ea_xl.jpg",
             }
         },

@@ -164,7 +164,6 @@ axios.interceptors.response.use(
 
 // get
 export const _get = (req) => {
-    // TODO  return new Promise 只 resolve res.status 为 200 的内容,其他统统 reject
 
     return new Promise((resolve, reject) => {
         axios.get(req.url, {params: req.data}).then(response => {

@@ -15,16 +15,15 @@
             <actionsheet :menus="menus" v-model="showMenus" show-cancel></actionsheet>
         </div>
 
-        <view-box ref="viewBox"  body-padding-top="46px" body-padding-bottom="45px">
+        <view-box ref="viewBox" body-padding-top="46px" body-padding-bottom="45px">
 
-            <!--<keep-alive>-->
-            <!--<router-view v-if="$route.meta.keepAlive"/>-->
-            <!--</keep-alive>-->
-            <!--<router-view v-if="!$route.meta.keepAlive"/>-->
+            <keep-alive>
+                <router-view v-if="$route.meta.keepAlive"/>
+            </keep-alive>
 
-                <router-view/>
+            <router-view v-if="!$route.meta.keepAlive"/>
 
-
+            <!--<router-view/>-->
 
 
             <tabbar class="tabbar-footer" slot="bottom">
@@ -139,30 +138,28 @@
 
         },
         watch: {
-            $route(to, from) {
-                /**
-                 *  TODO 这段代码写这里非常恶心,文章回退写的不好,有空必改
-                 *
-                 *  关于前进刷新 后退缓存,各种方案都尝试失败,目前只有这种能用
-                 */
-                let scrTop = this.$refs.viewBox.getScrollTop()
-                // 从列表到具体文章时保存之前的滚动距离
-                if (to.name === "read_article" && from.name === "article") {
-                    log("从列表到具体文章" + scrTop)
-                    this.states.scrollTop = scrTop
-                }
-                // 从文章退回列表跳转到之前的位置
-                if (to.name === "article" && from.name === "read_article") {
-                    log("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
-                    // 都可以
-                    // setTimeout(() => {
-                    //     this.scrollToBefore(this.states.scrollTop)
-                    // }, 0)
-                    this.$nextTick(() => {
-                        this.scrollToBefore(this.states.scrollTop)
-                    })
-                }
-            },
+            // $route(to, from) {
+            //     /**
+            //      *  旧版文章回退写的不好,现在已经用 keep-alive 替换
+            //      */
+            //     let scrTop = this.$refs.viewBox.getScrollTop()
+            //     // 从列表到具体文章时保存之前的滚动距离
+            //     if (to.name === "read_article" && from.name === "article") {
+            //         log("从列表到具体文章" + scrTop)
+            //         this.states.scrollTop = scrTop
+            //     }
+            //     // 从文章退回列表跳转到之前的位置
+            //     if (to.name === "article" && from.name === "read_article") {
+            //         log("从文章退回列表 this.states.scrollTop: " + this.states.scrollTop)
+            //         // 都可以
+            //         // setTimeout(() => {
+            //         //     this.scrollToBefore(this.states.scrollTop)
+            //         // }, 0)
+            //         this.$nextTick(() => {
+            //             this.scrollToBefore(this.states.scrollTop)
+            //         })
+            //     }
+            // },
 
         },
     }
@@ -184,7 +181,6 @@
     #app {
         height: 100%;
     }
-
 
     .icon-user {
         width: 27px;

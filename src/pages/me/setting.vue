@@ -19,7 +19,16 @@
 
                 <x-switch :title="informationDraft.sex ? '男' : '女' " v-model="informationDraft.sex"></x-switch>
 
-                <x-number title="你的年龄" v-model="informationDraft.age"></x-number>
+                <!--<x-number title="你的年龄" v-model="informationDraft.age"></x-number>-->
+
+                <!--TODO 还不会跳到相同的选项-->
+                <popup-picker :popup-title="('please select')"
+                              title="你的年龄"
+                              :data="list1"
+                              v-model="informationDraft.age"
+                              @on-change="onChangeAge"
+                              :placeholder="('please select')"
+                ></popup-picker>
 
                 <x-address title="你的地址"
                            v-model="informationDraft.address"
@@ -60,6 +69,7 @@
         XSwitch,
         Checker,
         CheckerItem,
+        PopupPicker,
     } from 'vux'
     import {mapGetters} from 'vuex'
     import {changeInformation, changePwd} from "@/api/user"
@@ -80,7 +90,8 @@
             XSwitch,
             Checker,
             CheckerItem,
-            profileIntro
+            profileIntro,
+            PopupPicker,
         },
         data() {
             return {
@@ -92,10 +103,20 @@
                 oldPwd: '', // 改密码
                 newPwd: '',
                 newPwd2: '',
+
+
             }
         },
         computed: {
             ...mapGetters(["userInfo"]),
+
+            list1: function () {
+                let t = [[]]
+                for (let i = 10; i<60;i++){
+                    t[0].push(i)
+                }
+                return t
+            }
         },
         mounted() {
             // 复制一下 userInfo,不需要深拷贝
@@ -105,6 +126,10 @@
 
         methods: {
 
+            onChangeAge(val){
+                log(val)
+                log("this.informationDraft.age:",this.informationDraft.age)
+            },
 
             // 创建符合 vux 组件要求的 用户信息数据
             createInformationDraft() {
@@ -115,8 +140,11 @@
                     this.informationDraft.address = this.informationDraft.address.split(",")
                 }
                 if (this.informationDraft.age == null) {
-                    this.informationDraft.age = 0
+                    this.informationDraft.age = []
+                }else {
+                    this.informationDraft.age = [this.informationDraft.age]
                 }
+                log("!!!!!!!!!!!",this.informationDraft.age)
 
                 // 男的时候为真,女为假
                 this.informationDraft.sex = this.informationDraft.sex !== 0;
@@ -130,7 +158,7 @@
                 // 将 vux 组件格式的数据改为可以存入数据库的格式
                 let data = {
                     nickname: this.informationDraft.nickname,
-                    age: this.informationDraft.age,
+                    age: this.informationDraft.age[0],
                     sex: this.informationDraft.sex ? 1 : 0,
                     email: this.informationDraft.email,
                     address: this.informationDraft.address.join(","),
