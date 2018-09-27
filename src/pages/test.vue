@@ -21,6 +21,7 @@
 
         <h2 style="color: #c56857" @click="getCnodeUserBulk">批量获取用户</h2>
 
+        <p @click="getChatRoomMessage">获取聊天室</p>
 
         <div class="transform-test">
             <div class="transform-test-item">
@@ -93,6 +94,24 @@
 
             },
 
+            getChatRoomMessage(){
+                let req = {
+                    url: "http://172.28.82.1:10010/hos_api/message/all",
+                    data: {
+                        uid:"63a9f0ea7bb98050796b649e85481845",
+                        // uid:"6b5b0dd03c9c85725032ce5f3a0918ae",
+                        page:1
+                    }
+                }
+                _get(req).then((response) => {
+                    let res = response.data
+
+                    log(res)
+
+                }).catch((error) => {
+                    console.log(error);
+                })
+            },
             async getCnodeUserBulk() {
                 // 1、获取文章里面的用户(包括作者)
                 // 2、把用户加入数据库

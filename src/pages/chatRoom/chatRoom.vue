@@ -41,13 +41,16 @@
                      :class="userInfo.username === item.username ? 'right-item-wrapper' : 'left-item-wrapper'">
 
                     <!--左边的头像-->
-                    <div class="avatar">
+                    <div class="avatar" @click="clickSomeOneAvatar(item)">
                         <img :src="item.avatar" alt="avatar">
                     </div>
                     <!--右边是 昵称 和 消息-->
                     <div class="right-wrapper">
                         <!--昵称-->
-                        <div class="nickname">{{item.nickname}}</div>
+                        <div class="nickname">{{item.nickname}}
+                            <span v-if="item.to_uid === uid">(仅你可见)</span>
+                        </div>
+
                         <!--消息-->
                         <div class=" msg msg-visible"
                              :class="userInfo.username === item.username ? 'right-msg' : 'left'">{{item.message}}
@@ -58,7 +61,8 @@
         </div>
 
         <div class="foot-wrapper">
-            <input class="chat-input" type="text" v-model="message" @keyup.enter="sendMessage">
+            <input class="chat-input" type="text" v-model="message" :placeholder="chatPlaceholder"
+                   @keyup.enter="sendMessage">
 
             <button class="chat-send" @click="sendMessage">发送</button>
         </div>
@@ -68,6 +72,7 @@
 <script>
     import {mapGetters, mapMutations} from "vuex"
     import timeTransMixins from "../../utils/timeTransMixin"
+    import {createUid} from "../../utils/common";
 
     /**
      *   进入组件触发 beforeCreate, created, mounted
@@ -81,14 +86,19 @@
 
         data() {
             return {
-                message: "ws chat room message",
+                message: "ws 随机消息:" + Math.random(),
                 chatList: [], // 消息数组,存放所有聊天消息
                 maxChatSize: 20,  // 能保存的最大消息数,DOM太多会严重影响性能
                 chatPosition: "left",
                 // 设置重试次数及重试延迟
                 retry: 2,
                 retryCount: 0,   //  以 _ 或 $ 开头的属性 不会 被 Vue 实例代理
-                retryDelay: 2000
+                retryDelay: 2000,
+
+                chatPlaceholder: "",
+                privateFor: "",
+
+                uid: "",
             }
         },
         computed: {
@@ -98,8 +108,6 @@
             // 防止热加载调试建立多个ws连接
             this.wsConnecting = false
             // this.creatw3cSocket()
-
-
             this.createSocketIOClient()
         },
         beforeDestroy() {
@@ -123,6 +131,11 @@
             let tabbar = document.getElementsByClassName("weui-tabbar")[0]
             tabbar.style.visibility = "hidden"
 
+            // 临时!!! ,自动发送
+            this.$nextTick((res) => {
+                this.sendMessage()
+            })
+
         },
         methods: {
             ...mapMutations(["setchatWSServerStatus",]),
@@ -131,14 +144,45 @@
                 // this.ws.close(3333, "离开聊天室,关闭 websocket 连接")
                 // this.io.close(1000, "用户离开聊天室")
             },
+            clickSomeOneAvatar(msgItem) {
+                this.chatPlaceholder = `与 ${msgItem.nickname} 私聊`
+                this.privateFor = msgItem.from_uid
+                log(`from_uid: `+ msgItem.from_uid)
+            },
+            sendMessage() {
+                if (this.message === "") return
+
+                let obj = {
+                    action: "message",
+                    from_uid: this.uid,
+                    to_uid: this.privateFor,   // 私聊的对象 || ""
+
+                    nickname: this.userInfo.nickname,
+                    username: this.userInfo.username,
+                    avatar: this.userInfo.avatar,
+                    message: this.message,
+                    message_type: "text",
+
+                    timeStamp: Math.round(new Date().getTime() / 1000),
+                }
+
+                this.io.emit('message', obj)
+                // 清空输入框
+                // this.message = ""
+            },
+
             createSocketIOClient() {
                 let _this = this
+
                 const io = require('socket.io-client');
                 this.io = io(process.env.CHAT_WS_SERVER)
+                this.uid = createUid(this.userInfo.username)    // 用户的 uid
 
                 // 连接
-                this.io.on('connect', (socket) => {
+                this.io.on('connect', () => {
+                    // 这里的 socket 是 undefined
                     // let token = socket.handshake.query.token;
+
                     log("ws 已连接")
                     // ws 连接后就触发上线
                     let obj = {
@@ -146,25 +190,36 @@
                         nickname: this.userInfo.nickname,
                         username: this.userInfo.username,
                         userId: this.userInfo.id,
+                        uid: this.uid,
                         timeStamp: Math.round(new Date().getTime() / 1000),
                     }
                     this.io.emit("online", obj)
+                    console.log("ws 已触发上线")
+
                 })
-                this.io.on('disconnect', (socket) => {
-                    log("ws 断开连接")
+                this.io.on('registed', (data) => {
+
                 })
 
                 // 群聊
-                this.io.on('receiveMsg', (data) => {
+                this.io.on('message', (data) => {
                     _this.addMsgToChatList(data)
                     _this.scrollToChatBottom()
                 })
+
                 // 收到提醒
                 this.io.on('notice', (data) => {
                     // 添加提醒
                     _this.addNoticeToChatList(data, data.type)
                     _this.scrollToChatBottom()
                 })
+
+                // 断开连接
+                this.io.on('disconnect', (socket) => {
+                    log("ws 断开连接")
+                })
+
+
             },
             addMsgToChatList(msg) {
                 this.chatList.push(msg)
@@ -181,21 +236,6 @@
                 chat.append(this.parseDom(msg))
             },
 
-            sendMessage() {
-                if (this.message === "") return
-
-                let obj = {
-                    action: "send",
-                    nickname: this.userInfo.nickname,
-                    username: this.userInfo.username,
-                    avatar: this.userInfo.avatar,
-                    timeStamp: Math.round(new Date().getTime() / 1000),
-                    message: this.message,
-                }
-                this.io.emit('sendGroupMsg', obj);
-                // 清空输入框
-                this.message = ""
-            },
             scrollToChatBottom() {
                 let chat = document.getElementsByClassName("rounded-messages")[0]
                 // dom 更新再滚动,否则是滚动到原来的高度
@@ -297,23 +337,21 @@
                     console.log("ws 出现连接错误", ev)
                 }
             },
-
         },
         watch: {
             chatList(curVal, oldVal) {
                 if (curVal.length > this.maxChatSize) {
-                    curVal.pop()
+                    // TODO 截断列表有问题,新消息不能插进来
+                    // curVal.pop()
                 }
-            }
-            ,
-        }
-        ,
+            },
+        },
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-    .clearfix {
+    .clearfix ::after {
         content: " ";
         display: block;
         clear: both;
@@ -337,16 +375,19 @@
             /*消息框公共部分*/
             .item-wrapper {
                 display: flex;
+                flex-wrap: nowrap;
                 position: relative;
                 .avatar {
-                    position: absolute;
+                    width: 100%;
+                    flex-basis: 40px;
                     img {
                         width: 36px;
                         height: 36px;
                     }
                 }
                 .right-wrapper {
-                    width: 100%;
+                    /*width: 100%;*/
+                    flex: 1;
                     position: relative;
                     .nickname {
                     }
@@ -355,12 +396,12 @@
             /*消息在左边的情况*/
             .left-item-wrapper {
                 .avatar {
-                    left: 0;
-                    top: 0;
+                    /*order属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。*/
+                    order: -1;
                 }
                 .right-wrapper {
                     .nickname {
-                        padding-left: 55px;
+                        padding-left: 15px;
                         font-size: 12px;
                         color: #555;
                     }
@@ -369,8 +410,9 @@
             /*消息在右边的情况*/
             .right-item-wrapper {
                 .avatar {
-                    right: 0;
-                    bottom: 0;
+                    /*order属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。*/
+                    order: 2;
+                    align-self: flex-end;
                 }
                 .right-wrapper {
                     .nickname {
@@ -458,13 +500,13 @@
                 display: block;
                 height: auto;
                 width: auto;
-                max-width: 60%;
+                max-width: 70%;
                 word-wrap: break-word;
                 word-break: keep-all;
                 font-family: sans-serif;
                 text-align: left;
                 line-height: 1.5em;
-                margin: 5px 55px;
+                margin: 5px 15px;
                 padding: 10px;
                 cursor: default;
                 border-radius: 15px;
@@ -575,10 +617,12 @@
                 border: none;
                 background: none;
                 color: #0078d7;
-
+                &:focus{
+                    border: none;
+                    outline: none;
+                }
             }
         }
     }
-
 
 </style>
