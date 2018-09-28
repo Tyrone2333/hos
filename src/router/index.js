@@ -14,7 +14,8 @@ import feedback from '@/pages/feedback/feedback.vue'
 import test from "@/pages/test.vue"
 import user from "@/pages/me/user.vue"
 import setting from "@/pages/me/setting.vue"
-import chatRoom from "@/pages/chatRoom/chatRoom.vue"
+import chatList from "@/pages/chatRoom/chatList.vue"
+import chatOne from "@/pages/chatRoom/chatOne.vue"
 import mavon_editor_test from '@/pages/console/mavon_editor_test.vue'
 import about from '@/pages/me/about.vue'
 
@@ -104,8 +105,17 @@ const router = new Router({
         },
         {
             path: '/chatRoom',
-            name: 'chatRoom',
-            component: chatRoom,
+            name: 'chatList',
+            component: chatList,
+            children: [
+                {
+                    // 当 /user/:id/profile 匹配成功，
+                    // UserProfile 会被渲染在 User 的 <router-view> 中
+                    name:"chatOne",
+                    path: 'chatOne',
+                    component: chatOne
+                },
+            ]
         },
         {
             path: '/test',

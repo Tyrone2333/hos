@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-room">
+    <div class="chat">
 
 
         <div class="chat-wrapper" v-if="chatList">
@@ -71,8 +71,8 @@
 
 <script>
     import {mapGetters, mapMutations} from "vuex"
-    import timeTransMixins from "../../utils/timeTransMixin"
-    import {createUid} from "../../utils/common";
+    import timeTransMixins from "../utils/timeTransMixin"
+    import {createUid} from "../utils/common";
 
     /**
      *   进入组件触发 beforeCreate, created, mounted
@@ -81,9 +81,14 @@
      *
      */
     export default {
-        name: "chatRoom",
+        name: "chat",
         mixins: [timeTransMixins],
-
+        props: {
+            chatFor: {
+                type: String,
+                default: ""
+            },
+        },
         data() {
             return {
                 message: "ws 随机消息:" + Math.random(),
@@ -147,7 +152,7 @@
             clickSomeOneAvatar(msgItem) {
                 this.chatPlaceholder = `与 ${msgItem.nickname} 私聊`
                 this.privateFor = msgItem.from_uid
-                log(`from_uid: `+ msgItem.from_uid)
+                log(`from_uid: ` + msgItem.from_uid)
             },
             sendMessage() {
                 if (this.message === "") return
@@ -357,7 +362,7 @@
         clear: both;
     }
 
-    .chat-room {
+    .chat {
         width: 100%;
         height: 100%;
         display: flex;
@@ -617,7 +622,7 @@
                 border: none;
                 background: none;
                 color: #0078d7;
-                &:focus{
+                &:focus {
                     border: none;
                     outline: none;
                 }
