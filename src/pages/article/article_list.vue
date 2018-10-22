@@ -5,17 +5,21 @@
         <Scroll
                 ref="scroll"
                 :autoUpdate="true"
+                :startY="-44"
                 @pullingDown="loadRefresh"
                 @pullingUp="loadMore"
-                :startY="-44"
                 @scroll="onScroll"
         >
 
             <!-- 滚动的内容 -->
-            <panel :header="'这不是彩蛋'" :list="articleList" :type="type"
-                   @on-click-item="readArticle"
-                   @on-click-header="egg">
-            </panel>
+            <panel
+                    :header="'这不是彩蛋'"
+                    :list="articleList"
+                    :type="type"
+                    @on-click-item="readArticle"
+                    @on-click-header="egg"
+            />
+
 
         </Scroll>
 
@@ -30,6 +34,8 @@
 
     import {getAritcleList, getAritcleById} from "@/api/article.js"
     import * as utils from "../../utils/common"
+
+    // TODO 直接把这个scroll提出来
     import Scroll from 'vue-slim-better-scroll'
 
     export default {

@@ -7,7 +7,7 @@
                 :header="publicHeader"
                 :list="publicList"
                 @on-click-item="publicItemClick"
-        ></panel>
+        />
 
         <transition name="slide-left">
             <router-view>
@@ -39,7 +39,7 @@
                 privateChatList: [],
                 publicChatList: [],
                 showChatList: true,
-                transitionName:"",
+                transitionName: "",
             }
         },
         mounted() {

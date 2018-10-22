@@ -70,14 +70,7 @@
     export default {
         name: 'app',
         components: {
-
-            Tab,
-            TabItem,
-            Sticky,
-            ViewBox,
-            Tabbar,
-            TabbarItem,
-            XHeader, XImg, Actionsheet
+            Tab, TabItem, Sticky, ViewBox, Tabbar, TabbarItem, XHeader, XImg, Actionsheet
         },
         data() {
             return {
