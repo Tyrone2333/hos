@@ -10,7 +10,6 @@
                 @pullingUp="loadMore"
                 @scroll="onScroll"
         >
-
             <!-- 滚动的内容 -->
             <panel
                     :header="'这不是彩蛋'"
@@ -20,12 +19,12 @@
                     @on-click-header="egg"
             />
 
-
+            <div class="pull-down" slot="pulldown">
+                xrala shuaxin
+            </div>
         </Scroll>
 
     </div>
-
-
 </template>
 
 <script>
@@ -123,11 +122,7 @@
                         this.resData = res.data
                         this.page++
                     } else {
-                        let moreBtn = document.getElementById("get-more-article")
-                        moreBtn.style.display = "none"
-                        this.loadingFooter = true
-                        this.loadingFooterSymbol = false
-                        this.loadingFooterText = "没有更多了"
+                        this.$refs.scroll.update(true)
                     }
                 }).catch(err => {
                     console.error(err)
@@ -143,11 +138,7 @@
                         if (res.data.length > 0) {
                             this.articleList = this.transformList(res.data)
                         } else {
-                            let moreBtn = document.getElementById("get-more-article")
-                            moreBtn.style.display = "none"
-                            this.loadingFooter = true
-                            this.loadingFooterSymbol = false
-                            this.loadingFooterText = "没有更多了"
+                            this.$refs.scroll.update(true)
                         }
                         resolve()
                     }).catch(err => {
