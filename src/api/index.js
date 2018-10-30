@@ -169,7 +169,7 @@ export const _get = (req) => {
         axios.get(req.url, {params: req.data}).then(response => {
             if (response !== undefined && response.data.errno === 0) {
                 // response.data 才是服务器返回的东西,其他都是 axios 加的
-                resolve(response.data)
+                resolve(response.data.data)
             } else {
                 console.log("GET 请求失败了:")
                 reject(response)
@@ -189,7 +189,7 @@ export const _post = (req) => {
         axios({method: 'post', url: req.url, data: req.data}).then(response => {
             if (response !== undefined && response.data.errno === 0) {
                 // response.data 才是服务器返回的东西,其他都是 axios 加的
-                resolve(response.data)
+                resolve(response.data.data)
             } else {
                 console.log("POST 请求失败了:")
                 reject(response)

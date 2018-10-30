@@ -28,8 +28,7 @@
 
             getCollectList(this.userInfo.id,)
                 .then((res) => {
-                    let list = res.data;
-                    this.$store.commit("setcollectList", list)
+                    this.$store.commit("setcollectList", res)
                 })
                 .catch(err => {
                     console.error(err)

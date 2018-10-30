@@ -91,7 +91,6 @@
                 this.articleId = this.$route.params.articleId || this.getIdByURL(url)
 //                log("articleId: " + this.articleId)
                 getAritcleById(this.articleId).then((res) => {
-
                     this.resData = res.data[0]
                     console.log("文章信息: %O", this.resData)
                     this.getTagsList(this.resData.tags)

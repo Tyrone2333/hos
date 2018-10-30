@@ -19,9 +19,6 @@
                     @on-click-header="egg"
             />
 
-            <div class="pull-down" slot="pulldown">
-                xrala shuaxin
-            </div>
         </Scroll>
 
     </div>
@@ -31,7 +28,7 @@
     import {Panel, Group, Radio} from 'vux'
     import {LoadMore} from "vux"
 
-    import {getAritcleList, getAritcleById} from "@/api/article.js"
+    import {getAritcleList, } from "@/api/article.js"
     import * as utils from "../../utils/common"
 
     // TODO 直接把这个scroll提出来
@@ -118,8 +115,8 @@
             async getAritcleList(page) {
 
                 await getAritcleList(page).then((res) => {
-                    if (res.data.length > 0) {
-                        this.resData = res.data
+                    if (res.length > 0) {
+                        this.resData = res
                         this.page++
                     } else {
                         this.$refs.scroll.update(true)

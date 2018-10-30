@@ -51,24 +51,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {
-        XTextarea,
-        Group,
-        XInput,
-        XNumber,
-        XButton,
-        XAddress,
-        ChinaAddressV4Data,
-        Cell,
-        Rater,
-        XSwitch,
-        Checker,
-        CheckerItem,
-        PopupPicker,
-    } from 'vux'
-    import {mapGetters} from 'vuex'
-    import {changeInformation, changePwd} from "@/api/user"
-    import profileIntro from "../../components/profileIntro"
+      import {XTextarea,Group,XInput,XNumber,XButton,XAddress,ChinaAddressV4Data,Cell,Rater,XSwitch,Checker,CheckerItem,PopupPicker,}from'vux'
+      import {mapGetters} from 'vuex'
+      import {changeInformation, changePwd} from "@/api/user"
+      import profileIntro from "../../components/profileIntro"
 
     export default {
         name: "setting",
@@ -177,7 +163,6 @@
 
                 changePwd(this.oldPwd, this.newPwd)
                     .then((res) => {
-
                         this.$vux.toast.show({
                             text: "修改成功,请重新登录",
                             type: "success",

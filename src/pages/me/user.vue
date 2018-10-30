@@ -129,10 +129,10 @@
             fetchData() {
                 this.userId = this.$route.params.id || this.getIdByURL(window.location.href)
                 getUserInfo(this.userId).then((res) => {
-                    this.userInfo = res.data.userInfo
-                    this.userArticle = res.data.userArticle
-                    this.userCollection = res.data.userCollection
-                    this.userReply = res.data.userReply
+                    this.userInfo = res.userInfo
+                    this.userArticle = res.userArticle
+                    this.userCollection = res.userCollection
+                    this.userReply = res.userReply
 
                     console.log("用户信息: %O", res)
 

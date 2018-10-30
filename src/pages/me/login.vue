@@ -156,7 +156,7 @@
 // //                    })
 //             },
 
-//            登录按钮事件
+            // 登录按钮事件
             loginBtnClick() {
                 let username = this.username
                 let password = this.password
@@ -165,15 +165,6 @@
 
                     this.resData = res
                     console.log(res);
-
-                    // 登录失败
-                    if (res.errno === 1) {
-                        this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                        return
-                    }
 
                     // 登录成功,保存必要信息进localStorage
                     this.$store.commit("setUserInfo", res.userinfo)
@@ -203,6 +194,8 @@
                 })
 
             },
+
+            // 注册按钮事件
             registerBtnClick() {
                 let username = this.username
                 let tel = this.tel
@@ -225,18 +218,6 @@
                     "nickname": nickname,
                 }
                 register(data).then((res) => {
-
-                    this.resData = res
-                    console.warn(this.resData);
-                    // 注册失败
-                    if (res.errno === -1) {
-                        this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                        // alert(res.resMsg)
-                        return
-                    }
                     // 注册成功
                     // 显示 Toast
                     this.$vux.toast.show({
@@ -251,10 +232,6 @@
                     }, 1500)
                 }).catch(err => {
                     console.log(err)
-                    this.$vux.toast.show({
-                        text: "error",
-                        type: "warn",
-                    })
                 })
             },
 

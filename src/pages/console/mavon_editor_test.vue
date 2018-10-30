@@ -117,7 +117,7 @@
 
             },
             uploadArticle() {
-          
+
                 if (this.contentCheck()) {
                     return
                 }
@@ -142,12 +142,7 @@
                 // this.contentCheck()
 
                 public_article({...data}).then((res) => {
-                    log(res)
-                    if (res.errno === 0) {
-                        this.toastSuccess(res.message)
-                    } else {
-                        this.toastWarn(res.message)
-                    }
+                    this.toastSuccess(res.message)
                 }).catch(err => {
                     console.error(err)
                 })
