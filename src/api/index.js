@@ -45,7 +45,7 @@ axios.interceptors.response.use(
     response => {
         // 如请求正确,则将 loading 关闭
         Vue.$vux.loading.hide()
-        if (response.data.errno === 0) {
+        if (response.data.errno === 200) {
             return response
         }
 
@@ -64,7 +64,9 @@ axios.interceptors.response.use(
             })
         } else if (response.data.errno === -1
             || response.data.errno === 1
-            || response.data.errno === 3) {
+            || response.data.errno === 3
+            || response.data.errno === 500
+        ) {
             Vue.$vux.toast.show({
                 text: response.data.message || "出错了",
                 type: "warn",
@@ -167,7 +169,7 @@ export const _get = (req) => {
 
     return new Promise((resolve, reject) => {
         axios.get(req.url, {params: req.data}).then(response => {
-            if (response !== undefined && response.data.errno === 0) {
+            if (response !== undefined && response.data.errno === 200) {
                 // response.data 才是服务器返回的东西,其他都是 axios 加的
                 resolve(response.data.data)
             } else {
@@ -187,7 +189,7 @@ export const _post = (req) => {
 
     return new Promise((resolve, reject) => {
         axios({method: 'post', url: req.url, data: req.data}).then(response => {
-            if (response !== undefined && response.data.errno === 0) {
+            if (response !== undefined && response.data.errno === 200) {
                 // response.data 才是服务器返回的东西,其他都是 axios 加的
                 resolve(response.data.data)
             } else {

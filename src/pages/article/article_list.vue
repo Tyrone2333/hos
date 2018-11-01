@@ -132,8 +132,8 @@
             refreshAritcleList() {
                 return new Promise((resolve, reject) => {
                     getAritcleList(1).then((res) => {
-                        if (res.data.length > 0) {
-                            this.articleList = this.transformList(res.data)
+                        if (res.length > 0) {
+                            this.articleList = this.transformList(res)
                         } else {
                             this.$refs.scroll.update(true)
                         }

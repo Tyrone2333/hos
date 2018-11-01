@@ -146,7 +146,7 @@
                     this.commentContent = ""
                     this.showReplyDialog = false
                     this.$vux.toast.show({
-                        text: res.message,
+                        text: res,
                         type: "success",
                     })
                     // 触发评论更新

@@ -111,14 +111,6 @@
             if (localStorage.token && localStorage.token !== "undefined") {
                 tokenLogin().then((res) => {
 
-                    // 登录失败
-                    if (res.errno !== 0) {
-                        this.$vux.toast.show({
-                            text: res.message,
-                            type: "warn",
-                        })
-                        return
-                    }
                     // 登录成功,保存必要信息进localStorage
                     this.$store.commit("setUserInfo", res.userinfo)
                     this.$store.commit("setToken", res.token)
