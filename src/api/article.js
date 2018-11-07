@@ -11,9 +11,12 @@ export const getAritcleList = (page) => {
     }
     return _get(req)
 }
-export const getAritcleById = (id) => {
+export const getAritcleById = (id,userId) => {
     let req = {
         url: "/article/" + id,
+        data:{
+            userId: userId || 0
+        }
     }
     return _get(req)
 }

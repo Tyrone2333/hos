@@ -28,7 +28,7 @@
     import {Panel, Group, Radio} from 'vux'
     import {LoadMore} from "vux"
 
-    import {getAritcleList, } from "@/api/article.js"
+    import {getAritcleList,} from "@/api/article.js"
     import * as utils from "../../utils/common"
 
     // TODO 直接把这个scroll提出来
@@ -179,7 +179,8 @@
             },
 
             egg() {
-                window.location.href = "http://t.cn/RHrvjVI";
+                // window.location.href = "http://t.cn/RHrvjVI";
+                alert("等下一个彩蛋吧")
             },
         },
     }

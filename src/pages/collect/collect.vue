@@ -24,6 +24,7 @@
         },
         components: {cellList},
         methods: {},
+
         mounted() {
 
             getCollectList(this.userInfo.id,)

@@ -35,6 +35,7 @@
         <div class="article-page-split-line"></div>
 
 
+        <!--TODO 评论要分页-->
         <!--评论列表-->
         <comment :commentList="commentList"
                  @updateReply="updateReply"
@@ -51,7 +52,7 @@
     import timeTransMixins from "../../utils/timeTransMixin"
 
     import comment from "../../components/comment"
-    import {mapGetters,} from 'vuex'
+    import {mapGetters} from 'vuex'
 
 
     export default {
@@ -72,11 +73,17 @@
             }
         },
         computed: {
-            ...mapGetters(["collectList"])
+            ...mapGetters(["collectList", "userInfo"])
         },
+
         beforeMount() {
+            console.log(this.userInfo)
+
             this.fetchData()
             this.initcollectList()
+        },
+        mounted(){
+
         },
 
         methods: {
@@ -89,8 +96,10 @@
 
                 let url = window.location.href
                 this.articleId = this.$route.params.articleId || this.getIdByURL(url)
-//                log("articleId: " + this.articleId)
-                getAritcleById(this.articleId).then((res) => {
+
+                log(this.userInfo)
+
+                getAritcleById(this.articleId,).then((res) => {
                     this.resData = res.data[0]
                     console.log("文章信息: %O", this.resData)
                     this.getTagsList(this.resData.tags)
@@ -153,6 +162,7 @@
                 this.tags = tagString.split(",")
             },
             initcollectList() {
+                log(this.collectList)
                 for (let k in this.collectList) {
                     if (this.articleId === this.collectList[k].article_id) {
                         this.collected = true

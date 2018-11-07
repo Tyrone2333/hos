@@ -61,7 +61,6 @@
 
 <script>
     import {Group, Cell, CellBox, XButton, Badge} from 'vux'
-    import {mapState} from 'vuex'
     import {mapGetters} from 'vuex'
     import profileIntro from "../../components/profileIntro"
 
@@ -78,6 +77,7 @@
         },
         methods: {
             clickVision() {
+
                 console.log("%c" + "  当前版本 v " + this.version + " %c",
                     "background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff",
                     "background:transparent")
