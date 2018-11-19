@@ -2,9 +2,8 @@
     <div class="read-article" v-if="resData">
 
         <h2>{{resData.title}}</h2>
-        <div class="collection " @click="toggleCollect">
-            {{collection}}
-        </div>
+
+
         <div class="article-info">
             <span>{{resData.author}} 写于 {{commonTime(resData.dateline)}}</span>
         </div>
@@ -13,23 +12,14 @@
 
         <div class="content" v-html="resData.content"></div>
 
-        <span v-if="tags" v-for="(item,idx) in tags"
-              v-bind:key="item"
-              class="list-complete-item tag"
-              id="tag">{{item}}</span>
-        <div class="vote-wrapper">
-            <div class="agree-wrapper">
-                <span class="icon  icon-thumbs-up">&nbsp;{{ resData.agree}}</span>
-            </div>
-            <div class="disagree-wrapper">
-                <span class="icon  icon-thumbs-down">&nbsp;{{ resData.disagree}}</span>
-            </div>
+        <div class="tab-wrapper">
+               <span v-if="tags" v-for="(item,idx) in tags"
+                     :key="item"
+                     class="list-complete-item tag"
+                     id="tag"
+               >{{item}}</span>
         </div>
 
-        <!--这是以前的打脸网！！-->
-        <!--<div class="count-down">-->
-        <!--距离打脸还有 : {{countDownTime}}-->
-        <!--</div>-->
 
         <!--分界线-->
         <div class="article-page-split-line"></div>
@@ -37,17 +27,43 @@
 
         <!--TODO 评论要分页-->
         <!--评论列表-->
-        <comment :commentList="commentList"
-                 @updateReply="updateReply"
-                 :authorId="resData.author_id"
-        ></comment>
-        <!--<reply :needReply="needReply"></reply>-->
+        <comment
+                ref="comment"
+                :commentList="commentList"
+                :authorId="resData.author_id"
+                @updateReply="updateReply"
 
+        ></comment>
+
+        <div class="fixed-footer">
+
+            <div class="reply-wrapper" @click="clickReply">
+                <i class=" icon  icon-quill"></i>
+                写评论
+            </div>
+
+
+            <div class="right">
+                <!--<div class="zan-wrapper">-->
+                <div class="zan-wrapper" @click="clickZan">
+                    <i class="icon" :class="isZan ?  'icon icon-thumbs-up': 'icon icon-thumbs-o-up'"></i>
+                    {{zanCount}}
+                </div>
+                <!--</div>-->
+
+                <!--收藏的图标-->
+                <div class="collection-wrapper" @click="toggleCollect">
+                    {{collection}}
+                </div>
+            </div>
+
+
+        </div>
     </div>
 </template>
 <script type="text/ecmascript-6">
 
-    import {getAritcleList, getAritcleById, reply} from "../../api/article.js"
+    import {getAritcleById, setZan} from "../../api/article.js"
     import {collect} from "../../api/collect";
     import timeTransMixins from "../../utils/timeTransMixin"
 
@@ -66,6 +82,8 @@
                 articleId: 0,
                 collected: false,
                 collection: "  ☆ 收藏​",
+                isZan: false,
+                zanCount: 0,
                 tags: [],
                 commentList: [],    // 评论列表
 
@@ -77,16 +95,45 @@
         },
 
         beforeMount() {
-            console.log(this.userInfo)
-
             this.fetchData()
             this.initcollectList()
-        },
-        mounted(){
 
+            this.$nextTick(function () {
+                // 隐藏外面的tabbar
+                document.getElementById("tabbar-footer").style.visibility = "hidden"
+                // 回顶部
+                document.body.scrollTop = 0
+                document.documentElement.scrollTop = 0
+            })
+        },
+        mounted() {
+        },
+        beforeDestroy() {
+            document.getElementById("tabbar-footer").style.visibility = "visible"
         },
 
         methods: {
+            // 底栏的点赞
+            clickZan() {
+                if (this.userInfo.id > 0) {
+                    setZan(this.articleId, this.userInfo.id, this.isZan ? "cancelZan" : "zan").then((res) => {
+                        this.isZan = !this.isZan
+                        this.isZan ? this.zanCount++ : this.zanCount--
+                    }).catch(error => {
+                        console.error(error.message)
+                    })
+                } else {
+                    this.$vux.toast.show({
+                        text: "请先登录",
+                        type: "warn",
+                    })
+                }
+
+            },
+            //  底栏的回复按钮
+            clickReply() {
+                this.$refs.comment.replyDialogShow()
+            },
             getIdByURL(url) {
                 let regExp = /((read-article)\/(\d+)$)/;
 //                let str = "http://192.168.1.186:10086/#read-article/66";
@@ -97,20 +144,15 @@
                 let url = window.location.href
                 this.articleId = this.$route.params.articleId || this.getIdByURL(url)
 
-                log(this.userInfo)
-
-                getAritcleById(this.articleId,).then((res) => {
+                getAritcleById(this.articleId, this.userInfo.id).then((res) => {
                     this.resData = res.data[0]
+                    this.isZan = this.resData.is_zan === 1 ? true : false
+                    this.zanCount = this.resData.agree
                     console.log("文章信息: %O", this.resData)
                     this.getTagsList(this.resData.tags)
                     this.commentList = res.reply
-
                 }).catch(error => {
                     console.error(error.message)
-                    // this.$vux.toast.show({
-                    //     text: "无法获取服务器数据",
-                    //     type: "warn",
-                    // })
                 })
 
             },
@@ -162,7 +204,7 @@
                 this.tags = tagString.split(",")
             },
             initcollectList() {
-                log(this.collectList)
+               console. log("this.collectList: ",this.collectList)
                 for (let k in this.collectList) {
                     if (this.articleId === this.collectList[k].article_id) {
                         this.collected = true
@@ -208,7 +250,7 @@
             },
             resData(curVal, oldVal) {
                 this.getCountDown(curVal.fuck_date)
-            }
+            },
         },
 
     }
@@ -229,26 +271,61 @@
             font-size: 18px;
             color: #000;
         }
-        #tag {
-            background-color: #ececec;
-            margin-left: 10px;
-            margin-top: 5px;
-            padding: 10px;
-            border-radius: 3px;
-        }
-        .vote-wrapper {
+        .tab-wrapper {
             margin: 25px auto 0;
-            padding: 0 0 25px;
-            text-align: center;
-            .agree-wrapper {
-                display: inline-block;
-                vertical-align: middle;
+            /*padding: 0 0 25px;*/
+            /*text-align: center;*/
+            #tag {
+                background-color: #ececec;
+                margin-left: 10px;
+                margin-top: 5px;
+                padding: 10px;
+                border-radius: 3px;
             }
-            .disagree-wrapper {
-                display: inline-block;
-                vertical-align: middle;
-                margin-left: 50px;
+        }
+
+        // 固定底部
+        .fixed-footer {
+            display: flex;
+            position: fixed;
+            z-index: 500;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 10px;
+            background-color: #F7F7FA;
+            font-size: 18px;
+            color: #858585;
+
+            .reply-wrapper {
+                i {
+                    color: #858585;
+                }
             }
+            .right {
+                position: absolute;
+                right: 0;
+                .zan-wrapper {
+                    /*float: right;*/
+                    display: inline-block;
+                    /*vertical-align: middle;*/
+                    .icon-thumbs-up {
+                        color: black;
+                    }
+                    .icon-thumbs-o-up {
+                        color: #858585;
+                    }
+                }
+                .collection-wrapper {
+                    display: inline-block;
+
+                    /*float: right;*/
+                    margin-right: 18px;
+                    margin-left: 18px;
+                    transition: all 1s;
+                }
+            }
+
         }
 
         .article-page-split-line {
@@ -272,14 +349,6 @@
 
     .article-info {
         color: #999;
-    }
-
-    .collection {
-        color: #8590a6;
-        float: right;
-        margin-right: 10px;
-        margin-left: 10px;
-        transition: all 1s;
     }
 
     .mll {

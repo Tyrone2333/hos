@@ -19,6 +19,7 @@ module.exports = {
     // View the bundle analyzer report after build finishes:
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
+
     //   开启一个图形界面的打包分析
     bundleAnalyzerReport: process.env.npm_config_report
     // bundleAnalyzerReport: true

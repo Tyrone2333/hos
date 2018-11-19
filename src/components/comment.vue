@@ -3,7 +3,7 @@
         <!--发表评论-->
         <div class="top-title">
             <div class="left ">精彩评论</div>
-            <div class="right icon  icon-quill" @click="replyDialogShow()">写评论</div>
+            <!--<div class="right icon  icon-quill" @click="replyDialogShow()">写评论</div>-->
         </div>
 
         <!--评论列表-->
@@ -104,6 +104,9 @@
                 this.$router.push({name: 'user', params: {id: userId}})
             },
 
+            clickReply(){
+                this.$emit("clickReply")
+            },
             // 用于显示评论框, @别人 会有一个 placeholder 样式
             replyDialogShow(commentInfo) {
 

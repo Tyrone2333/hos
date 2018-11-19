@@ -43,3 +43,13 @@ export const reply = ({from_id, to_id, content, timestamp, article_id}) => {
     return _post(req);
 }
 
+export const setZan = (typeId, userId, action) => {
+    let req = {
+        data: {
+            typeId, userId, action
+        },
+        url: '/article/setZan'
+    }
+    return _post(req);
+}
+

@@ -67,7 +67,7 @@
 
     export default {
         components: {
-            Group, Cell, CellBox, XButton, Badge,profileIntro
+            Group, Cell, CellBox, XButton, Badge, profileIntro
         },
         data() {
             return {
@@ -108,7 +108,6 @@
             font-size: 16px;
         }
     }
-
 
     .slide {
         padding: 0 20px;

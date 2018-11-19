@@ -25,7 +25,7 @@
             <!--<router-view/>-->
 
 
-            <tabbar class="tabbar-footer" slot="bottom">
+            <tabbar class="tabbar-footer" id="tabbar-footer" slot="bottom">
                 <tabbar-item link="/article">
                     <img src="./assets/PNG/file-text.png" slot="icon" alt="icon">
                     <span slot="label">首页</span>
@@ -111,7 +111,7 @@
             if (localStorage.token && localStorage.token !== "undefined") {
                 tokenLogin().then((res) => {
 
-                    // 登录成功,保存必要信息进localStorage
+                    // 登录成功,保存必要信息进localStorage TODO 增加收藏列表
                     this.$store.commit("setUserInfo", res.userinfo)
                     this.$store.commit("setToken", res.token)
                     console.log("已刷新token和用户信息")

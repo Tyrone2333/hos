@@ -55,7 +55,8 @@
                 return this.username + "addUsername"
             },
             cheerio() {
-                return require('cheerio')
+                // return require('cheerio')
+                return "ii"
             }
         },
         mounted() {
@@ -94,13 +95,13 @@
 
             },
 
-            getChatRoomMessage(){
+            getChatRoomMessage() {
                 let req = {
                     url: "http://172.28.82.1:10010/hos_api/message/all",
                     data: {
-                        uid:"63a9f0ea7bb98050796b649e85481845",
+                        uid: "63a9f0ea7bb98050796b649e85481845",
                         // uid:"6b5b0dd03c9c85725032ce5f3a0918ae",
-                        page:1
+                        page: 1
                     }
                 }
                 _get(req).then((response) => {
