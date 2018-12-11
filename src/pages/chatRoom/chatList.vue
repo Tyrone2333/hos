@@ -42,10 +42,16 @@
                 transitionName: "",
             }
         },
+        activated() {
+            log(this.$route)
+        },
         mounted() {
+            console.log(
+                this.$route
+            )
             this.publicList = [
                 {
-                    src: "http://pfqu2aq6k.bkt.clouddn.com//o_1coev7ev21bsq1h7819l913b21eiqe.jpg",
+                    src: "//192.168.36.171:10010/static/images/avatar/88ba331dcadc20528415c18220765b4f3d78f005.png",
                     title: "大大大 群聊",
                     articleId: 123,
                     desc: "descdescdescdescdescdescdesc"
@@ -60,8 +66,12 @@
             publicItemClick(item) {
 
                 this.showChatList = !this.showChatList
-                this.$router.push({name: "chatOne",})
-            }
+                this.$router.push({
+                    name: "chatOne",
+                    query: {chatRedirect: "none"},
+                })
+            },
+
         },
         watch: {
             $route(to, from) {

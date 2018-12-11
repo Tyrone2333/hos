@@ -33,28 +33,38 @@
 
                 <div class="clearfix"></div>
 
-                <!--消息体-->
+                <!--消息 + 时间 容器-->
                 <div v-for="(item,idx) in chatList"
-                     class="item-wrapper"
-                     :class="userInfo.username === item.username ? 'right-item-wrapper' : 'left-item-wrapper'">
+                >
+                    <!--消息体-->
+                    <div v-if="item.type !== 'time'"
+                         class="item-wrapper"
+                         :class="userInfo.username === item.username ? 'right-item-wrapper' : 'left-item-wrapper'"
+                    >
+                        <!--左边的头像-->
+                        <div class="avatar" @click="clickSomeOneAvatar(item)">
+                            <img :src="item.avatar" alt="avatar">
+                        </div>
+                        <!--右边是 昵称 和 消息-->
+                        <div class="right-wrapper">
+                            <!--昵称-->
+                            <div class="nickname">{{item.nickname}}
+                                <span v-if="item.to_uid === uid">(仅你可见)</span>
+                            </div>
 
-                    <!--左边的头像-->
-                    <div class="avatar" @click="clickSomeOneAvatar(item)">
-                        <img :src="item.avatar" alt="avatar">
+                            <!--消息-->
+                            <div class=" msg msg-visible"
+                                 :class="userInfo.username === item.username ? 'right-msg' : 'left'">{{item.message}}
+                            </div>
+                        </div>
                     </div>
-                    <!--右边是 昵称 和 消息-->
-                    <div class="right-wrapper">
-                        <!--昵称-->
-                        <div class="nickname">{{item.nickname}}
-                            <span v-if="item.to_uid === uid">(仅你可见)</span>
-                        </div>
 
-                        <!--消息-->
-                        <div class=" msg msg-visible"
-                             :class="userInfo.username === item.username ? 'right-msg' : 'left'">{{item.message}}
-                        </div>
+                    <!--如果上条消息和本条时间超过了1分钟就会在消息上面添加一个时间-->
+                    <div v-else class="time  msg">
+                        {{commonTime(item.timeStamp)}}
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -71,6 +81,7 @@
     import {mapGetters, mapMutations} from "vuex"
     import timeTransMixins from "../../utils/timeTransMixin"
     import {createUid} from "../../utils/common";
+    import {getLatestMessage} from "../../api/message";
 
     /**
      *   进入组件触发 beforeCreate, created, mounted
@@ -107,12 +118,11 @@
         computed: {
             ...mapGetters(["chatWSServer", "userInfo",]),
         },
-        created() {
-            // 防止热加载调试建立多个ws连接
-            this.wsConnecting = false
-            // this.creatw3cSocket()
-            this.createSocketIOClient()
-        },
+        // created() {
+        //     // 防止热加载调试建立多个ws连接
+        //     this.wsConnecting = false
+        //     // this.creatw3cSocket()
+        // },
         beforeDestroy() {
             // 重新显示tabbar
             let tabbar = document.getElementsByClassName("weui-tabbar")[0]
@@ -128,6 +138,26 @@
             }
             this.io.emit("offline", obj)
 
+        },
+        activated() {
+            log(this.$route)
+        },
+        beforeMount() {
+            log(this.$route)
+            this.createSocketIOClient()
+
+            // 获取最近的10条消息
+            getLatestMessage().then((res) => {
+                // 要把 res 从后往前遍历
+                let i = res.length
+                while (i) {
+                    this.addMsgToChatList(res[i - 1])
+                    this.scrollToChatBottom()
+                    i--
+                }
+            }).catch(err => {
+                console.error(err)
+            })
         },
         mounted() {
             // 隐藏底部的 tabbar
@@ -147,33 +177,33 @@
                 // this.ws.close(3333, "离开聊天室,关闭 websocket 连接")
                 // this.io.close(1000, "用户离开聊天室")
             },
+            // 点击进入私聊, TODO 需要加一个聊天对象
             clickSomeOneAvatar(msgItem) {
                 this.chatPlaceholder = `与 ${msgItem.nickname} 私聊`
                 this.privateFor = msgItem.from_uid
-                log(`from_uid: ` + msgItem.from_uid)
-            },
-            sendMessage() {
-                if (this.message === "") return
+                log(`点击头像: `, msgItem)
 
+                // 触发下线,服务器要自己设定断开与 client 的连接
                 let obj = {
-                    action: "message",
-                    from_uid: this.uid,
-                    to_uid: this.privateFor,   // 私聊的对象 || ""
-
+                    action: "offline",
                     nickname: this.userInfo.nickname,
                     username: this.userInfo.username,
-                    avatar: this.userInfo.avatar,
-                    message: this.message,
-                    message_type: "text",
-
+                    userId: this.userInfo.id,
                     timeStamp: Math.round(new Date().getTime() / 1000),
                 }
+                this.io.emit("offline", obj)
 
-                this.io.emit('message', obj)
-                // 清空输入框
-                // this.message = ""
+                // 清空消息,替换头部
+                this.chatList = []
+                document.querySelector(".reveal-messages").innerHTML = ""
+
+                // 然后重新创建一条线路
+                this.createSocketIOClient()
+
+                // 通知父组件把聊天列表重新加载
             },
 
+            // 创建 ws 连接,并监听各种事件
             createSocketIOClient() {
                 let _this = this
 
@@ -200,9 +230,6 @@
                     console.log("ws 已触发上线")
 
                 })
-                this.io.on('registed', (data) => {
-
-                })
 
                 // 群聊
                 this.io.on('message', (data) => {
@@ -222,9 +249,41 @@
                     log("ws 断开连接")
                 })
 
-
             },
+
+            // 发送消息
+            sendMessage() {
+                if (this.message === "") return
+
+                let obj = {
+                    action: "message",
+                    from_uid: this.uid,
+                    to_uid: this.privateFor,   // 私聊的对象 || ""
+
+                    nickname: this.userInfo.nickname,
+                    username: this.userInfo.username,
+                    avatar: this.userInfo.avatar,
+                    message: this.message.toString(),
+                    message_type: "text",
+
+                    timeStamp: Math.round(new Date().getTime() / 1000),
+                }
+
+                this.io.emit('message', obj)
+                // 清空输入框
+                // this.message = ""
+            },
+
             addMsgToChatList(msg) {
+                let lastestMsg = this.chatList[this.chatList.length - 1]
+                //  如果上条消息和本条时间超过了1分钟就会在消息上面添加一个时间
+                if (this.chatList.length === 0 || (msg.timeStamp - lastestMsg.timeStamp) > 60) {
+                    let time = {
+                        type: "time",
+                        timeStamp: msg.timeStamp
+                    }
+                    this.chatList.push(time)
+                }
                 this.chatList.push(msg)
             },
             addNoticeToChatList(data, type) {
@@ -256,90 +315,6 @@
                 return objE.childNodes[0];
             },
 
-            // 用原生的 API 创建 socket
-            creatw3cSocket() {
-                if (!window.WebSocket) return
-                if (this.wsConnecting) return
-                let _this = this
-                let ws = new WebSocket(this.chatWSServer.wsUrl, "echo-protocol");
-
-                this.ws = ws
-
-                ws.onopen = function () {
-                    _this.wsConnecting = true
-                    console.log("WebSocket 已连接")
-                    _this.setchatWSServerStatus(true)
-
-                    let obj = {
-                        action: "register",
-                        UserKey: "eoi15e34o3i15oe4i1egidhytmd",
-                        UserName: "enzo",
-                        UserType: "1",
-                        data: this.message,
-                    }
-                    ws.send(JSON.stringify(obj))
-                }
-
-                ws.onmessage = function (e) {
-                    if (typeof e.data === "string") {
-                        let res = JSON.parse(e.data)
-
-                        if (res.type === "registed") {
-                            console.info("注册成功")
-                            _this.wsConnecting = false
-                        } else if (res.type === "message") {
-                            // 把收到的消息放到列表
-                            _this.addMsgToChatList(res)
-
-                        }
-
-                        // console.log("【" + _this.commonTime(res.timeStamp) + "】" + " 收到消息: ", res)
-                    }
-                }
-                // readyState changes to CLOSED. The listener receives a CloseEvent named "close".
-                ws.onclose = function (event) {
-                    let closeReason
-                    if (event.code === 1000) {
-                        closeReason = "正常关闭"
-                    } else {
-                        // 如1006等非正常关闭
-                        closeReason = "异常关闭,尝试重连"
-
-                        // 重试次数大于设置的次数，reject
-                        if (_this.retryCount >= _this.retry) {
-                            return
-                        }
-                        console.log(`断线,第 ${_this.retryCount + 1} 次重试`)
-                        // 重试统计 +1
-                        _this.retryCount++
-                        // return new Promise(resolve => {
-                        //     setTimeout(resolve, _this.retryDelay || 1)
-                        // }).then(() => {
-                        //     _this.creatw3cSocket()
-                        // })
-                        return setTimeout(() => {
-                            _this.creatw3cSocket()
-                        }, _this.retryDelay || 1)
-
-
-                    }
-                    console.log("echo-protocol ws " + closeReason)
-
-                    let nullAct = () => {
-                    }
-                    ws.onopen = nullAct;
-                    ws.onmessage = nullAct;
-                    ws.onerror = nullAct;
-                    ws.onclose = nullAct;
-                    ws = nullAct
-
-                    _this.wsConnecting = false
-                    _this.setchatWSServerStatus(false)
-                }
-                ws.onerror = function (ev) {
-                    console.log("ws 出现连接错误", ev)
-                }
-            },
         },
         watch: {
             chatList(curVal, oldVal) {
