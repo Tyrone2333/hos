@@ -2,23 +2,42 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import {store} from '@/store/store.js'
 
-
-import news from '@/pages/news/news.vue'
-import me from '@/pages/me/me.vue'
-import login from '@/pages/me/login.vue'
-import article_modify from '@/pages/console/article_modify.vue'
+// 四个tabbar页面
 import article from '@/pages/article/article_list.vue'
-import read_article from '@/pages/article/read_article.vue'
-import collect from '@/pages/collect/collect.vue'
-import feedback from '@/pages/feedback/feedback.vue'
-import test from "@/pages/test.vue"
-import user from "@/pages/me/user.vue"
-import setting from "@/pages/me/setting.vue"
-import chatList from "@/pages/chatRoom/chatList.vue"
-import chatOne from "@/pages/chatRoom/chatOne.vue"
 import mavon_editor_test from '@/pages/console/mavon_editor_test.vue'
-import about from '@/pages/me/about.vue'
+import collect from '@/pages/collect/collect.vue'
+import me from '@/pages/me/me.vue'
 
+// 其他页面
+import login from '@/pages/me/login.vue'
+import read_article from '@/pages/article/read_article.vue'
+import test from "@/pages/test.vue"
+
+const feedback = resolve => {
+    require.ensure(["@/pages/feedback/feedback.vue"], () => {
+        resolve(require("@/pages/feedback/feedback.vue"));
+    });
+}
+const user = resolve => {
+    require.ensure(["@/pages/me/user.vue"], () => {
+        resolve(require("@/pages/me/user.vue"));
+    });
+}
+const setting = resolve => {
+    require.ensure(["@/pages/me/setting.vue"], () => {
+        resolve(require("@/pages/me/setting.vue"));
+    });
+}
+const chatList = resolve => {
+    require.ensure(["@/pages/chatRoom/chatList.vue"], () => {
+        resolve(require("@/pages/chatRoom/chatList.vue"));
+    });
+}
+const chatOne = resolve => {
+    require.ensure(["@/pages/chatRoom/chatOne.vue"], () => {
+        resolve(require("@/pages/chatRoom/chatOne.vue"));
+    });
+}
 Vue.use(Router)
 
 
@@ -48,11 +67,6 @@ const router = new Router({
             component: read_article,
         },
         {
-            path: '/news',
-            name: 'news',
-            component: news
-        },
-        {
             path: '/me',
             name: 'me',
             meta: {
@@ -71,14 +85,6 @@ const router = new Router({
                 requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
             },
             component: mavon_editor_test
-        }, {
-            path: '/article_modify',
-            name: 'article_modify',
-            component: article_modify
-        }, {
-            path: '/about',
-            name: 'about',
-            component: about
         },
         {
             path: '/feedback',
@@ -112,8 +118,6 @@ const router = new Router({
             },
             children: [
                 {
-                    // 当 /user/:id/profile 匹配成功，
-                    // UserProfile 会被渲染在 User 的 <router-view> 中
                     name:"chatOne",
                     path: 'chatOne',
                     component: chatOne,

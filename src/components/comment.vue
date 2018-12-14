@@ -59,13 +59,11 @@
 <script>
     import * as utils from "../utils/common"
     import {TransferDomDirective as TransferDom} from 'vux'
-    import {XDialog, XButton} from 'vux'
     import {reply} from "../api/article.js"
 
     export default {
         name: "commentList",
         components: {
-            XDialog, XButton,
         },
         directives: {
             TransferDom

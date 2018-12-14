@@ -13,8 +13,8 @@
                 <span class="cellIcon small-icon icon-user" slot="icon"></span>
             </cell>
 
-            <cell title="尬聊室(beta)" value="" is-link link="/chatRoom">
-                <span class="cellIcon small-icon icon-user" slot="icon"></span>
+            <cell title="聊天室(beta)" value="" is-link link="/chatRoom">
+                <span class="cellIcon small-icon icon-question_answer" slot="icon"></span>
             </cell>
 
 
@@ -24,9 +24,6 @@
                   :arrow-direction="showContent ? 'up' : 'down'"
                   @click.native="showContent = !showContent"></cell>
             <div class="slide" :class="showContent?'animate':''">
-                <!--<cell-box is-link link="/article_edit">-->
-                <!--<del>发布文章 使用wang_editor</del>-->
-                <!--</cell-box>-->
                 <cell title="我的收藏" value="" is-link link="/collect">
                     <span class="cellIcon small-icon icon-bookmark" slot="icon"></span>
                 </cell>
@@ -60,14 +57,13 @@
 </template>
 
 <script>
-    import {Group, Cell, CellBox, XButton, Badge} from 'vux'
     import {mapGetters} from 'vuex'
     import profileIntro from "../../components/profileIntro"
 
 
     export default {
         components: {
-            Group, Cell, CellBox, XButton, Badge, profileIntro
+             profileIntro
         },
         data() {
             return {

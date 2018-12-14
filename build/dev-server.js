@@ -1,4 +1,5 @@
 require('./check-versions')()
+var utils = require('./utils')
 
 var config = require('../config')
 if (!process.env.NODE_ENV) {
@@ -62,7 +63,7 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
-var uri = 'http://' + getIPAddress() + ':' + port
+var uri = 'http://' + utils.getIPAddress() + ':' + port
 
 var _resolve
 var readyPromise = new Promise(resolve => {
@@ -87,19 +88,4 @@ module.exports = {
   close: () => {
     server.close()
   }
-}
-
-function getIPAddress() {
-    var interfaces = require('os').networkInterfaces();
-    for (var devName in interfaces) {
-        var iface = interfaces[devName];
-
-        for (var i = 0; i < iface.length; i++) {
-            var alias = iface[i];
-            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal)
-                return alias.address;
-        }
-    }
-
-    return '0.0.0.0';
 }

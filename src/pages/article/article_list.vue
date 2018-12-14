@@ -25,8 +25,6 @@
 </template>
 
 <script>
-    import {Panel, Group, Radio} from 'vux'
-    import {LoadMore} from "vux"
 
     import {getAritcleList,} from "@/api/article.js"
     import * as utils from "../../utils/common"
@@ -36,9 +34,7 @@
 
     export default {
         components: {
-            Panel,
-            Group,
-            Radio, LoadMore, Scroll
+            Scroll
         },
         data() {
             return {
@@ -55,6 +51,10 @@
                 loadingFooterText: "正在加载",
 
             }
+        },
+        activated(){
+            // 重新刷新，让 bs 不卡住
+            this.$refs.scroll.refresh()
         },
         beforeMount() {
             this.getAritcleList(1)

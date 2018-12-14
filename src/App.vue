@@ -59,18 +59,15 @@
 </template>
 
 <script>
-
-    import {Tab, TabItem, Sticky} from 'vux'
     import {ViewBox} from 'vux'
-    import {Tabbar, Actionsheet, TabbarItem, XHeader, XImg} from 'vux'
-    import BScroll from 'better-scroll'
+    import {Tabbar, Actionsheet, TabbarItem, XHeader, } from 'vux'
 
     import {tokenLogin} from "./api/user";
 
     export default {
         name: 'app',
         components: {
-            Tab, TabItem, Sticky, ViewBox, Tabbar, TabbarItem, XHeader, XImg, Actionsheet
+             ViewBox, Tabbar, TabbarItem, XHeader,  Actionsheet
         },
         data() {
             return {
@@ -106,7 +103,6 @@
         },
 
         mounted() {
-
             // 每次打开如果token没过期就会自动刷新,很久未访问就要重新登录
             if (localStorage.token && localStorage.token !== "undefined") {
                 tokenLogin().then((res) => {
@@ -202,10 +198,9 @@
         height: 100%;
     }
 
-    .icon-user {
-        width: 27px;
-        height: 27px;
-        color: #5d0500 !important;
+    #tabbar-footer{
+        padding-bottom:  constant(safe-area-inset-bottom);
+        padding-bottom:  env(safe-area-inset-bottom);
     }
 
     .weui-bar__item_on .weui-tabbar__label span {

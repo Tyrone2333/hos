@@ -51,26 +51,20 @@
 </template>
 
 <script type="text/ecmascript-6">
-      import {XTextarea,Group,XInput,XNumber,XButton,XAddress,ChinaAddressV4Data,Cell,Rater,XSwitch,Checker,CheckerItem,PopupPicker,}from'vux'
-      import {mapGetters} from 'vuex'
-      import {changeInformation, changePwd} from "@/api/user"
-      import profileIntro from "../../components/profileIntro"
+    import {
+        XAddress,
+        ChinaAddressV4Data,
+        PopupPicker,
+    } from 'vux'
+    import {mapGetters} from 'vuex'
+    import {changeInformation, changePwd} from "@/api/user"
+    import profileIntro from "../../components/profileIntro"
 
     export default {
         name: "setting",
         components: {
-            XTextarea,
-            Group,
-            XInput,
-            XNumber,
-            XButton,
             XAddress,
             ChinaAddressV4Data,
-            Cell,
-            Rater,
-            XSwitch,
-            Checker,
-            CheckerItem,
             profileIntro,
             PopupPicker,
         },

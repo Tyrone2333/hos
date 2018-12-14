@@ -197,3 +197,4 @@ export function createUid(str_data) {
     }
     return binl2hex(core_md5(str2binl(str_data), str_data.length * chrsz))
 }
+

@@ -62,14 +62,12 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {XTextarea, Group, XInput, XNumber, XButton, XAddress, ChinaAddressV4Data, Cell, Rater, XSwitch,Checker, CheckerItem,} from 'vux'
+    import {  XTextarea,XAddress, ChinaAddressV4Data,} from 'vux'
 
     export default {
         name: "feedback",
         components: {
-            XTextarea,
-            Group,
-            XInput, XNumber, XButton, XAddress, ChinaAddressV4Data, Cell, Rater, XSwitch,Checker, CheckerItem,
+            XTextarea, XAddress, ChinaAddressV4Data,
         },
         data() {
             return {

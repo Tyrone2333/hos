@@ -61,19 +61,16 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {Panel, Group, Radio, Swiper, SwiperItem, Tab, TabItem, Sticky} from 'vux'
-
     import {getUserInfo} from "@/api/user"
     import cellList from "../../components/cellList"
     import profileIntro from "../../components/profileIntro"
     import timeTransMixins from "../../utils/timeTransMixin"
 
-
     export default {
         name: "user",
         mixins: [timeTransMixins],
         components: {
-            Panel, Group, Radio, Tab, TabItem, Swiper, SwiperItem, Sticky, cellList, profileIntro
+            cellList, profileIntro
         },
         data() {
             return {

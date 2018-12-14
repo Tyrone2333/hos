@@ -21,13 +21,9 @@
 </template>
 
 <script>
-    import chat from "../../components/chat"
-    // import chatOne from "./chatOne"
-    import {Panel} from 'vux'
 
     export default {
         name: "chatList",
-        components: {Panel,},
         data() {
             return {
                 publicHeader: "群聊",
@@ -54,8 +50,7 @@
                     src: "//192.168.36.171:10010/static/images/avatar/88ba331dcadc20528415c18220765b4f3d78f005.png",
                     title: "大大大 群聊",
                     articleId: 123,
-                    desc: "descdescdescdescdescdescdesc"
-
+                    desc: "公共聊天室，请注意个人言行"
                 },
             ]
         },

@@ -30,6 +30,9 @@
     import { Scroller } from 'vux'
     import { AjaxPlugin } from 'vux'
 
+    /**
+     *  以后可以做成板块页
+     */
     export default {
         components: {
             Tab, TabItem,Swiper, SwiperItem,

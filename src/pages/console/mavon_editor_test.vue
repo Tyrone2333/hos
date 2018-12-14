@@ -13,7 +13,7 @@
                           default_open="edit"
                           @change="onEditorChange"
                           @htmlcode="onShowHtml"
-                          placeholder="提交“待验证”的预言、个人判断、思路"
+                          placeholder="在这里写下你的文章"
                           @imgAdd="$imgAdd" @imgDel="$imgDel"></mavon-editor>
         </div>
 
