@@ -9,8 +9,8 @@ import VueRouterIndex from './router/index.js'
 import {ToastPlugin} from 'vux'
 import {
     Panel, Group, Cell, Swiper, Badge, Tab, Sticky, Checker, Rater,Actionsheet,
-    ViewBox,SwiperItem, CheckerItem, TabItem,
-    XNumber, XButton, XInput, XDialog,XHeader,XSwitch
+    ViewBox,SwiperItem, CheckerItem, TabItem,PopupPicker,
+    XNumber, XButton, XInput, XDialog,XHeader,XSwitch,XTextarea,XAddress,
 } from 'vux'
 
 Vue.component('panel', Panel)
@@ -20,6 +20,8 @@ Vue.component('x-number', XNumber)
 Vue.component('x-switch', XSwitch)
 Vue.component('x-dialog', XDialog)
 Vue.component('x-header', XHeader)
+Vue.component('x-textarea', XTextarea)
+Vue.component('x-address', XAddress)
 Vue.component('group', Group)
 Vue.component('cell', Cell)
 Vue.component('badge', Badge)
@@ -33,6 +35,7 @@ Vue.component('checker', Checker)
 Vue.component('actionsheet', Actionsheet)
 Vue.component('view-box', ViewBox)
 Vue.component('checker-item', CheckerItem)
+Vue.component('popup-picker', PopupPicker)
 
 Vue.use(ToastPlugin)
 Vue.use(VueRouter)

@@ -12,20 +12,13 @@ import me from '@/pages/me/me.vue'
 import login from '@/pages/me/login.vue'
 import read_article from '@/pages/article/read_article.vue'
 import test from "@/pages/test.vue"
+// feedback 和 setting 都有用 ChinaAddressV4Data，按需会重复打包太大
+import feedback from "@/pages/feedback/feedback"
+import setting from "@/pages/me/setting.vue"
 
-const feedback = resolve => {
-    require.ensure(["@/pages/feedback/feedback.vue"], () => {
-        resolve(require("@/pages/feedback/feedback.vue"));
-    });
-}
 const user = resolve => {
     require.ensure(["@/pages/me/user.vue"], () => {
         resolve(require("@/pages/me/user.vue"));
-    });
-}
-const setting = resolve => {
-    require.ensure(["@/pages/me/setting.vue"], () => {
-        resolve(require("@/pages/me/setting.vue"));
     });
 }
 const chatList = resolve => {

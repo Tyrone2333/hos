@@ -22,7 +22,7 @@
         </group>
 
         <div class="box">
-            <div class="weui-cells__title">所属行业 </div>
+            <div class="weui-cells__title">所属行业</div>
             <checker v-model="checkVal"
                      type="checkbox"
                      default-item-class="demo5-item"
@@ -62,13 +62,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {  XTextarea,XAddress, ChinaAddressV4Data,} from 'vux'
+    import {ChinaAddressV4Data} from 'vux'
 
     export default {
         name: "feedback",
-        components: {
-            XTextarea, XAddress, ChinaAddressV4Data,
-        },
         data() {
             return {
                 name: "",
@@ -103,8 +100,8 @@
                 maxValue: '',
                 maskValue: '13545678910',
                 maskValue2: '',
-                checkVal:[2, 3],
-                industry: ['电子商务', '社交网络','产品运营',"云计算","游戏","程序员","物联网","非互联网行业"],
+                checkVal: [2, 3],
+                industry: ['电子商务', '社交网络', '产品运营', "云计算", "游戏", "程序员", "物联网", "非互联网行业"],
 
             }
         },
@@ -130,8 +127,8 @@
             onEnter(val) {
                 console.log('click enter!', val)
             },
-            submit(){
-                if(isEmptyStr(this.name) ){
+            submit() {
+                if (isEmptyStr(this.name)) {
                     this.$vux.toast.show({
                         text: "姓名必填哦",
                         type: "warn",
@@ -149,7 +146,7 @@
 </script>
 
 <style lang="less">
-    .feedback{
+    .feedback {
         .box {
             padding: 15px 0;
         }

@@ -51,11 +51,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {
-        XAddress,
-        ChinaAddressV4Data,
-        PopupPicker,
-    } from 'vux'
+    import {ChinaAddressV4Data,} from 'vux'
     import {mapGetters} from 'vuex'
     import {changeInformation, changePwd} from "@/api/user"
     import profileIntro from "../../components/profileIntro"
@@ -63,10 +59,8 @@
     export default {
         name: "setting",
         components: {
-            XAddress,
             ChinaAddressV4Data,
             profileIntro,
-            PopupPicker,
         },
         data() {
             return {
