@@ -8,9 +8,9 @@ import App from './App'
 import VueRouterIndex from './router/index.js'
 import {ToastPlugin} from 'vux'
 import {
-    Panel, Group, Cell, Swiper, Badge, Tab, Sticky, Checker, Rater,Actionsheet,
-    ViewBox,SwiperItem, CheckerItem, TabItem,PopupPicker,
-    XNumber, XButton, XInput, XDialog,XHeader,XSwitch,XTextarea,XAddress,
+    Panel, Group, Cell, Swiper, Badge, Tab, Sticky, Checker, Rater, Actionsheet,
+    ViewBox, SwiperItem, CheckerItem, TabItem, PopupPicker,
+    XNumber, XButton, XInput, XDialog, XHeader, XSwitch, XTextarea, XAddress,
 } from 'vux'
 
 Vue.component('panel', Panel)
@@ -42,6 +42,7 @@ Vue.use(VueRouter)
 
 // 引入 iconfont
 import "./assets/style.css"
+import "./assets/icomoon-dianzan/style.css"
 
 FastClick.attach(document.body)
 

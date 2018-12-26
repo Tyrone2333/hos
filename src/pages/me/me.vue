@@ -41,6 +41,15 @@
             </cell>
         </group>
 
+        <group title="其他作品">
+            <cell title="玩个游戏?"  link="http://tm.lilanz.com/supersale/2018/pig/build/index.aspx">
+                <span class="cellIcon icon-question-circle-o" slot="icon"></span>
+            </cell>
+            <cell title="不懂穿搭?"  link="http://tm.lilanz.com/oa/project/ClothesCollocation/">
+                <span class="cellIcon icon-question-circle-o" slot="icon"></span>
+            </cell>
+        </group>
+
         <group title="开发者">
             <cell title="版本" @click.native="clickVision" :inline-desc=" 'v' + version">
                 <x-icon class="cellIcon" slot="icon" type="ios-information" size="30"></x-icon>
@@ -53,6 +62,7 @@
             <x-button @click.native="signOut" type="warn">退出账户</x-button>
 
         </group>
+
     </div>
 </template>
 
@@ -63,7 +73,7 @@
 
     export default {
         components: {
-             profileIntro
+            profileIntro
         },
         data() {
             return {

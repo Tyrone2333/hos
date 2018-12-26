@@ -483,7 +483,7 @@
                 /* Slow Animation Length */
             }
 
-            /* Message Bubbles */
+            /* Message Bubbles 这个是消息体 */
             div.rounded-messages .msg {
                 position: relative;
                 clear: both;
@@ -491,8 +491,6 @@
                 height: auto;
                 width: auto;
                 max-width: 70%;
-                word-wrap: break-word;
-                word-break: keep-all;
                 font-family: sans-serif;
                 text-align: left;
                 line-height: 1.5em;
@@ -501,6 +499,10 @@
                 cursor: default;
                 border-radius: 15px;
 
+                // 需要强制换行,不然div会被撑的乱七八糟
+                white-space: normal;
+                word-break: break-all;
+                word-wrap: break-word;
             }
 
             /* Left Message Bubble */

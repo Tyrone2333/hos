@@ -46,7 +46,8 @@
             <div class="right">
                 <!--<div class="zan-wrapper">-->
                 <div class="zan-wrapper" @click="clickZan">
-                    <i class="icon" :class="isZan ?  'icon icon-thumbs-up': 'icon icon-thumbs-o-up'"></i>
+                    <i class="icon"
+                       :class="isZan ?  'icon  icon-dianzan-dianzan-mian': 'icon  icon-dianzan-dianzan-xian'"></i>
                     {{zanCount}}
                 </div>
                 <!--</div>-->
@@ -204,7 +205,7 @@
                 this.tags = tagString.split(",")
             },
             initcollectList() {
-               console. log("this.collectList: ",this.collectList)
+                console.log("this.collectList: ", this.collectList)
                 for (let k in this.collectList) {
                     if (this.articleId === this.collectList[k].article_id) {
                         this.collected = true
@@ -309,10 +310,10 @@
                     /*float: right;*/
                     display: inline-block;
                     /*vertical-align: middle;*/
-                    .icon-thumbs-up {
+                    .icon-dianzan-dianzan-mian {
                         color: black;
                     }
-                    .icon-thumbs-o-up {
+                    .icon-dianzan-dianzan-xian {
                         color: #858585;
                     }
                 }
