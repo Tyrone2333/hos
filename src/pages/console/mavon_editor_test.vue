@@ -200,6 +200,7 @@
                     this.resData = res.data
                     this.$refs["mavon-editor"].$imgUpdateByUrl(pos, res.data.data[0])
                     this.$refs["mavon-editor"].$img2Url(pos, res.data.data[0])
+                    // 在这里设置文章略缩图
                     this.draft.banner_img = res.data.data[0]
                     console.log(res.data)
                 })

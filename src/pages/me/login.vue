@@ -182,7 +182,7 @@
                         }, 2000)
                     } else {
                         this.$vux.toast.show({
-                            text: res.message,
+                            text: "登录成功",
                             type: "success",
                         })
                         setTimeout(() => {
@@ -221,7 +221,7 @@
                     // 注册成功
                     // 显示 Toast
                     this.$vux.toast.show({
-                        text: res.message,
+                        text: "注册成功",
                         type: "success",
                     })
                     // 跳转到登录页,并放置注册的用户名

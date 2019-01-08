@@ -56,7 +56,6 @@ let webpackConfig = {
                     name: utils.assetsPath('media/[name].[hash:7].[ext]')
                 }
             },
-            // TODO 和css抽离到 style 标签
             {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
                 loader: 'url-loader',
