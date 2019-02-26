@@ -45,9 +45,6 @@
             <cell title="玩个游戏?"  link="http://tm.lilanz.com/supersale/2018/pig/build/index.aspx">
                 <span class="cellIcon icon-question-circle-o" slot="icon"></span>
             </cell>
-            <cell title="不懂穿搭?"  link="http://tm.lilanz.com/oa/project/ClothesCollocation/">
-                <span class="cellIcon icon-question-circle-o" slot="icon"></span>
-            </cell>
         </group>
 
         <group title="开发者">

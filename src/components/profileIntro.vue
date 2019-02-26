@@ -10,7 +10,7 @@
             </div>
             <div class="text">
                 <div class="nickname">
-                    {{userInfo.username}} <br>
+                    {{userInfo.nickname}} <br>
                 </div>
                 <div class="username" v-if="showUsername">User : {{userInfo.username}}</div>
                 <div class="register-info" v-else>第 {{userInfo.id}} 号用户,加入于{{commonTime(userInfo.register_time)}}</div>

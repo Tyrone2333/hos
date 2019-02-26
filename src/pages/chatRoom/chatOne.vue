@@ -593,6 +593,12 @@
 
             background: #f2f3f2;
             padding: 5px;
+
+            height:  calc(~"48px + constant(safe-area-inset-bottom)");
+            height:  calc(~"48px + env(safe-area-inset-bottom)");
+            padding-bottom:  calc(~"5px + constant(safe-area-inset-bottom)");
+            padding-bottom:  calc(~"5px + env(safe-area-inset-bottom)");
+
             .chat-input {
                 flex: 90%;
                 border: none;

@@ -3,7 +3,7 @@ var utils = require('../build/utils')
 
 module.exports = {
     NODE_ENV: '"production"',
-    APP_NAME: '"机yo"',
+    APP_NAME: '"undefined"',
 
     BASE_API: '"http://undefined.ga:10010/hos_api"',
     CHAT_WS_SERVER: '"ws://undefined.ga:10010/"',
