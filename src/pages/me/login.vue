@@ -117,7 +117,8 @@
             },
 
             checkName(val) {
-                let reg = /^[A-Za-z][A-Za-z0-9]{5,12}$/
+                // 首字母,一共4-12位
+                let reg = /^[A-Za-z][A-Za-z0-9]{3,12}$/
                 if (reg.test(val)) {
                     this.iconType = "success"
                 } else {
@@ -127,34 +128,6 @@
             togleLogin() {
                 this.inLogin = !this.inLogin
             },
-
-//            AjaxPlugin 在移动端兼容性都不好，不使用
-//             submitForm() {
-//                 let username = this.username
-//                 let tel = this.tel
-//                 let email = this.email
-//                 let password = this.password
-//
-//                 this.submitBtnLodingState = true
-// //                this.submitBtnDisabled = true
-//
-//
-//                 let fromData = [
-//                     ["username", username],
-//                     ["password", password],
-//                 ]
-//                 let params = new URLSearchParams(fromData);
-//
-//                 /**
-//                  * AjaxPlugin 在UC和夸克都无法提交表单
-//                  *
-//                  * */
-// //                AjaxPlugin.$http.post(process.env.BASE_API + "/phpstorm_test/phpstorm_test/hos_api.php", params)
-// //                    .then((response) => {
-// //                    _this.resData = response.data
-// //                        console.log(this.resData)
-// //                    })
-//             },
 
             // 登录按钮事件
             loginBtnClick() {
@@ -203,8 +176,12 @@
                 let password = this.password
                 let password2 = this.password2
                 let nickname = this.nickname
+                let reg = /^[A-Za-z0-9]{6,12}$/
 
-                if (isEmptyStr(password) || password2 !== password) {
+                if (username.length < 4) {
+                    return
+                }
+                if (isEmptyStr(password) || password2 !== password || !reg.test(password)) {
                     this.$vux.toast.show({
                         text: "请检查密码",
                         type: "warn",
