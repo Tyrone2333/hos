@@ -39,17 +39,17 @@
                       :hide-on-blur="true">
 
                 <div class="reply">
-                    <form>
-                        <textarea name="content" maxlength="10000" class="mll" id="reply_content"
-                                  v-model="commentContent"
-                                  :placeholder="replyPlaceholder"
-                                  style="overflow: hidden; word-wrap: break-word; resize: none; height: 112px;"></textarea>
-                    </form>
-
-                    <span class="weui-btn weui-btn_mini btn-none" @click="showReplyDialog=false">取消</span>
-                    <span class="weui-btn weui-btn_mini weui-btn_primary" @click="replySend">确认</span>
-                    <!--上面是直接写类名，不引入 x-button 样式不会加进来生效-->
-                    <x-button mini type="primary" style="display: none">primary</x-button>
+                    <textarea name="content" maxlength="10000" class="mll" id="reply_content"
+                              v-model="commentContent"
+                              :placeholder="replyPlaceholder"
+                              style="overflow: hidden; word-wrap: break-word; resize: none; height: 112px;">
+                    </textarea>
+                    <div class="btn-wrapper">
+                        <span class="weui-btn weui-btn_mini btn-none" @click="showReplyDialog=false">取消</span>
+                        <span class="weui-btn weui-btn_mini weui-btn_primary" @click="replySend">确认</span>
+                        <!--上面是直接写类名，不引入 x-button 样式不会加进来生效-->
+                        <x-button mini type="primary" style="display: none">primary</x-button>
+                    </div>
                 </div>
             </x-dialog>
         </div>
@@ -63,8 +63,7 @@
 
     export default {
         name: "commentList",
-        components: {
-        },
+        components: {},
         directives: {
             TransferDom
         },
@@ -110,12 +109,11 @@
                 this.commentReply = commentInfo || {}
 
                 this.replyPlaceholder = this.commentReply.from_nickname ? "@" + this.commentReply.from_nickname : ""
-                // setTimeout(function () {
+
+                // 自动聚焦在 ios 会有 bug:无法聚焦,双击才能聚焦
+                // this.$nextTick(() => {
                 //     document.getElementById("reply_content").focus()
-                // }, 1)
-                this.$nextTick(() => {
-                    document.getElementById("reply_content").focus()
-                })
+                // })
 
                 /**
                  * 有bug,放在最底部可以这样,如果reply组件底下还有东西就不行
@@ -240,13 +238,25 @@
 
     // 评论css
     .reply {
-        .btn-none {
-            border: none !important;
-            background: transparent !important;
-            color: black;
-            &.btn-none:after {
-                content: none;
+        .btn-wrapper {
+            /*padding: 15px 0 2px 0;*/
+            padding: 5px 0;
+            display: flex;
+            /*align-items: center;*/
+            justify-content: center;
+            .weui-btn {
+                margin : 0;
+                &.btn-none {
+                    margin-right: 24px;
+                    border: none !important;
+                    background: transparent !important;
+                    color: black;
+                    &.btn-none:after {
+                        content: none;
+                    }
+                }
             }
         }
+
     }
 </style>
