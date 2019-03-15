@@ -42,7 +42,7 @@
         </group>
 
         <group title="其他作品">
-            <cell title="玩个游戏?"  link="http://tm.lilanz.com/supersale/2018/pig/build/index.aspx">
+            <cell title="玩个游戏?"  link="http://undefined.ga/pig/build/">
                 <span class="cellIcon icon-question-circle-o" slot="icon"></span>
             </cell>
         </group>
