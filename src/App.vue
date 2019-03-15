@@ -25,7 +25,7 @@
             <!--<router-view/>-->
 
 
-            <tabbar class="tabbar-footer" id="tabbar-footer" slot="bottom">
+            <tabbar class="tabbar-footer" id="tabbar-footer" slot="bottom" v-model="tabbarActive">
                 <tabbar-item link="/article">
                     <img src="./assets/PNG/file-text.png" slot="icon" alt="icon">
                     <span slot="label">首页</span>
@@ -60,17 +60,18 @@
 
 <script>
     import {ViewBox} from 'vux'
-    import {Tabbar, Actionsheet, TabbarItem, XHeader, } from 'vux'
+    import {Tabbar, Actionsheet, TabbarItem, XHeader,} from 'vux'
 
     import {tokenLogin} from "./api/user";
 
     export default {
         name: 'app',
         components: {
-             ViewBox, Tabbar, TabbarItem, XHeader,  Actionsheet
+            ViewBox, Tabbar, TabbarItem, XHeader, Actionsheet
         },
         data() {
             return {
+                tabbarActive: 0,
                 showMenu: false,
                 menus: {
                     'language.noop': '<span class="menu-title">Language</span>',
@@ -100,8 +101,28 @@
                 log(this.$refs)
                 this.$refs.viewBox.scrollTo(0)
             },
+            autoSelectTabbar() {
+                let curRoute = this.$route.name
+                switch (curRoute) {
+                    case "article":
+                        this.tabbarActive = 0
+                        break
+                    case "mavon_editor_test":
+                        this.tabbarActive = 1
+                        break
+                    case "collect":
+                        this.tabbarActive = 2
+                        break
+                    case "me":
+                        this.tabbarActive = 3
+                        break
+                }
+            },
         },
 
+        beforeMount(){
+            this.autoSelectTabbar()
+        },
         mounted() {
             // 每次打开如果token没过期就会自动刷新,很久未访问就要重新登录
             if (localStorage.token && localStorage.token !== "undefined") {
@@ -115,8 +136,9 @@
             }
         },
         watch: {
-            // $route(to, from) {
-
+            $route(to, from) {
+                this.autoSelectTabbar()
+            }
             /**
              * 这一段可以用来判断 tabbar-item 的高亮,不过现在觉得没这个必要去弄
              *
@@ -198,9 +220,9 @@
         height: 100%;
     }
 
-    #tabbar-footer{
-        padding-bottom:  constant(safe-area-inset-bottom);
-        padding-bottom:  env(safe-area-inset-bottom);
+    #tabbar-footer {
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
     }
 
     .weui-bar__item_on .weui-tabbar__label span {
